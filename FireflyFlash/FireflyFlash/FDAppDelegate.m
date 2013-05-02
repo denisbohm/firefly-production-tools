@@ -15,6 +15,7 @@
 #import <FireflyProduction/FDUSBHIDMonitor.h>
 
 #import <ARMSerialWireDebug/FDCortexM.h>
+#import <ARMSerialWireDebug/FDLogger.h>
 #import <ARMSerialWireDebug/FDSerialEngine.h>
 #import <ARMSerialWireDebug/FDSerialWireDebug.h>
 #import <ARMSerialWireDebug/FDUSBDevice.h>
@@ -54,7 +55,7 @@
 
 @end
 
-@interface FDAppDelegate () <CBCentralManagerDelegate, FDUSBMonitorDelegate, FDUSBHIDMonitorDelegate, FDUSBHIDDeviceDelegate, FDFireflyDeviceDelegate, NSTableViewDataSource>
+@interface FDAppDelegate () <CBCentralManagerDelegate, FDUSBMonitorDelegate, FDUSBHIDMonitorDelegate, FDUSBHIDDeviceDelegate, FDFireflyDeviceDelegate, NSTableViewDataSource, FDLoggerConsumer>
 
 @property (assign) IBOutlet NSTableView *bluetoothTableView;
 @property CBCentralManager *centralManager;
@@ -67,6 +68,13 @@
 @property (assign) IBOutlet NSTableView *swdTableView;
 @property FDUSBMonitor *swdMonitor;
 @property FDUSBTableViewDataSource *swdTableViewDataSource;
+@property (assign) IBOutlet NSTextView *swdTextView;
+@property (assign) IBOutlet NSPathControl *swdPathControl;
+@property (assign) IBOutlet NSImageView *swdJtagImageView;
+@property (assign) IBOutlet NSImageView *swdGdbImageView;
+@property (assign) IBOutlet NSImageView *swdRunningImageView;
+@property (assign) IBOutlet NSButton *programButton;
+@property (assign) IBOutlet NSButton *resetButton;
 
 @property (assign) IBOutlet NSSlider *axSlider;
 @property (assign) IBOutlet NSSlider *aySlider;
@@ -79,20 +87,25 @@
 @property FDGdbServer *gdbServer;
 @property FDGdbServerSwd *gdbServerSwd;
 
-@property NSString *elf;
-
 @end
 
 @implementation FDAppDelegate
 
+- (void)applicationWillTerminate:(NSNotification *)notification
+{
+    NSString *firmwarePath = _swdPathControl.URL.path;
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:firmwarePath forKey:@"firmwarePath"];
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    //    _elf = @"/Users/denis/sandbox/denisbohm/firefly-ice-firmware/THUMB Flash Release/FireflyIce.elf";
-    _elf = @"/Users/denis/sandbox/denisbohm/firefly-ice-firmware/bin/FireflyIce.elf";
-    FDExecutable *executable = [[FDExecutable alloc] init];
-    [executable load:_elf];
-    for (FDExecutableSection *section in executable.sections) {
-        NSLog(@"type = %d, address = 0x%08x, length = %ld", section.type, section.address, section.data.length);
+    [FDLogger setConsumer:self];
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *firmwarePath = [userDefaults stringForKey:@"firmwarePath"];
+    if (firmwarePath) {
+        _swdPathControl.URL = [[NSURL alloc] initFileURLWithPath:firmwarePath];
     }
     
     _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
@@ -120,19 +133,64 @@
     _gdbServerSwd = [[FDGdbServerSwd alloc] init];
     _gdbServer.delegate = _gdbServerSwd;
     _gdbServerSwd.gdbServer = _gdbServer;
+    [_gdbServer addObserver:self forKeyPath:@"connected" options:NSKeyValueObservingOptionNew context:nil];
+    [_gdbServerSwd addObserver:self forKeyPath:@"halted" options:NSKeyValueObservingOptionNew context:nil];
     [_gdbServer start];
+}
+
+- (void)swdDeviceAdded:(FDUSBDevice *)device
+{
+    [_swdTableViewDataSource.devices addObject:device];
+    [_swdTableView reloadData];
+    
+    if (!_gdbServerSwd.serialWireDebug) {
+        [self performSelectorOnMainThread:@selector(swdSelectAndConnect:) withObject:device waitUntilDone:NO];
+    }
+}
+
+- (void)swdSelectAndConnect:(FDUSBDevice *)device
+{
+    [_swdTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+    [self swdConnect:nil];
 }
 
 - (void)usbMonitor:(FDUSBMonitor *)usbMonitor usbDeviceAdded:(FDUSBDevice *)device
 {
-    [_swdTableViewDataSource.devices addObject:device];
+    [self performSelectorOnMainThread:@selector(swdDeviceAdded:) withObject:device waitUntilDone:NO];
+}
+
+- (void)swdDeviceRemoved:(FDUSBDevice *)device
+{
+    [_swdTableViewDataSource.devices removeObject:device];
     [_swdTableView reloadData];
 }
 
 - (void)usbMonitor:(FDUSBMonitor *)usbMonitor usbDeviceRemoved:(FDUSBDevice *)device
 {
-    [_swdTableViewDataSource.devices removeObject:device];
-    [_swdTableView reloadData];
+    [self performSelectorOnMainThread:@selector(swdDeviceRemoved:) withObject:device waitUntilDone:NO];
+}
+
+- (void)logFile:(char *)file line:(NSUInteger)line class:(NSString *)class method:(NSString *)method message:(NSString *)message
+{
+    BOOL scrollAfter = NSMaxY(_swdTextView.visibleRect) >= NSMaxY(_swdTextView.bounds);
+    NSTextStorage* storage = _swdTextView.textStorage;
+    if (storage.length > 0) {
+        [storage appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
+    }
+    [storage appendAttributedString:[[NSAttributedString alloc] initWithString:message]];
+    if (scrollAfter) {
+        [_swdTextView scrollRangeToVisible:NSMakeRange(storage.length, 0)];
+    }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([@"connected" isEqualToString:keyPath]) {
+        [_swdGdbImageView setAlphaValue:_gdbServer.connected ? 1.0 : 0.25];
+    } else
+    if ([@"halted" isEqualToString:keyPath]) {
+        [_swdRunningImageView setAlphaValue:!_gdbServerSwd.halted ? 1.0 : 0.25];
+    }
 }
 
 - (FDUSBDevice *)getSelectedSwdDevice
@@ -165,45 +223,55 @@
     
     [serialWireDebug resetDebugAccessPort];
     uint32_t debugPortIDCode = [serialWireDebug readDebugPortIDCode];
-    NSLog(@"DPID = %08x", debugPortIDCode);
     if (debugPortIDCode != EnergyMicro_DebugPort_IdentifcationCode) {
-        NSLog(@"unexpected debug port identification code");
+        FDLog(@"unexpected debug port identification code %08x", debugPortIDCode);
     }
     [serialWireDebug initializeDebugAccessPort];
-    NSLog(@"read CPU ID");
     uint32_t cpuID = [serialWireDebug readCPUID];
-    NSLog(@"CPUID = %08x", cpuID);
     if ((cpuID & 0xfffffff0) == 0x412FC230) {
         uint32_t n = cpuID & 0x0000000f;
-        NSLog(@"ARM Cortex-M3 r2p%d", n);
+        FDLog(@"ARM Cortex-M3 r2p%d", n);
+    } else {
+        FDLog(@"CPUID = %08x", cpuID);        
     }
     
     [serialWireDebug halt];
     
     _gdbServerSwd.serialWireDebug = serialWireDebug;
+    [_programButton setEnabled:YES];
+    [_resetButton setEnabled:YES];
+    [_swdJtagImageView setAlphaValue:1.0];
+}
+
+- (IBAction)swdDisconnect:(id)sender
+{
+    _gdbServerSwd.serialWireDebug = nil;
+    [_programButton setEnabled:NO];
+    [_resetButton setEnabled:NO];
+    [_swdJtagImageView setAlphaValue:0.25];
 }
 
 /*
  - (IBAction)swdTest:(id)sender
- NSLog(@"write memory");
+ FDLog(@"write memory");
  uint32_t address = 0x20000000;
  [serialWireDebug writeMemory:address value:0x01234567];
  [serialWireDebug checkDebugPortStatus];
  [serialWireDebug writeMemory:address + 4 value:0x76543210];
- NSLog(@"read memory");
+ FDLog(@"read memory");
  uint32_t m0 = [serialWireDebug readMemory:address];
  uint32_t m1 = [serialWireDebug readMemory:address+4];
- NSLog(@"m0 = %08x, m1 = %08x", m0, m1);
+ FDLog(@"m0 = %08x, m1 = %08x", m0, m1);
  
- NSLog(@"write register");
+ FDLog(@"write register");
  [serialWireDebug writeRegister:0 value:0x01234567];
  [serialWireDebug writeRegister:1 value:0x76543210];
- NSLog(@"read register");
+ FDLog(@"read register");
  uint32_t r0 = [serialWireDebug readRegister:0];
  uint32_t r1 = [serialWireDebug readRegister:1];
- NSLog(@"r0 = %08x, r1 = %08x", r0, r1);
+ FDLog(@"r0 = %08x, r1 = %08x", r0, r1);
  
- NSLog(@"bluk memory read/write");
+ FDLog(@"bluk memory read/write");
  address = 0x20000000;
  uint32_t length = 1024;
  NSMutableData *data = [NSMutableData dataWithCapacity:length];
@@ -219,14 +287,14 @@
  if ([data isEqualToData:output]) {
  double writeBps = data.length / [between timeIntervalSinceDate:before];
  double readBps = output.length / [after timeIntervalSinceDate:between];
- NSLog(@"pass write = %0.1f Bps, read = %0.1f Bps", writeBps, readBps);
+ FDLog(@"pass write = %0.1f Bps, read = %0.1f Bps", writeBps, readBps);
  } else {
- NSLog(@"fail");
- NSLog(@"data = %@", data);
- NSLog(@"output = %@", output);
+ FDLog(@"fail");
+ FDLog(@"data = %@", data);
+ FDLog(@"output = %@", output);
  }
  
- NSLog(@"erase & program");
+ FDLog(@"erase & program");
  address = 0x00000000;
  [serialWireDebug erase:address];
  before = [NSDate date];
@@ -235,11 +303,11 @@
  double programBps = data.length / [after timeIntervalSinceDate:before];
  NSData *readData = [serialWireDebug readMemory:address length:(UInt32)data.length];
  if ([data isEqualToData:readData]) {
- NSLog(@"pass program = %0.1f Bps", programBps);
+ FDLog(@"pass program = %0.1f Bps", programBps);
  } else {
- NSLog(@"fail");
- NSLog(@"data = %@", data);
- NSLog(@"output = %@", readData);
+ FDLog(@"fail");
+ FDLog(@"data = %@", data);
+ FDLog(@"output = %@", readData);
  }
  }
  */
@@ -248,32 +316,40 @@
 {
     FDSerialWireDebug *serialWireDebug = _gdbServerSwd.serialWireDebug;
     
-    NSLog(@"reading executable");
+    NSString *firmwarePath = _swdPathControl.URL.path;
+    if (!firmwarePath) {
+        FDLog(@"no firmware file selected");
+        return;
+    }
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:firmwarePath forKey:@"firmwarePath"];
+    FDLog(@"reading %@", firmwarePath);
     FDExecutable *executable = [[FDExecutable alloc] init];
-    [executable load:_elf];
-    NSLog(@"mass erase");
+    [executable load:firmwarePath];
+    FDLog(@"mass erase");
     [serialWireDebug massErase];
     for (FDExecutableSection *section in executable.sections) {
         switch (section.type) {
             case FDExecutableSectionTypeProgram: {
-                NSLog(@"loading flash");
+                FDLog(@"loading flash");
                 [serialWireDebug program:section.address data:section.data];
                 NSData *verify = [serialWireDebug readMemory:section.address length:(uint32_t)section.data.length];
                 if ([section.data isEqualToData:verify]) {
-                    NSLog(@"flash verified");
+                    FDLog(@"flash verified");
                 } else {
-                    NSLog(@"flash program failure");
+                    FDLog(@"flash program failure");
                 }
             } break;
             case FDExecutableSectionTypeData:
-                NSLog(@"loading RAM");
+                FDLog(@"loading RAM");
                 [serialWireDebug writeMemory:section.address data:section.data];
                 break;
         }
     }
-    NSLog(@"resetting");
+    FDLog(@"resetting");
     [serialWireDebug reset];
-    //    [serialWireDebug run];
+    [serialWireDebug run];
+    FDLog(@"program loaded");
     
     /*
      FDExecutableFunction *function = executable.functions[@"test_led"];
@@ -334,12 +410,12 @@
 
 - (void)sensing:(NSData *)data
 {
-    NSLog(@"sensing data received %@", data);
+//    FDLog(@"sensing data received %@", data);
 }
 
 - (void)usbHidDevice:(FDUSBHIDDevice *)device inputReport:(NSData *)data
 {
-    NSLog(@"inputReport %@", data);
+//    FDLog(@"inputReport %@", data);
     
     if (data.length < 1) {
         return;
@@ -481,7 +557,7 @@
         return;
     }
     
-    NSLog(@"didDiscoverPeripheral %@", peripheral);
+    FDLog(@"didDiscoverPeripheral %@", peripheral);
     fireflyDevice = [[FDFireflyDevice alloc] initWithPeripheral:peripheral];
     [_fireflyDevices addObject:fireflyDevice];
     
@@ -490,14 +566,14 @@
 
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral
 {
-    NSLog(@"didConnectPeripheral %@", peripheral.name);
+    FDLog(@"didConnectPeripheral %@", peripheral.name);
     FDFireflyDevice *fireflyDevice = [self getFireflyDeviceByPeripheral:peripheral];
     [fireflyDevice didConnectPeripheral];
 }
 
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
 {
-    NSLog(@"didDisconnectPeripheral %@ : %@", peripheral.name, error);
+    FDLog(@"didDisconnectPeripheral %@ : %@", peripheral.name, error);
     FDFireflyDevice *fireflyDevice = [self getFireflyDeviceByPeripheral:peripheral];
     [fireflyDevice didDisconnectPeripheralError:error];
 }

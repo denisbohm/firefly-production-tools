@@ -8,6 +8,8 @@
 
 #import "FDGdbServerSwd.h"
 
+#import <ARMSerialWireDebug/FDLogger.h>
+
 /* reg-arm.dat
  name:arm
  xmlarch:arm
@@ -91,6 +93,8 @@ reg_t expediteRegisters[] = {
 @property uint8_t signal;
 @property NSMutableDictionary *transfers;
 @property BOOL killed;
+@property BOOL continuing;
+@property NSTimer *statusTimer;
 
 @end
 
@@ -117,12 +121,33 @@ reg_t expediteRegisters[] = {
 - (void)gdbConnected
 {
     _killed = NO;
+    _continuing = NO;
     
     uint32_t breakpointCount = [_serialWireDebug breakpointCount];
     for (uint32_t i = 0; i < breakpointCount; ++i) {
         [_serialWireDebug disableBreakpoint:i];
     }
     [_serialWireDebug enableBreakpoints:true];
+    
+    _statusTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(statusTime:) userInfo:nil repeats:YES];
+}
+
+- (void)gdbDisconnected
+{
+    [_statusTimer invalidate];
+}
+
+- (void)statusTime:(NSTimer *)timer
+{
+    BOOL halted = [_serialWireDebug isHalted];
+    if (halted != _halted) {
+        self.halted = halted;
+    }
+    
+    if (_continuing && _halted) {
+        _continuing = NO;
+        [_gdbServer respond:[NSString stringWithFormat:@"T%02x", _signal]];
+    }
 }
 
 - (void)notifyStop
@@ -152,7 +177,7 @@ reg_t expediteRegisters[] = {
 - (void)gdbInterrupt
 {
     [_serialWireDebug halt];
-    NSLog(@"gdbInterrupt %@", [_serialWireDebug isHalted] ? @"halted" : @"running");
+    FDLog(@"gdbInterrupt %@", [_serialWireDebug isHalted] ? @"halted" : @"running");
     [_gdbServer respond:[NSString stringWithFormat:@"T%02x", _signal]];
 }
 
@@ -169,17 +194,18 @@ reg_t expediteRegisters[] = {
     for (uint32_t i = 0; i < breakpointCount; ++i) {
         uint32_t address;
         if ([_serialWireDebug getBreakpoint:i address:&address]) {
-            NSLog(@"gdbServerContinue breakpoint at 0x%08x", address);
+            FDLog(@"gdbServerContinue breakpoint at 0x%08x", address);
         }
     }
     [_serialWireDebug run];
-    NSLog(@"gdbServerContinue %@", [_serialWireDebug isHalted] ? @"halted" : @"running");
+    _continuing = YES;
+    FDLog(@"gdbServerContinue %@", [_serialWireDebug isHalted] ? @"halted" : @"running");
 }
 
 - (void)gdbServerStep:(NSData *)packet
 {
     [_serialWireDebug step];
-    NSLog(@"gdbServerStep %@", [_serialWireDebug isHalted] ? @"halted" : @"running");
+    FDLog(@"gdbServerStep %@", [_serialWireDebug isHalted] ? @"halted" : @"running");
     [_gdbServer respond:[NSString stringWithFormat:@"T%02x", _signal]];
 }
 
@@ -212,7 +238,7 @@ reg_t expediteRegisters[] = {
     if (free != -1) {
         // new breakpoint
         [_serialWireDebug setBreakpoint:(uint32_t)free address:address];
-        NSLog(@"added hardware breakpoint %ld", free);
+        FDLog(@"added hardware breakpoint %ld", free);
         [_gdbServer respond:@"OK"];
     } else {
         // no hardware breakpoints left
@@ -236,7 +262,7 @@ reg_t expediteRegisters[] = {
         if ([_serialWireDebug getBreakpoint:i address:&breakpointAddress]) {
             if (address == breakpointAddress) {
                 [_serialWireDebug disableBreakpoint:i];
-                NSLog(@"removed hardware breakpoint %u", i);
+                FDLog(@"removed hardware breakpoint %u", i);
             }
         }
     }
@@ -299,7 +325,7 @@ reg_t expediteRegisters[] = {
     if (index < _generalRegisterCount) {
         reg_t reg = generalRegisters[index];
         uint32_t v = CFSwapInt32(value);
-        NSLog(@"set register %ld = %08x", (long)reg.swdNumber, v);
+        FDLog(@"set register %ld = %08x", (long)reg.swdNumber, v);
         [_serialWireDebug writeRegister:reg.swdNumber value:v];
         [_gdbServer respond:@"OK"];
     } else {

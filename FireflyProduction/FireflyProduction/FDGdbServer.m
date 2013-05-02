@@ -8,6 +8,8 @@
 
 #import "FDGdbServer.h"
 
+#import <ARMSerialWireDebug/FDLogger.h>
+
 @protocol FDGdbServerPacketDelegate <NSObject>
 
 - (void)packetInterrupt;
@@ -114,7 +116,7 @@ uint8_t checksum(NSData *data) {
                 if ((packet.length > 0) && (verify == actual)) {
                     [_delegate packetSuccess:packet];
                 } else {
-                    NSLog(@"checksum mismatch");
+                    FDLog(@"checksum mismatch");
                     [_delegate packetFailure:packet];
                 }
             } break;
@@ -157,7 +159,7 @@ uint8_t checksum(NSData *data) {
                                name:NSFileHandleConnectionAcceptedNotification
                              object:nil];
     [_socketFileHandle acceptConnectionInBackgroundAndNotify];
-    NSLog(@"gdb server ready to accept a connection");
+    FDLog(@"gdb server ready to accept a connection");
 }
 
 - (void)newConnection:(NSNotification *)notification
@@ -165,7 +167,7 @@ uint8_t checksum(NSData *data) {
     NSDictionary *userInfo = [notification userInfo];
     NSNumber *error = [userInfo objectForKey:@"NSFileHandleError"];
     if (error) {
-        NSLog(@"NSFileHandle Error: %@", error);
+        FDLog(@"NSFileHandle Error: %@", error);
         return;
     }
     
@@ -180,7 +182,8 @@ uint8_t checksum(NSData *data) {
     [_clientFileHandle readInBackgroundAndNotify];
     
     [self performSelectorOnDelegate:@selector(gdbConnected)];
-    NSLog(@"gdb server accepted a connection");
+    self.connected = YES;
+    FDLog(@"gdb server accepted a connection");
 }
 
 - (void)dataReceivedNotification:(NSNotification *)notification
@@ -189,20 +192,21 @@ uint8_t checksum(NSData *data) {
     if (data.length == 0) {
         _clientFileHandle = nil;
         [self performSelectorOnDelegate:@selector(gdbDisconnected)];
-        NSLog(@"gdb server disconnected");
+        self.connected = NO;
+        FDLog(@"gdb server disconnected");
         return;
     }
     
     [_clientFileHandle readInBackgroundAndNotify];
 
-    NSLog(@"gdb server received data %@", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    FDLog(@"gdb server received data %@", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     [_parser append:data];
 }
 
 - (void)sendAck:(BOOL)success
 {
     uint8_t byte = success ? '+' : '-';
-    NSLog(@"gdb ack: %c", byte);
+    FDLog(@"gdb ack: %c", byte);
     [_clientFileHandle writeData:[NSData dataWithBytes:&byte length:1]];
 }
 
@@ -225,7 +229,7 @@ uint8_t checksum(NSData *data) {
         checksum += byte;
     }
     [response appendFormat:@"#%02x", checksum];
-    NSLog(@"gdb tx: %@", response);
+    FDLog(@"gdb tx: %@", response);
     [_clientFileHandle writeData:[response dataUsingEncoding:NSASCIIStringEncoding]];
 }
 
@@ -248,7 +252,7 @@ uint8_t checksum(NSData *data) {
         checksum += byte;
     }
     [response appendFormat:@"#%02x", checksum];
-    NSLog(@"gdb tx: %@", response);
+    FDLog(@"gdb tx: %@", response);
     [_clientFileHandle writeData:[response dataUsingEncoding:NSASCIIStringEncoding]];
 }
 
@@ -273,7 +277,7 @@ BOOL startsWith(NSData *data, NSString *command) {
 
 - (void)packetSuccess:(NSData *)data
 {
-    NSLog(@"gdb rx: %@", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+    FDLog(@"gdb rx: %@", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     
     [self sendAck:true];
     SEL selector = nil;

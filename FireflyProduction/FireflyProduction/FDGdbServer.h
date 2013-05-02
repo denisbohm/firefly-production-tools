@@ -52,6 +52,7 @@
 
 @property unsigned short port;
 @property (weak) id<FDGdbServerDelegate> delegate;
+@property BOOL connected;
 
 - (void)start;
 

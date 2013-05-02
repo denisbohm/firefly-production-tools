@@ -14,5 +14,6 @@
 
 @property FDGdbServer *gdbServer;
 @property FDSerialWireDebug *serialWireDebug;
+@property BOOL halted;
 
 @end
