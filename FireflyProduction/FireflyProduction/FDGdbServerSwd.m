@@ -103,6 +103,7 @@ reg_t expediteRegisters[] = {
 - (id)init
 {
     if (self = [super init]) {
+        _logger = [[FDLogger alloc] init];
         _generalRegisterCount = sizeof(generalRegisters) / sizeof(reg_t);
         _expediteRegisterCount = sizeof(expediteRegisters) / sizeof(reg_t);
         _signal = 5; // TRAP

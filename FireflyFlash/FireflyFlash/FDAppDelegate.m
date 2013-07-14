@@ -87,6 +87,8 @@
 @property FDGdbServer *gdbServer;
 @property FDGdbServerSwd *gdbServerSwd;
 
+@property FDLogger *logger;
+
 @end
 
 @implementation FDAppDelegate
@@ -100,7 +102,7 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    [FDLogger setConsumer:self];
+    _logger = [[FDLogger alloc] init];
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *firmwarePath = [userDefaults stringForKey:@"firmwarePath"];
@@ -120,6 +122,7 @@
     _usbTableView.dataSource = _usbTableViewDataSource;
     
     _swdMonitor = [[FDUSBMonitor alloc] init];
+    _swdMonitor.logger.consumer = self;
     _swdMonitor.vendor = 0x15ba;
     _swdMonitor.product = 0x002a;
     _swdMonitor.delegate = self;
@@ -130,7 +133,9 @@
     [_swdMonitor start];
     
     _gdbServer = [[FDGdbServer alloc] init];
+    _gdbServer.logger.consumer = self;
     _gdbServerSwd = [[FDGdbServerSwd alloc] init];
+    _gdbServerSwd.logger.consumer = self;
     _gdbServer.delegate = _gdbServerSwd;
     _gdbServerSwd.gdbServer = _gdbServer;
     [_gdbServer addObserver:self forKeyPath:@"connected" options:NSKeyValueObservingOptionNew context:nil];
@@ -202,13 +207,15 @@
     return [_swdTableViewDataSource.devices objectAtIndex:row];
 }
 
-#define EnergyMicro_DebugPort_IdentifcationCode 0x2ba01477
+#define EnergyMicro_DebugPort_IdentifcationCode 0x2ba01477f
+#define Nuvoton_DebugPort_IdentifcationCode 0x0bb11477
 
 - (IBAction)swdConnect:(id)sender
 {
     FDUSBDevice *usbDevice = [self getSelectedSwdDevice];
     [usbDevice open];
     FDSerialEngine *serialEngine = [[FDSerialEngine alloc] init];
+    serialEngine.timeout = 0; // !!! need to move swd to a separate thread and enable timeout -denis
     serialEngine.usbDevice = usbDevice;
     FDSerialWireDebug *serialWireDebug = [[FDSerialWireDebug alloc] init];
     serialWireDebug.serialEngine = serialEngine;
@@ -221,21 +228,12 @@
     [serialEngine write];
     [NSThread sleepForTimeInterval:0.100];
     
-    [serialWireDebug resetDebugAccessPort];
-    uint32_t debugPortIDCode = [serialWireDebug readDebugPortIDCode];
-    if (debugPortIDCode != EnergyMicro_DebugPort_IdentifcationCode) {
-        FDLog(@"unexpected debug port identification code %08x", debugPortIDCode);
-    }
-    [serialWireDebug initializeDebugAccessPort];
-    uint32_t cpuID = [serialWireDebug readCPUID];
-    if ((cpuID & 0xfffffff0) == 0x412FC230) {
-        uint32_t n = cpuID & 0x0000000f;
-        FDLog(@"ARM Cortex-M3 r2p%d", n);
-    } else {
-        FDLog(@"CPUID = %08x", cpuID);        
-    }
+    FDCortexM *cortexM = [[FDCortexM alloc] init];
+    cortexM.serialWireDebug = serialWireDebug;
+    [cortexM identify];
     
     [serialWireDebug halt];
+    FDLog(@"CPU Halted %@", [serialWireDebug isHalted] ? @"YES" : @"NO");
     
     _gdbServerSwd.serialWireDebug = serialWireDebug;
     [_programButton setEnabled:YES];

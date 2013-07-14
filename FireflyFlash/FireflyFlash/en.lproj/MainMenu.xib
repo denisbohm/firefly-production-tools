@@ -2,7 +2,7 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1080</int>
-		<string key="IBDocument.SystemVersion">12E30</string>
+		<string key="IBDocument.SystemVersion">12E40</string>
 		<string key="IBDocument.InterfaceBuilderVersion">3084</string>
 		<string key="IBDocument.AppKitVersion">1187.39</string>
 		<string key="IBDocument.HIToolboxVersion">626.00</string>
@@ -1328,7 +1328,6 @@
 							<int key="NSvFlags">12</int>
 							<string key="NSFrame">{{13, 10}, {520, 359}}</string>
 							<reference key="NSSuperview" ref="911212272"/>
-							<reference key="NSNextKeyView" ref="230515248"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<array class="NSMutableArray" key="NSTabViewItems">
 								<object class="NSTabViewItem" id="190023561">
@@ -1557,7 +1556,7 @@
 																<int key="NSvFlags">2322</int>
 																<string key="NSFrameSize">{464, 133}</string>
 																<reference key="NSSuperview" ref="428978790"/>
-																<reference key="NSNextKeyView" ref="560379476"/>
+																<reference key="NSNextKeyView" ref="158830713"/>
 																<string key="NSReuseIdentifierKey">_NS:13</string>
 																<object class="NSTextContainer" key="NSTextContainer" id="1009073222">
 																	<object class="NSLayoutManager" key="NSLayoutManager">
@@ -1673,7 +1672,7 @@
 												</array>
 												<string key="NSFrame">{{17, 17}, {466, 135}}</string>
 												<reference key="NSSuperview" ref="230515248"/>
-												<reference key="NSNextKeyView" ref="158830713"/>
+												<reference key="NSNextKeyView" ref="428978790"/>
 												<string key="NSReuseIdentifierKey">_NS:9</string>
 												<int key="NSsFlags">133138</int>
 												<reference key="NSVScroller" ref="560379476"/>
@@ -2622,7 +2621,6 @@
 				</set>
 				<string key="NSFrameSize">{48, 48}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSNextKeyView"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<bool key="NSEnabled">YES</bool>
 				<object class="NSImageCell" key="NSCell" id="204847365">

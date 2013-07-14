@@ -30,6 +30,7 @@ typedef enum {
 
 @property (weak) id<FDGdbServerPacketDelegate> delegate;
 
+@property FDLogger *logger;
 @property FDGdbServerParserState state;
 @property uint8_t checksumUpper;
 @property NSMutableData *packet;
@@ -66,6 +67,7 @@ uint8_t checksum(NSData *data) {
 - (id)init
 {
     if (self = [super init]) {
+        _logger = [[FDLogger alloc] init];
         _state = WaitForStart;
     }
     return self;
@@ -141,6 +143,7 @@ uint8_t checksum(NSData *data) {
 - (id)init
 {
     if (self = [super init]) {
+        _logger = [[FDLogger alloc] init];
         _port = 9000;
         _parser = [[FDGdbServerParser alloc] init];
         _parser.delegate = self;

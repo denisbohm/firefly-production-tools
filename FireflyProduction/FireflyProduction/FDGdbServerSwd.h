@@ -12,6 +12,7 @@
 
 @interface FDGdbServerSwd : NSObject <FDGdbServerDelegate>
 
+@property FDLogger *logger;
 @property FDGdbServer *gdbServer;
 @property FDSerialWireDebug *serialWireDebug;
 @property BOOL halted;

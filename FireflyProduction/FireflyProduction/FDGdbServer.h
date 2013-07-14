@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class FDLogger;
+
 @protocol FDGdbServerDelegate <NSObject>
 
 @optional
@@ -50,6 +52,7 @@
 
 @interface FDGdbServer : NSObject
 
+@property FDLogger *logger;
 @property unsigned short port;
 @property (weak) id<FDGdbServerDelegate> delegate;
 @property BOOL connected;
