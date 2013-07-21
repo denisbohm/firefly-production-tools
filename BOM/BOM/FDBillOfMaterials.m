@@ -7,59 +7,18 @@
 //
 
 #import "FDBillOfMaterials.h"
+#import "FDPartSearch.h"
 #import "FDSpreadsheet.h"
 
-@interface FDPackage : NSObject
+@implementation FDOption
 
-@property NSString *name;
-@property double minSpacing;
-
-@end
-
-@interface FDDevice : NSObject
-
-@property NSString *manufacturer;
-@property NSString *orderingCode;
-
-@end
-
-@interface FDPad : NSObject
-
-@property double x;
-@property double y;
-
-@end
-
-@interface FDPart : NSObject
-
-@property NSString *name;
-@property NSString *value;
-@property FDPackage *package;
-@property NSString *manufacturer;
-@property NSString *orderingCode;
-@property NSString *distributor;
-@property NSString *distributorOrderingCode;
-@property NSString *note;
-@property NSMutableSet *variants;
-@property BOOL doNotStuff;
-
-@property NSString *namePrefix;
-@property NSUInteger nameNumber;
-
-- (void)parseName;
-
-@end
-
-@interface FDItem : NSObject
-
-@property NSString *orderingCode;
-@property BOOL doNotStuff;
-@property NSMutableArray *parts;
-@property NSString *reference;
-@property NSUInteger number;
-@property NSArray *orderQuantities;
-
-- (void)createReference;
++ (FDOption *)option:(NSString *)title value:(BOOL)value
+{
+    FDOption *option = [[FDOption alloc] init];
+    option.title = title;
+    option.value = value;
+    return option;
+}
 
 @end
 
@@ -162,16 +121,29 @@
 
 @end
 
+@implementation FDPartBuy
+@end
+
+@implementation FDBuy
+@end
+
 @interface FDBillOfMaterials ()
 
 @property NSString *directory;
 @property NSString *filename;
 @property NSArray *items;
-@property NSArray *boardQuantities;
 
 @end
 
 @implementation FDBillOfMaterials
+
+- (id)init
+{
+    if (self = [super init]) {
+        _quantities = @[ @10, @100, @3000 ];
+    }
+    return self;
+}
 
 - (FDItem *)addExtraItem:(NSMutableDictionary *)itemsByOrderingId
                     name:(NSString *)name
@@ -197,27 +169,57 @@
     return item;
 }
 
-- (void)read
+- (NSXMLDocument *)getDocument
 {
     _directory = [_schematicPath stringByDeletingLastPathComponent];
     _filename = [[_schematicPath lastPathComponent]stringByDeletingPathExtension];
     
-    NSMutableSet *variants = [NSMutableSet set];
-    // Add ! in front of variant to exclude it. -denis
-    [variants addObject:@"low-power"];
-    [variants addObject:@"efficient-power"];
-    [variants addObject:@"efficient-radio"];
-    [variants addObject:@"usb-power"];
-    [variants addObject:@"usb-charging"];
-    [variants addObject:@"usb-data"];
-
-    _boardQuantities = @[ @10, @100, @1000 ];
-
+    /*
+     // Add ! in front of variant to exclude it. -denis
+     [_options addObject:@"low-power"];
+     [_options addObject:@"efficient-power"];
+     [_options addObject:@"efficient-radio"];
+     [_options addObject:@"usb-power"];
+     [_options addObject:@"usb-charging"];
+     [_options addObject:@"usb-data"];
+     
+     */
+    
     NSError *error = nil;
     NSString *xml = [[NSString alloc] initWithContentsOfFile:_schematicPath encoding:NSUTF8StringEncoding error:&error];
     NSXMLDocument *document = [[NSXMLDocument alloc] initWithXMLString:xml options:0 error:&error];
+    return document;
+}
+
+- (NSArray *)readOptions
+{
+    NSMutableSet *variants = [NSMutableSet set];
+    NSXMLDocument *document = [self getDocument];
+    NSError *error = nil;
+    NSArray *partElements = [document objectsForXQuery:@"./eagle/drawing/schematic/parts/part" error:&error];
+    for (NSXMLElement *partElement in partElements) {
+        NSArray *attributes = [partElement objectsForXQuery:@"attribute" error:&error];
+        for (NSXMLElement *attribute in attributes) {
+            NSString *attributeName = [[attribute attributeForName:@"name"] stringValue];
+            NSString *attributeValue = [[attribute attributeForName:@"value"] stringValue];
+            if ([attributeName isEqualToString:@"VARIANTS"]) {
+                for (NSString *token in [attributeValue componentsSeparatedByString:@","]) {
+                    NSString *variant = [token hasPrefix:@"!"] ? [token substringFromIndex:1] : token;
+                    [variants addObject:variant];
+                }
+            }
+        }
+    }
+    NSArray *options = [variants allObjects];
+    return options;
+}
+
+- (void)read
+{
+    NSXMLDocument *document = [self getDocument];
     
     NSMutableDictionary *packageByName = [NSMutableDictionary dictionary];
+    NSError *error = nil;
     NSArray *packageElements = [document objectsForXQuery:@"./eagle/drawing/schematic/libraries/library/packages/package" error:&error];
     for (NSXMLElement *packageElement in packageElements) {
         NSString *name = [[packageElement attributeForName:@"name"] stringValue];
@@ -367,7 +369,7 @@
         }
 
         if (part.variants.count > 0) {
-            if (![part.variants intersectsSet:variants]) {
+            if (![part.variants intersectsSet:_options]) {
                 NSLog(@"do not stuff %@ (not in variants)", part.name);
                 part.doNotStuff = YES;
             }
@@ -415,7 +417,7 @@
     
     for (FDItem *item in _items) {
         NSMutableArray *orderQuantities = [NSMutableArray array];
-        for (NSNumber *boardQuantityNumber in _boardQuantities) {
+        for (NSNumber *boardQuantityNumber in _quantities) {
             NSInteger boardQuantity = [boardQuantityNumber integerValue];
             NSInteger quantity = item.parts.count * boardQuantity;
             FDPart *part = item.parts[0];
@@ -429,12 +431,297 @@
                 // max of 10% extra or ~1" (10 parts w/ 2mm spacing on tape)
                 quantity += MAX(ceil(quantity * 0.10), 10);
             } else {
-                quantity += 1;
+                // include 1 extra part for non-discretes if building in small qty
+                if (quantity < 100) {
+                    quantity += 1;
+                }
             }
             [orderQuantities addObject:[NSNumber numberWithInteger:quantity]];
         }
         item.orderQuantities = orderQuantities;
     }
+}
+
+- (NSArray *)sortPartBuysBySeller:(NSArray *)partBuys
+{
+    NSArray *partBuysBy = [partBuys sortedArrayUsingComparator:^NSComparisonResult(id oa, id ob) {
+        FDPartBuy *a = (FDPartBuy *)oa;
+        FDPartBuy *b = (FDPartBuy *)ob;
+        return [a.seller.name compare:b.seller.name];
+    }];
+    return partBuysBy;
+}
+
+- (NSArray *)sortPartBuysByPrice:(NSArray *)partBuys
+{
+    NSArray *partBuysByPrice = [partBuys sortedArrayUsingComparator:^NSComparisonResult(id oa, id ob) {
+        FDPartBuy *a = (FDPartBuy *)oa;
+        FDPartBuy *b = (FDPartBuy *)ob;
+        if (a.price < b.price) {
+            return NSOrderedAscending;
+        }
+        if (a.price > b.price) {
+            return NSOrderedDescending;
+        }
+        return NSOrderedSame;
+    }];
+    return partBuysByPrice;
+}
+
+- (NSArray *)sortPartBuysByPriceAndLeadTime:(NSArray *)partBuys
+{
+    NSArray *partBuysByPrice = [partBuys sortedArrayUsingComparator:^NSComparisonResult(id oa, id ob) {
+        FDPartBuy *a = (FDPartBuy *)oa;
+        FDPartBuy *b = (FDPartBuy *)ob;
+        if ((a.leadDays != 0) != (b.leadDays != 0)) {
+            return a.leadDays != 0 ? NSOrderedAscending : NSOrderedDescending;
+        }
+        if (a.price < b.price) {
+            return NSOrderedAscending;
+        }
+        if (a.price > b.price) {
+            return NSOrderedDescending;
+        }
+        return NSOrderedSame;
+    }];
+    return partBuysByPrice;
+}
+
+- (FDPartBuy *)getSingleSellerFullBuy:(FDItem *)item itemQuantity:(NSUInteger)itemQuantity sellers:(NSArray *)sellers
+{
+    NSMutableArray *partBuys = [NSMutableArray array];
+    for (FDPartSeller *seller in sellers) {
+        if ((_sellers != nil) && ![_sellers containsObject:seller.name]) {
+            continue;
+        }
+        for (FDPartOffer *offer in seller.offers) {
+            for (FDPartPriceAtQuantity *priceAtQuantity in offer.priceAtQuantitys) {
+                if (offer.stock == FDPartStock.InStock) {
+                    NSUInteger quantity = itemQuantity;
+                    if (quantity < priceAtQuantity.quantity) {
+                        quantity = priceAtQuantity.quantity;
+                    }
+                    if (quantity < offer.minimumOrderQuantity) {
+                        quantity = offer.minimumOrderQuantity;
+                    }
+                    if (offer.orderMultiple) {
+                        if ((quantity % offer.orderMultiple) != 0) {
+                            quantity += offer.orderMultiple - quantity % offer.orderMultiple;
+                        }
+                    }
+                    if (offer.inStockQuantity >= quantity) {
+                        double price = priceAtQuantity.price * quantity;
+                        FDPartBuy *buy = [[FDPartBuy alloc] init];
+                        buy.item = item;
+                        buy.seller = seller;
+                        buy.offer = offer;
+                        buy.priceAtQuantity = priceAtQuantity;
+                        buy.quantity = quantity;
+                        buy.price = price;
+                        [partBuys addObject:buy];
+                    }
+                }
+            }
+        }
+    }
+    if (partBuys.count == 0) {
+        return nil;
+    }
+    NSArray *partBuysByPrice = [self sortPartBuysByPrice:partBuys];
+    return partBuysByPrice[0];
+}
+
+- (FDPartBuy *)getBackorderBuy:(FDItem *)item itemQuantity:(NSUInteger)itemQuantity sellers:(NSArray *)sellers
+{
+    NSMutableArray *partBuys = [NSMutableArray array];
+    for (FDPartSeller *seller in sellers) {
+        if ((_sellers != nil) && ![_sellers containsObject:seller.name]) {
+            continue;
+        }
+        for (FDPartOffer *offer in seller.offers) {
+            for (FDPartPriceAtQuantity *priceAtQuantity in offer.priceAtQuantitys) {
+                if ((offer.stock == FDPartStock.InStock) || (offer.stock == FDPartStock.NotInStock)) {
+                    NSUInteger quantity = itemQuantity;
+                    if (quantity < priceAtQuantity.quantity) {
+                        quantity = priceAtQuantity.quantity;
+                    }
+                    if (quantity < offer.minimumOrderQuantity) {
+                        quantity = offer.minimumOrderQuantity;
+                    }
+                    if (offer.orderMultiple) {
+                        if ((quantity % offer.orderMultiple) != 0) {
+                            quantity += offer.orderMultiple - quantity % offer.orderMultiple;
+                        }
+                    }
+                    double price = priceAtQuantity.price * quantity;
+                    FDPartBuy *buy = [[FDPartBuy alloc] init];
+                    buy.item = item;
+                    buy.seller = seller;
+                    buy.offer = offer;
+                    buy.priceAtQuantity = priceAtQuantity;
+                    buy.quantity = quantity;
+                    buy.price = price;
+                    buy.backorder = YES;
+                    buy.leadDays = offer.leadDays;
+                    [partBuys addObject:buy];
+                }
+            }
+        }
+    }
+    if (partBuys.count == 0) {
+        return nil;
+    }
+    NSArray *partBuysByPrice = [self sortPartBuysByPriceAndLeadTime:partBuys];
+    return partBuysByPrice[0];
+}
+
+- (NSArray *)sortPartBuysByPiecePrice:(NSArray *)partBuys
+{
+    NSArray *partBuysByPrice = [partBuys sortedArrayUsingComparator:^NSComparisonResult(id oa, id ob) {
+        FDPartBuy *a = (FDPartBuy *)oa;
+        FDPartBuy *b = (FDPartBuy *)ob;
+        double aPiecePrice = a.price / a.quantity;
+        double bPiecePrice = b.price / b.quantity;
+        if (aPiecePrice < bPiecePrice) {
+            return NSOrderedAscending;
+        }
+        if (aPiecePrice > bPiecePrice) {
+            return NSOrderedDescending;
+        }
+        return NSOrderedSame;
+    }];
+    return partBuysByPrice;
+}
+
+- (FDPartBuy *)getMultipleSellerBuy:(FDItem *)item itemQuantity:(NSUInteger)itemQuantity sellers:(NSArray *)sellers
+{
+    if ([@"nRF8001-R2Q32-T" isEqualToString:item.orderingCode]) {
+        NSLog(@"nice breakpoint");
+    }
+    NSMutableArray *partialPartBuys = [NSMutableArray array];
+    for (FDPartSeller *seller in sellers) {
+        if ((_sellers != nil) && ![_sellers containsObject:seller.name]) {
+            continue;
+        }
+        NSMutableArray *sellerPartBuys = [NSMutableArray array];
+        for (FDPartOffer *offer in seller.offers) {
+            for (FDPartPriceAtQuantity *priceAtQuantity in offer.priceAtQuantitys) {
+                if (offer.stock == FDPartStock.InStock) {
+                    NSUInteger quantity = itemQuantity;
+                    if (quantity < priceAtQuantity.quantity) {
+                        quantity = priceAtQuantity.quantity;
+                    }
+                    if (quantity < offer.minimumOrderQuantity) {
+                        quantity = offer.minimumOrderQuantity;
+                    }
+                    if (offer.orderMultiple) {
+                        if ((quantity % offer.orderMultiple) != 0) {
+                            quantity += offer.orderMultiple - quantity % offer.orderMultiple;
+                        }
+                    }
+                    if (offer.inStockQuantity < quantity) {
+                        quantity = offer.inStockQuantity;
+                    }
+                    if (quantity >= priceAtQuantity.quantity) {
+                        double price = priceAtQuantity.price * quantity;
+                        FDPartBuy *buy = [[FDPartBuy alloc] init];
+                        buy.item = item;
+                        buy.seller = seller;
+                        buy.offer = offer;
+                        buy.priceAtQuantity = priceAtQuantity;
+                        buy.quantity = quantity;
+                        buy.price = price;
+                        [sellerPartBuys addObject:buy];
+                    }
+                }
+            }
+        }
+        if (sellerPartBuys.count > 0) {
+            NSArray *sellerPartBuysByPrice = [self sortPartBuysByPrice:sellerPartBuys];
+            [partialPartBuys addObject:sellerPartBuysByPrice[0]];
+        }
+    }
+    NSMutableArray *partBuys = [NSMutableArray array];
+    NSArray *partialPartBuysByPrice = [self sortPartBuysByPiecePrice:partialPartBuys];
+    NSUInteger totalQuantity = 0;
+    double totalPrice = 0.0;
+    for (FDPartBuy *partBuy in partialPartBuysByPrice) {
+        if (totalQuantity < itemQuantity) {
+            totalQuantity += partBuy.quantity;
+            totalPrice += partBuy.price;
+            [partBuys addObject:partBuy];
+        }
+    }
+
+    FDPartBuy *buy = [[FDPartBuy alloc] init];
+    buy.item = item;
+//    buy.seller = seller;
+//    buy.offer = offer;
+//    buy.priceAtQuantity = priceAtQuantity;
+    buy.quantity += totalQuantity;
+    buy.price += totalPrice;
+    buy.partialPartBuys = partBuys;
+    return buy;
+}
+
+- (FDBuy *)getBestBuy:(FDPartSearch *)partSearch quantityIndex:(NSUInteger)quantityIndex
+{
+    NSUInteger leadDays = 0;
+    NSMutableArray *partBuys = [NSMutableArray array];
+    NSMutableArray *lowStockItems = [NSMutableArray array];
+    double totalPrice = 0.0;
+    for (FDItem *item in _items) {
+        if (item.doNotStuff) {
+            NSLog(@"DNS %@", item.orderingCode);
+            continue;
+        }
+        NSUInteger itemQuantity = [item.orderQuantities[quantityIndex] unsignedIntegerValue];
+        FDPartBuy *partBuy = nil;
+        NSArray *sellers = [partSearch findOffersWithManufacturerPartNumber:item.orderingCode];
+        partBuy = [self getSingleSellerFullBuy:item itemQuantity:itemQuantity sellers:sellers];
+        if (partBuy == nil) {
+            partBuy = [self getMultipleSellerBuy:item itemQuantity:itemQuantity sellers:sellers];
+            for (FDPartBuy *buy in partBuy.partialPartBuys) {
+                NSLog(@"%@ %lu of %lu %@", item.orderingCode, (unsigned long)buy.quantity, (unsigned long)itemQuantity, buy.seller.name);
+            }
+        }
+        if (partBuy.quantity < itemQuantity) {
+            NSLog(@"%@ only %lu of %lu available", item.orderingCode, (unsigned long)partBuy.quantity, (unsigned long)itemQuantity);
+            [lowStockItems addObject:item];
+            
+            NSUInteger backorderQuantity = itemQuantity - partBuy.quantity;
+            FDPartBuy *backorderPartBuy = [self getBackorderBuy:item itemQuantity:backorderQuantity sellers:sellers];
+            if (backorderPartBuy == nil) {
+                NSLog(@"!!! NO SOURCE FOR %@ QTY %lu", item.orderingCode, (unsigned long)backorderQuantity);
+            } else {
+                NSLog(@"BACKORDER %lu %@ %@ lead time is %lu days", backorderQuantity, item.orderingCode, backorderPartBuy.seller.name, backorderPartBuy.leadDays);
+                [partBuy.partialPartBuys addObject:backorderPartBuy];
+                if (backorderPartBuy.leadDays > leadDays) {
+                    leadDays = backorderPartBuy.leadDays;
+                }
+            }
+        }
+        [partBuys addObject:partBuy];
+        totalPrice += partBuy.price;
+    }
+    
+    FDBuy *buy = [[FDBuy alloc] init];
+    buy.quantity = [_quantities[quantityIndex] unsignedIntegerValue];
+    buy.price = totalPrice;
+    buy.partBuys = partBuys;
+    buy.leadDays = leadDays;
+    buy.lowStockItems = lowStockItems;
+    return buy;
+}
+
+- (void)getPricingAndAvailability
+{
+    FDPartSearch *partSearch = [[FDPartSearch alloc] init];
+    NSMutableArray *buys = [NSMutableArray array];
+    for (NSUInteger i = 0; i < _quantities.count; ++i) {
+        [buys addObject:[self getBestBuy:partSearch quantityIndex:i]];
+    }
+    _buys = buys;
 }
 
 + (NSComparisonResult)compareItem1:(FDItem *)firstObjToCompare item2:(FDItem *)secondObjToCompare
@@ -640,7 +927,7 @@
     
     NSMutableString *export = [NSMutableString string];
     NSLog(@"Screaming Circuits Export");
-    [export appendString:@"Item #\tQty\tRef Des\tManufacturer\tMfg Part #\tDist. Part #\tDescription\tPackage\tType\n"];
+    [export appendString:@"Item #\tQty\tRef Des\tManufacturer\tMfg Part #\tDistributor\tDescription\tPackage\tType\n"];
     NSUInteger uniquePartCount = 0;
     NSUInteger surfaceMountCount = 0;
     NSUInteger finePitchCount = 0;
@@ -683,6 +970,12 @@
                 [description appendString:@" "];
             }
             [description appendString:part.note];
+        }
+        if (part.doNotStuff) {
+            if (description.length > 0) {
+                [description appendString:@" "];
+            }
+            [description appendString:@"(do not stuff)"];
         }
 
         [export appendFormat:@"%lu\t%lu\t%@\t%@\t%@\t%@\t%@\t%@\t%@\n", (unsigned long)item.number, (unsigned long)item.parts.count, item.reference, part.manufacturer, part.orderingCode, distributor, description, packageName, type];
@@ -729,6 +1022,137 @@
     [spreadsheet addNumberCell:0]; // leadless (BGA, etc)
     
     [self write:@"bom-screaming-circuits.xml" content:[spreadsheet content]];
+}
+
++ (NSString *)eta:(NSUInteger)leadDays
+{
+    NSDate *date = [NSDate dateWithTimeIntervalSinceNow:leadDays*24*60*60];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"MMM dd"];
+    return [dateFormatter stringFromDate:date];
+}
+
+- (void)appendPartBuy:(NSMutableString *)export partBuy:(FDPartBuy *)partBuy
+{
+    [export appendFormat:@"%@ %@ %lu $%0.2f (%lu $%0.5f)", partBuy.item.orderingCode, partBuy.seller.name,(unsigned long)partBuy.quantity, partBuy.price, partBuy.priceAtQuantity.quantity, partBuy.priceAtQuantity.price];
+    if (partBuy.backorder) {
+        if (partBuy.leadDays == 0) {
+            [export appendString:@" BACKORDER - UNKNOWN LEAD TIME"];
+        } else {
+            [export appendFormat:@" BACKORDER - %@ ETA", [FDBillOfMaterials eta:partBuy.leadDays]];
+        }
+    }
+    [export appendString:@"\n"];
+}
+
+- (void)appendPartBuys:(NSMutableString *)export partBuys:(NSArray *)partBuys
+{
+    for (FDPartBuy *partBuy in partBuys) {
+        if (partBuy.partialPartBuys != nil) {
+            for (FDPartBuy *partialPartBuy in partBuy.partialPartBuys) {
+                [self appendPartBuy:export partBuy:partialPartBuy];
+            }
+        } else {
+            [self appendPartBuy:export partBuy:partBuy];
+        }
+    }
+}
+
+- (NSArray *)flattenPartBuys:(NSArray *)partBuys
+{
+    NSMutableArray *flatPartBuys = [NSMutableArray array];
+    for (FDPartBuy *partBuy in partBuys) {
+        if (partBuy.partialPartBuys != nil) {
+            for (FDPartBuy *partialPartBuy in partBuy.partialPartBuys) {
+                [flatPartBuys addObject:partialPartBuy];
+            }
+        } else {
+            [flatPartBuys addObject:partBuy];
+        }
+    }
+    return flatPartBuys;
+}
+
+- (void)exportBuy:(FDBuy *)buy
+{
+    NSMutableArray *backorderPartBuys = [NSMutableArray array];
+    for (FDPartBuy *partBuy in buy.partBuys) {
+        if (partBuy.partialPartBuys != nil) {
+            for (FDPartBuy *partialPartBuy in partBuy.partialPartBuys) {
+                if (partialPartBuy.backorder) {
+                    [backorderPartBuys addObject:partialPartBuy];
+                }
+            }
+        } else {
+            if (partBuy.backorder) {
+                [backorderPartBuys addObject:partBuy];
+            }
+        }
+    }
+
+    NSMutableString *export = [NSMutableString string];
+    
+    [export appendFormat:@"qty %lu $%0.2f/ea $%0.2f", buy.quantity, buy.price / buy.quantity, buy.price];
+    if (buy.lowStockItems.count == 0) {
+        [export appendString:@" in stock"];
+    } else {
+        [export appendFormat:@" %lu BACKORDERS", (unsigned long)buy.lowStockItems.count];
+        if (buy.leadDays == 0) {
+            [export appendString:@" - UNKNOWN LEAD TIME"];
+        } else {
+            [export appendFormat:@" - %@ ETA", [FDBillOfMaterials eta:buy.leadDays]];
+        }
+    }
+    [export appendString:@"\n\n"];
+    
+    if (backorderPartBuys.count > 0) {
+        NSArray *sortedPartBuys = [backorderPartBuys sortedArrayUsingComparator:^NSComparisonResult(id oa, id ob) {
+            FDPartBuy *a = (FDPartBuy *)oa;
+            FDPartBuy *b = (FDPartBuy *)ob;
+            if ((a.leadDays == 0) != (b.leadDays == 0)) {
+                return a.leadDays == 0 ? NSOrderedAscending : NSOrderedDescending;
+            }
+            if (a.quantity > b.quantity) {
+                return NSOrderedAscending;
+            }
+            if (a.quantity < b.quantity) {
+                return NSOrderedDescending;
+            }
+            return [a.item.orderingCode compare:b.item.orderingCode];
+        }];
+        [export appendString:@"BACKORDERS:\n"];
+        [self appendPartBuys:export partBuys:sortedPartBuys];
+        [export appendString:@"\n"];
+    }
+    
+    NSArray *partBuys = [[self flattenPartBuys:buy.partBuys] sortedArrayUsingComparator:^NSComparisonResult(id oa, id ob) {
+        FDPartBuy *a = (FDPartBuy *)oa;
+        FDPartBuy *b = (FDPartBuy *)ob;
+        return [a.item.orderingCode compare:b.item.orderingCode];
+    }];
+
+    [export appendString:@"Buys By Part:\n"];
+    [self appendPartBuys:export partBuys:partBuys];
+    [export appendString:@"\n"];
+    
+    NSArray *partBuysBySeller = [self sortPartBuysBySeller:partBuys];
+    [export appendString:@"Buys By Seller:\n"];
+    [self appendPartBuys:export partBuys:partBuysBySeller];
+    [export appendString:@"\n"];
+    
+    NSArray *partBuysByPrice = [[[self sortPartBuysByPrice:partBuys] reverseObjectEnumerator] allObjects];
+    [export appendString:@"Buys By Price:\n"];
+    [self appendPartBuys:export partBuys:partBuysByPrice];
+    [export appendString:@"\n"];
+    
+    [self write:[NSString stringWithFormat:@"buy-%lu.txt", (unsigned long)buy.quantity] content:export];
+}
+
+- (void)exportBuys
+{
+    for (FDBuy *buy in _buys) {
+        [self exportBuy:buy];
+    }
 }
 
 @end

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9202A681179AD949006C4AA9 /* FDPartSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 9202A680179AD949006C4AA9 /* FDPartSearch.m */; };
 		92B51A6A1745508E00D4A423 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92B51A691745508E00D4A423 /* Cocoa.framework */; };
 		92B51A741745508E00D4A423 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92B51A721745508E00D4A423 /* InfoPlist.strings */; };
 		92B51A761745508E00D4A423 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B51A751745508E00D4A423 /* main.m */; };
@@ -33,6 +34,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9202A67F179AD949006C4AA9 /* FDPartSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDPartSearch.h; sourceTree = "<group>"; };
+		9202A680179AD949006C4AA9 /* FDPartSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDPartSearch.m; sourceTree = "<group>"; };
 		92B51A661745508E00D4A423 /* BOM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BOM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		92B51A691745508E00D4A423 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		92B51A6C1745508E00D4A423 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -122,14 +125,16 @@
 		92B51A6F1745508E00D4A423 /* BOM */ = {
 			isa = PBXGroup;
 			children = (
-				92B51AA21745513000D4A423 /* FDSpreadsheet.h */,
-				92B51AA31745513000D4A423 /* FDSpreadsheet.m */,
-				92B51A9D174550F400D4A423 /* FDBillOfMaterials.h */,
-				92B51A9E174550F400D4A423 /* FDBillOfMaterials.m */,
+				92B51A701745508E00D4A423 /* Supporting Files */,
+				92B51A7E1745508E00D4A423 /* MainMenu.xib */,
 				92B51A7B1745508E00D4A423 /* FDAppDelegate.h */,
 				92B51A7C1745508E00D4A423 /* FDAppDelegate.m */,
-				92B51A7E1745508E00D4A423 /* MainMenu.xib */,
-				92B51A701745508E00D4A423 /* Supporting Files */,
+				92B51A9D174550F400D4A423 /* FDBillOfMaterials.h */,
+				92B51A9E174550F400D4A423 /* FDBillOfMaterials.m */,
+				9202A67F179AD949006C4AA9 /* FDPartSearch.h */,
+				9202A680179AD949006C4AA9 /* FDPartSearch.m */,
+				92B51AA21745513000D4A423 /* FDSpreadsheet.h */,
+				92B51AA31745513000D4A423 /* FDSpreadsheet.m */,
 			);
 			path = BOM;
 			sourceTree = "<group>";
@@ -280,6 +285,7 @@
 				92B51A7D1745508E00D4A423 /* FDAppDelegate.m in Sources */,
 				92B51A9F174550F400D4A423 /* FDBillOfMaterials.m in Sources */,
 				92B51AA41745513000D4A423 /* FDSpreadsheet.m in Sources */,
+				9202A681179AD949006C4AA9 /* FDPartSearch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,6 +475,7 @@
 				92B51A991745508E00D4A423 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		92B51A9A1745508E00D4A423 /* Build configuration list for PBXNativeTarget "BOMTests" */ = {
 			isa = XCConfigurationList;
@@ -477,6 +484,7 @@
 				92B51A9C1745508E00D4A423 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
