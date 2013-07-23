@@ -737,4 +737,47 @@ static int get_array_length(Dwarf_Debug dbg, Dwarf_Die die, int *length) {
     [self loadProgram:cfilename];
 }
 
+- (NSArray *)combineSectionsType:(FDExecutableSectionType)type
+                         address:(uint32_t)address
+                          length:(uint32_t)length
+                        pageSize:(uint32_t)pageSize
+{
+    uint32_t end = address + length;
+    uint32_t min = 0xffffffff;
+    uint32_t max = 0x00000000;
+    NSMutableArray *sections = [NSMutableArray array];
+    NSMutableArray *candidates = [NSMutableArray array];
+    for (FDExecutableSection *section in _sections) {
+        uint32_t sectionEnd = section.address + (uint32_t)section.data.length;
+        if ((section.type != type) || (section.address < address) || (sectionEnd > end)) {
+            [sections addObject:section];
+            continue;
+        }
+        if (section.address < min) {
+            min = section.address;
+        }
+        if (sectionEnd > max) {
+            max = sectionEnd;
+        }
+        [candidates addObject:section];
+    }
+    if (candidates.count > 0) {
+        min = min & ~(pageSize - 1); // round down to page boundary
+        max = (max + (pageSize - 1)) & ~(pageSize - 1); // round up to page boundary
+        uint32_t combinedLength = max - min;
+        NSMutableData *data = [NSMutableData data];
+        data.length = combinedLength;
+        for (FDExecutableSection *section in candidates) {
+            uint32_t location = section.address - min;
+            [data replaceBytesInRange:NSMakeRange(location, section.data.length) withBytes:section.data.bytes];
+        }
+        FDExecutableSection *section = [[FDExecutableSection alloc] init];
+        section.type = type;
+        section.address = min;
+        section.data = data;
+        [sections addObject:section];
+    }
+    return sections;
+}
+
 @end

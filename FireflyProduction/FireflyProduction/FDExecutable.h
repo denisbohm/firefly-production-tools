@@ -34,4 +34,11 @@ typedef enum {
 
 - (void)load:(NSString *)filename;
 
+// combine sections withing the given address range into sections that
+// start and stop on page boundaries
+- (NSArray *)combineSectionsType:(FDExecutableSectionType)type
+                         address:(uint32_t)address
+                          length:(uint32_t)length
+                        pageSize:(uint32_t)pageSize;
+
 @end
