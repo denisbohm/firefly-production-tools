@@ -175,15 +175,14 @@
                     FDLog(@"ignoring RAM data for address 0x%08x length %lu", section.address, (unsigned long)section.data.length);
                     continue;
                 }
-                FDLog(@"writing flash at 0x%08x length %lu", section.address, (unsigned long)section.data.length);
+//                FDLog(@"writing flash at 0x%08x length %lu", section.address, (unsigned long)section.data.length);
                 [self writePages:section.address data:section.data];
 // slower method using SWD only (no flash function required in RAM -denis
 //                [_serialWireDebug program:section.address data:section.data];
                 NSData *verify = [_serialWireDebug readMemory:section.address length:(uint32_t)section.data.length];
-                if ([section.data isEqualToData:verify]) {
-                    FDLog(@"write verified");
-                } else {
-                    FDLog(@"write verification failed");
+                if (![section.data isEqualToData:verify]) {
+                    FDLog(@"write verification failed!");
+                    @throw [NSException exceptionWithName:@"FlashVerificationFailure" reason:@"flash verification failure" userInfo:nil];
                 }
             } break;
         }
