@@ -661,7 +661,7 @@ static int get_array_length(Dwarf_Debug dbg, Dwarf_Die die, int *length) {
             n += data->d_size;
         }
 
-        NSLog(@"Section %-4.4jd %s %08x %ld", (uintmax_t) elf_ndxscn(scn), name, address, sectionData.length);
+//        NSLog(@"Section %-4.4jd %s %08x %ld", (uintmax_t) elf_ndxscn(scn), name, address, sectionData.length);
         
         FDExecutableSection *section = [[FDExecutableSection alloc] init];
         section.type = FDExecutableSectionTypeProgram;

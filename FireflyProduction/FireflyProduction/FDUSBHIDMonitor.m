@@ -74,7 +74,7 @@ void FDUSBHIDDeviceInputReportCallback(void *context, IOReturn result, void *sen
     if (ioReturn != kIOReturnSuccess) {
         
     }
-    IOHIDDeviceScheduleWithRunLoop(_hidDeviceRef, _monitor.runLoopRef, kCFRunLoopDefaultMode);
+    IOHIDDeviceScheduleWithRunLoop(_hidDeviceRef, _monitor.runLoopRef, kCFRunLoopCommonModes); // kCFRunLoopDefaultMode);
     IOHIDDeviceRegisterInputReportCallback(_hidDeviceRef, (uint8_t *)_inputData.bytes, _inputData.length, FDUSBHIDDeviceInputReportCallback, (__bridge void *)self);
     
     _isOpen = true;
@@ -86,7 +86,7 @@ void FDUSBHIDDeviceInputReportCallback(void *context, IOReturn result, void *sen
         return;
     }
     
-    IOHIDDeviceUnscheduleFromRunLoop(_hidDeviceRef, _monitor.runLoopRef, kCFRunLoopDefaultMode);
+    IOHIDDeviceUnscheduleFromRunLoop(_hidDeviceRef, _monitor.runLoopRef, kCFRunLoopCommonModes); // kCFRunLoopDefaultMode);
     IOHIDDeviceRegisterInputReportCallback(_hidDeviceRef, NULL, 0, NULL, (__bridge void *)self);
     IOHIDDeviceClose(_hidDeviceRef, kIOHIDOptionsTypeNone);
     
@@ -150,7 +150,7 @@ void FDUSBHIDMonitorDeviceMatchingCallback(void *context, IOReturn result, void 
 - (void)hidRunLoop
 {
     _runLoopRef = CFRunLoopGetCurrent();
-    IOHIDManagerScheduleWithRunLoop(_hidManagerRef, _runLoopRef, kCFRunLoopDefaultMode);
+    IOHIDManagerScheduleWithRunLoop(_hidManagerRef, _runLoopRef, kCFRunLoopCommonModes); // kCFRunLoopDefaultMode);
     IOReturn ioReturn = IOHIDManagerOpen(_hidManagerRef, 0);
     if (ioReturn != kIOReturnSuccess) {
         

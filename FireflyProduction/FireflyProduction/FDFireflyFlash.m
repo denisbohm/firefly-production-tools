@@ -64,7 +64,6 @@
     _cortexM = [[FDCortexM alloc] init];
     _cortexM.serialWireDebug = _serialWireDebug;
     _cortexM.logger.consumer = _logger.consumer;
-    [_cortexM identify];
     
     _family = [_serialWireDebug readMemoryUInt8:EFM32_PART_FAMILY];
 
