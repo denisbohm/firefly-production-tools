@@ -189,4 +189,16 @@
     }
 }
 
+- (void)setDebugLock
+{
+    uint8_t bytes[] = {0, 0, 0, 0};
+    [_serialWireDebug flash:EFM32_LB_DLW data:[NSData dataWithBytes:bytes length:4]];
+}
+
+- (BOOL)debugLock
+{
+    uint32_t value = [_serialWireDebug readMemory:EFM32_LB_DLW];
+    return (value & 0x0000000f) != 0x0000000f;
+}
+
 @end

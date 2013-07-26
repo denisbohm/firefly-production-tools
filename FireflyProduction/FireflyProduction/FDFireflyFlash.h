@@ -24,4 +24,7 @@
 
 - (void)program:(FDExecutable *)executable;
 
+- (void)setDebugLock;
+- (BOOL)debugLock;
+
 @end
