@@ -108,10 +108,6 @@
 
 - (void)getPricingAndAvailability;
 
-- (void)exportForDigikey;
-- (void)exportForMouser;
-- (void)exportForArrow;
-- (void)exportForRichardsonRFPD;
 - (void)exportForScreamingCircuits;
 
 - (void)exportBuys;

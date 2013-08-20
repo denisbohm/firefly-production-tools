@@ -225,10 +225,6 @@
     [self read];
     
     [_bom exportForScreamingCircuits];
-    [_bom exportForDigikey];
-    [_bom exportForMouser];
-    [_bom exportForArrow];
-    [_bom exportForRichardsonRFPD];
 }
 
 @end

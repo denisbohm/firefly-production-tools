@@ -837,89 +837,6 @@
     }
 }
 
-- (void)exportForDigikey
-{
-    NSMutableString *export = [NSMutableString string];
-    NSLog(@"Digikey Export");
-    for (FDItem *item in _items) {
-        if (item.doNotStuff) {
-            continue;
-        }
-        FDPart *part = item.parts[0];
-        if ((part.distributor != nil) && ![part.distributor isEqualToString:@"Digikey"]) {
-            continue;
-        }
-        for (NSNumber *orderQuantityNumber in item.orderQuantities) {
-            unsigned long orderQuantity = [orderQuantityNumber unsignedLongValue];
-            [export appendFormat:@"%lu\t", orderQuantity];
-        }
-        NSString *distributorOrderingCode = @"";
-        if (part.distributorOrderingCode != nil) {
-            distributorOrderingCode = part.distributorOrderingCode;
-        }
-        [export appendFormat:@"%@\t%@\t%@\n", item.orderingCode, distributorOrderingCode, item.reference];
-    }
-    NSLog(@"%@", export);
-    [self write:@"bom-digikey.txt" content:export];
-}
-
-- (void)exportForMouser
-{
-    NSMutableString *export = [NSMutableString string];
-    NSLog(@"Mouser Export");
-    for (FDItem *item in _items) {
-        if (item.doNotStuff) {
-            continue;
-        }
-        FDPart *part = item.parts[0];
-        if ((part.distributor == nil) || ![part.distributor isEqualToString:@"Mouser"]) {
-            continue;
-        }
-        unsigned long orderQuantity = [item.orderQuantities[0] unsignedLongValue];
-        [export appendFormat:@"%@|%lu\n", item.orderingCode, orderQuantity];
-    }
-    NSLog(@"%@", export);
-    [self write:@"bom-mouser.txt" content:export];
-}
-
-- (void)exportForArrow
-{
-    NSMutableString *export = [NSMutableString string];
-    NSLog(@"Arrow Export");
-    for (FDItem *item in _items) {
-        if (item.doNotStuff) {
-            continue;
-        }
-        FDPart *part = item.parts[0];
-        if ((part.distributor == nil) || ![part.distributor isEqualToString:@"Arrow"]) {
-            continue;
-        }
-        unsigned long orderQuantity = [item.orderQuantities[0] unsignedLongValue];
-        [export appendFormat:@"%@|%lu\n", item.orderingCode, orderQuantity];
-    }
-    NSLog(@"%@", export);
-    [self write:@"bom-arrow.txt" content:export];
-}
-
-- (void)exportForRichardsonRFPD
-{
-    NSMutableString *export = [NSMutableString string];
-    NSLog(@"RichardsonRFPD Export");
-    for (FDItem *item in _items) {
-        if (item.doNotStuff) {
-            continue;
-        }
-        FDPart *part = item.parts[0];
-        if ((part.distributor == nil) || ![part.distributor isEqualToString:@"RichardsonRFPD"]) {
-            continue;
-        }
-        unsigned long orderQuantity = [item.orderQuantities[0] unsignedLongValue];
-        [export appendFormat:@"%@|%lu\n", item.orderingCode, orderQuantity];
-    }
-    NSLog(@"%@", export);
-    [self write:@"bom-richardsonrfpd.txt" content:export];
-}
-
 - (void)exportForScreamingCircuits
 {
     FDSpreadsheet *spreadsheet = [[FDSpreadsheet alloc] init];
@@ -1073,6 +990,46 @@
     return flatPartBuys;
 }
 
+- (void)exportBuy:(FDBuy *)buy partBuysForDigikey:(NSArray *)partBuys
+{
+    NSString *seller = @"Digi-Key";
+    NSMutableString *export = [NSMutableString string];
+    NSLog(@"%@ Export", seller);
+    for (FDPartBuy *partBuy in partBuys) {
+        if (![seller isEqualToString:partBuy.seller.name]) {
+            continue;
+        }
+        FDItem *item = partBuy.item;
+        NSString *distributorOrderingCode = @"";
+        FDPart *part = item.parts[0];
+        if ((part.distributor != nil) && [part.distributor isEqualToString:@"Digikey"]) {
+            distributorOrderingCode = part.distributorOrderingCode;
+        }
+        [export appendFormat:@"%lu\t%@\t%@\t%@\n", (unsigned long)partBuy.quantity, item.orderingCode, distributorOrderingCode, partBuy.item.reference];
+    }
+    NSLog(@"%@", export);
+    [self write:[NSString stringWithFormat:@"bom-%lu-%@.txt", (unsigned long)buy.quantity, seller] content:export];
+}
+
+- (void)exportBuy:(FDBuy *)buy partBuys:(NSArray *)partBuys seller:(NSString *)seller
+{
+    if ([@"Digi-Key" isEqualToString:seller]) {
+        [self exportBuy:buy partBuysForDigikey:partBuys];
+        return;
+    }
+    
+    NSMutableString *export = [NSMutableString string];
+    NSLog(@"%@ Export", seller);
+    for (FDPartBuy *partBuy in partBuys) {
+        if (![seller isEqualToString:partBuy.seller.name]) {
+            continue;
+        }
+        [export appendFormat:@"%@|%lu|%@\n", partBuy.item.orderingCode, (unsigned long)partBuy.quantity, partBuy.item.reference];
+    }
+    NSLog(@"%@", export);
+    [self write:[NSString stringWithFormat:@"bom-%lu-%@.txt", (unsigned long)buy.quantity, seller] content:export];
+}
+
 - (void)exportBuy:(FDBuy *)buy
 {
     NSMutableArray *backorderPartBuys = [NSMutableArray array];
@@ -1094,16 +1051,19 @@
     
     [export appendFormat:@"qty %lu $%0.2f/ea $%0.2f", buy.quantity, buy.price / buy.quantity, buy.price];
     if (buy.lowStockItems.count == 0) {
-        [export appendString:@" in stock"];
+        [export appendString:@" in stock\n"];
     } else {
         [export appendFormat:@" %lu BACKORDERS", (unsigned long)buy.lowStockItems.count];
         if (buy.leadDays == 0) {
-            [export appendString:@" - UNKNOWN LEAD TIME"];
+            [export appendString:@" - UNKNOWN LEAD TIME\n"];
         } else {
-            [export appendFormat:@" - %@ ETA", [FDBillOfMaterials eta:buy.leadDays]];
+            [export appendFormat:@" - %@ ETA\n", [FDBillOfMaterials eta:buy.leadDays]];
+        }
+        for (FDItem *item in buy.lowStockItems) {
+            [export appendFormat:@"  %@\n", item.orderingCode];
         }
     }
-    [export appendString:@"\n\n"];
+    [export appendString:@"\n"];
     
     if (backorderPartBuys.count > 0) {
         NSArray *sortedPartBuys = [backorderPartBuys sortedArrayUsingComparator:^NSComparisonResult(id oa, id ob) {
@@ -1146,6 +1106,14 @@
     [export appendString:@"\n"];
     
     [self write:[NSString stringWithFormat:@"buy-%lu.txt", (unsigned long)buy.quantity] content:export];
+    
+    NSMutableSet *sellers = [NSMutableSet set];
+    for (FDPartBuy *partBuy in partBuys) {
+        [sellers addObject:partBuy.seller.name];
+    }
+    for (NSString *seller in sellers) {
+        [self exportBuy:buy partBuys:partBuys seller:seller];
+    }
 }
 
 - (void)exportBuys
