@@ -41,4 +41,9 @@ typedef enum {
                           length:(uint32_t)length
                         pageSize:(uint32_t)pageSize;
 
+- (NSArray *)combineAllSectionsType:(FDExecutableSectionType)type
+                            address:(uint32_t)address
+                             length:(uint32_t)length
+                           pageSize:(uint32_t)pageSize;
+
 @end

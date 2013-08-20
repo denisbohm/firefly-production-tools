@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9214495A17BED43200FC6BAF /* FDRadioTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9214495817BED43200FC6BAF /* FDRadioTest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9214495B17BED43200FC6BAF /* FDRadioTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9214495917BED43200FC6BAF /* FDRadioTest.m */; };
 		9214AEDD17309E5700F7707E /* features.xml in Resources */ = {isa = PBXBuildFile; fileRef = 9214AEDB17309E5700F7707E /* features.xml */; };
 		9214AEDE17309E5700F7707E /* memory-map.xml in Resources */ = {isa = PBXBuildFile; fileRef = 9214AEDC17309E5700F7707E /* memory-map.xml */; };
 		927E8574179F3AF90038CEFC /* FireflyFlash.elf in Resources */ = {isa = PBXBuildFile; fileRef = 927E8573179F3AF90038CEFC /* FireflyFlash.elf */; };
@@ -52,6 +54,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9214495817BED43200FC6BAF /* FDRadioTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDRadioTest.h; sourceTree = "<group>"; };
+		9214495917BED43200FC6BAF /* FDRadioTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDRadioTest.m; sourceTree = "<group>"; };
 		9214AEDB17309E5700F7707E /* features.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = features.xml; sourceTree = "<group>"; };
 		9214AEDC17309E5700F7707E /* memory-map.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "memory-map.xml"; sourceTree = "<group>"; };
 		927E8573179F3AF90038CEFC /* FireflyFlash.elf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FireflyFlash.elf; sourceTree = "<group>"; };
@@ -187,6 +191,8 @@
 				92E7754D1730979E00A111DF /* FDUSBHIDMonitor.m */,
 				92E774E01730925800A111DF /* FireflyProduction.h */,
 				92E774E11730925800A111DF /* FireflyProduction.m */,
+				9214495817BED43200FC6BAF /* FDRadioTest.h */,
+				9214495917BED43200FC6BAF /* FDRadioTest.m */,
 			);
 			path = FireflyProduction;
 			sourceTree = "<group>";
@@ -238,6 +244,7 @@
 				92E775561730979E00A111DF /* FDGdbServer.h in Headers */,
 				92E775581730979E00A111DF /* FDGdbServerSwd.h in Headers */,
 				92E7755A1730979E00A111DF /* FDUSBHIDMonitor.h in Headers */,
+				9214495A17BED43200FC6BAF /* FDRadioTest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,6 +367,7 @@
 				92E775591730979E00A111DF /* FDGdbServerSwd.m in Sources */,
 				92E7755B1730979E00A111DF /* FDUSBHIDMonitor.m in Sources */,
 				92898BDF179E35D0007B84B7 /* FDFireflyFlash.m in Sources */,
+				9214495B17BED43200FC6BAF /* FDRadioTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
