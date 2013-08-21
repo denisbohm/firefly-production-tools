@@ -13,6 +13,8 @@
 @interface FDRadioTestResult : NSObject
 
 @property BOOL pass;
+@property BOOL timeout;
+@property NSUInteger count;
 @property double rssi;
 @property NSTimeInterval duration;
 

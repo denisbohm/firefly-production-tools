@@ -72,7 +72,12 @@
     for (FDRadioTestContext *context in [_tests allValues]) {
         if ((context.start != nil) && ([now timeIntervalSinceDate:context.start] > _timeout)) {
             [_tests removeObjectForKey:context.name];
-            [context.delegate radioTest:self complete:context.name result:nil];
+            FDRadioTestResult *result = [[FDRadioTestResult alloc] init];
+            result.pass = false;
+            result.timeout = true;
+            result.count = context.writeCount;
+            result.rssi = [context.RSSI doubleValue];
+            [context.delegate radioTest:self complete:context.name result:result];
         }
     }
 }
@@ -152,6 +157,7 @@
         [_tests removeObjectForKey:peripheral.name];
         FDRadioTestResult *result = [[FDRadioTestResult alloc] init];
         result.pass = context.writeCount == context.writeData.length;
+        result.count = context.writeCount;
         result.rssi = [context.RSSI doubleValue];
         result.duration = [context.writeEnd timeIntervalSinceDate:context.writeStart];
         [context.delegate radioTest:self complete:peripheral.name result:result];
