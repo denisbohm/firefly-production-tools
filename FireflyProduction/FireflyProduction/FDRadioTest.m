@@ -33,10 +33,20 @@
 @property NSDate *writeEnd;
 @property NSUInteger writeIndex;
 @property NSUInteger writeCount;
+@property NSMutableArray *updates;
 
 @end
 
 @implementation FDRadioTestContext
+
+- (id)init
+{
+    if (self = [super init]) {
+        _updates = [NSMutableArray array];
+    }
+    return self;
+}
+
 @end
 
 @interface FDRadioTest () <CBCentralManagerDelegate, CBPeripheralDelegate>
@@ -55,7 +65,7 @@
     if (self = [super init]) {
         _tests = [NSMutableDictionary dictionary];
         _dataCharacteristicUUID = [CBUUID UUIDWithString:@"2a24"]; // Device Information: Model Number String
-        _timeout = 55.0;
+        _timeout = 10.0;
     }
     return self;
 }
@@ -156,10 +166,11 @@
     if (context != nil) {
         [_tests removeObjectForKey:peripheral.name];
         FDRadioTestResult *result = [[FDRadioTestResult alloc] init];
-        result.pass = context.writeCount == context.writeData.length;
+        result.pass = context.writeEnd != nil;
         result.count = context.writeCount;
         result.rssi = [context.RSSI doubleValue];
         result.duration = [context.writeEnd timeIntervalSinceDate:context.writeStart];
+        result.updates = context.updates;
         [context.delegate radioTest:self complete:peripheral.name result:result];
     }
 }
@@ -217,11 +228,17 @@
     FDLog(@"didUpdateValueForCharacteristic %@ : %@ (error %@)", peripheral.name, characteristic.value, error);
     FDRadioTestContext *context = _tests[peripheral.name];
     if (context != nil) {
-        if (context.writeCount == context.writeData.length) {
-            context.writeEnd = [NSDate date];
-            [_centralManager cancelPeripheralConnection:peripheral];
-        } else {
-            [self setCharacteristicValue:context];
+        [context.updates addObject:characteristic.value];
+        if (characteristic.value.length == 20) {
+            uint8_t n = ((uint8_t *)characteristic.value.bytes)[0];
+            if (n == context.writeData.length) {
+                context.writeEnd = [NSDate date];
+                [_centralManager cancelPeripheralConnection:peripheral];
+            } else {
+                if (n == context.writeCount) {
+                    [self setCharacteristicValue:context];
+                }
+            }
         }
     }
 }

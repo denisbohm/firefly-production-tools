@@ -17,6 +17,7 @@
 @property NSUInteger count;
 @property double rssi;
 @property NSTimeInterval duration;
+@property NSArray *updates;
 
 @end
 
