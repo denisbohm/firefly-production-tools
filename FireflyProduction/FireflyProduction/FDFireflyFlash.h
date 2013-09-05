@@ -16,12 +16,18 @@
 @property FDSerialWireDebug *serialWireDebug;
 @property FDLogger *logger;
 
+@property(readonly) uint8_t family;
+@property(readonly) uint32_t flashSize;
+@property(readonly) uint32_t ramSize;
+@property(readonly) uint32_t pageSize;
+
 - (void)initialize:(FDSerialWireDebug *)serialWireDebug;
 
 - (void)disableWatchdogByErasingIfNeeded;
 
 - (void)massErase;
 
+- (void)writePages:(uint32_t)address data:(NSData *)data;
 - (void)program:(FDExecutable *)executable;
 
 - (void)setDebugLock;
