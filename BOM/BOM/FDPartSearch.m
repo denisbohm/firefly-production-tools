@@ -187,6 +187,10 @@ NSInteger getInteger(id value)
     NSMutableDictionary *partSellers = [NSMutableDictionary dictionary];
     NSDictionary *result = results[0];
     NSArray *resultItems = result[@"items"];
+    if (resultItems.count == 0) {
+        NSLog(@"no part search result items for %@", manufacturerPartNumber);
+        return nil;
+    }
     NSDictionary *resultItem = resultItems[0];
     NSArray *offers = resultItem[@"offers"];
     for (NSDictionary *offer in offers) {

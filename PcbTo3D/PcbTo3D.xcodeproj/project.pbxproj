@@ -1,0 +1,488 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		927F5EC117DBA21A0047BB95 /* FDRhino.m in Sources */ = {isa = PBXBuildFile; fileRef = 927F5EC017DBA21A0047BB95 /* FDRhino.m */; };
+		927F5EC417DBA2690047BB95 /* FDBoard.m in Sources */ = {isa = PBXBuildFile; fileRef = 927F5EC317DBA2690047BB95 /* FDBoard.m */; };
+		92BCB83917DA662D00B01308 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92BCB83817DA662D00B01308 /* Cocoa.framework */; };
+		92BCB84317DA662D00B01308 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92BCB84117DA662D00B01308 /* InfoPlist.strings */; };
+		92BCB84517DA662D00B01308 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BCB84417DA662D00B01308 /* main.m */; };
+		92BCB84917DA662D00B01308 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 92BCB84717DA662D00B01308 /* Credits.rtf */; };
+		92BCB84C17DA662D00B01308 /* FDAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BCB84B17DA662D00B01308 /* FDAppDelegate.m */; };
+		92BCB84F17DA662E00B01308 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92BCB84D17DA662E00B01308 /* MainMenu.xib */; };
+		92BCB85717DA662E00B01308 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92BCB85617DA662E00B01308 /* SenTestingKit.framework */; };
+		92BCB85817DA662E00B01308 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92BCB83817DA662D00B01308 /* Cocoa.framework */; };
+		92BCB86017DA662E00B01308 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92BCB85E17DA662E00B01308 /* InfoPlist.strings */; };
+		92BCB86317DA662E00B01308 /* PcbTo3DTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BCB86217DA662E00B01308 /* PcbTo3DTests.m */; };
+		92BCB86E17DA6B7E00B01308 /* FDBoardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BCB86D17DA6B7E00B01308 /* FDBoardView.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		92BCB85917DA662E00B01308 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92BCB82D17DA662D00B01308 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 92BCB83417DA662D00B01308;
+			remoteInfo = PcbTo3D;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		927F5EBF17DBA21A0047BB95 /* FDRhino.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDRhino.h; sourceTree = "<group>"; };
+		927F5EC017DBA21A0047BB95 /* FDRhino.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDRhino.m; sourceTree = "<group>"; };
+		927F5EC217DBA2690047BB95 /* FDBoard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDBoard.h; sourceTree = "<group>"; };
+		927F5EC317DBA2690047BB95 /* FDBoard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDBoard.m; sourceTree = "<group>"; };
+		92BCB83517DA662D00B01308 /* PcbTo3D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PcbTo3D.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		92BCB83817DA662D00B01308 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		92BCB83B17DA662D00B01308 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		92BCB83C17DA662D00B01308 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		92BCB83D17DA662D00B01308 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		92BCB84017DA662D00B01308 /* PcbTo3D-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PcbTo3D-Info.plist"; sourceTree = "<group>"; };
+		92BCB84217DA662D00B01308 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		92BCB84417DA662D00B01308 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		92BCB84617DA662D00B01308 /* PcbTo3D-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PcbTo3D-Prefix.pch"; sourceTree = "<group>"; };
+		92BCB84817DA662D00B01308 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		92BCB84A17DA662D00B01308 /* FDAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FDAppDelegate.h; sourceTree = "<group>"; };
+		92BCB84B17DA662D00B01308 /* FDAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FDAppDelegate.m; sourceTree = "<group>"; };
+		92BCB84E17DA662E00B01308 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		92BCB85517DA662E00B01308 /* PcbTo3DTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PcbTo3DTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		92BCB85617DA662E00B01308 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		92BCB85D17DA662E00B01308 /* PcbTo3DTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PcbTo3DTests-Info.plist"; sourceTree = "<group>"; };
+		92BCB85F17DA662E00B01308 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		92BCB86117DA662E00B01308 /* PcbTo3DTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PcbTo3DTests.h; sourceTree = "<group>"; };
+		92BCB86217DA662E00B01308 /* PcbTo3DTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PcbTo3DTests.m; sourceTree = "<group>"; };
+		92BCB86C17DA6B7E00B01308 /* FDBoardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDBoardView.h; sourceTree = "<group>"; };
+		92BCB86D17DA6B7E00B01308 /* FDBoardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDBoardView.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		92BCB83217DA662D00B01308 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92BCB83917DA662D00B01308 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		92BCB85117DA662E00B01308 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92BCB85717DA662E00B01308 /* SenTestingKit.framework in Frameworks */,
+				92BCB85817DA662E00B01308 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		92BCB82C17DA662D00B01308 = {
+			isa = PBXGroup;
+			children = (
+				92BCB83E17DA662D00B01308 /* PcbTo3D */,
+				92BCB85B17DA662E00B01308 /* PcbTo3DTests */,
+				92BCB83717DA662D00B01308 /* Frameworks */,
+				92BCB83617DA662D00B01308 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		92BCB83617DA662D00B01308 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				92BCB83517DA662D00B01308 /* PcbTo3D.app */,
+				92BCB85517DA662E00B01308 /* PcbTo3DTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		92BCB83717DA662D00B01308 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				92BCB83817DA662D00B01308 /* Cocoa.framework */,
+				92BCB85617DA662E00B01308 /* SenTestingKit.framework */,
+				92BCB83A17DA662D00B01308 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		92BCB83A17DA662D00B01308 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				92BCB83B17DA662D00B01308 /* AppKit.framework */,
+				92BCB83C17DA662D00B01308 /* CoreData.framework */,
+				92BCB83D17DA662D00B01308 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		92BCB83E17DA662D00B01308 /* PcbTo3D */ = {
+			isa = PBXGroup;
+			children = (
+				92BCB83F17DA662D00B01308 /* Supporting Files */,
+				92BCB84D17DA662E00B01308 /* MainMenu.xib */,
+				92BCB84A17DA662D00B01308 /* FDAppDelegate.h */,
+				92BCB84B17DA662D00B01308 /* FDAppDelegate.m */,
+				92BCB86C17DA6B7E00B01308 /* FDBoardView.h */,
+				92BCB86D17DA6B7E00B01308 /* FDBoardView.m */,
+				927F5EBF17DBA21A0047BB95 /* FDRhino.h */,
+				927F5EC017DBA21A0047BB95 /* FDRhino.m */,
+				927F5EC217DBA2690047BB95 /* FDBoard.h */,
+				927F5EC317DBA2690047BB95 /* FDBoard.m */,
+			);
+			path = PcbTo3D;
+			sourceTree = "<group>";
+		};
+		92BCB83F17DA662D00B01308 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				92BCB84017DA662D00B01308 /* PcbTo3D-Info.plist */,
+				92BCB84117DA662D00B01308 /* InfoPlist.strings */,
+				92BCB84417DA662D00B01308 /* main.m */,
+				92BCB84617DA662D00B01308 /* PcbTo3D-Prefix.pch */,
+				92BCB84717DA662D00B01308 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		92BCB85B17DA662E00B01308 /* PcbTo3DTests */ = {
+			isa = PBXGroup;
+			children = (
+				92BCB86117DA662E00B01308 /* PcbTo3DTests.h */,
+				92BCB86217DA662E00B01308 /* PcbTo3DTests.m */,
+				92BCB85C17DA662E00B01308 /* Supporting Files */,
+			);
+			path = PcbTo3DTests;
+			sourceTree = "<group>";
+		};
+		92BCB85C17DA662E00B01308 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				92BCB85D17DA662E00B01308 /* PcbTo3DTests-Info.plist */,
+				92BCB85E17DA662E00B01308 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		92BCB83417DA662D00B01308 /* PcbTo3D */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 92BCB86617DA662E00B01308 /* Build configuration list for PBXNativeTarget "PcbTo3D" */;
+			buildPhases = (
+				92BCB83117DA662D00B01308 /* Sources */,
+				92BCB83217DA662D00B01308 /* Frameworks */,
+				92BCB83317DA662D00B01308 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PcbTo3D;
+			productName = PcbTo3D;
+			productReference = 92BCB83517DA662D00B01308 /* PcbTo3D.app */;
+			productType = "com.apple.product-type.application";
+		};
+		92BCB85417DA662E00B01308 /* PcbTo3DTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 92BCB86917DA662E00B01308 /* Build configuration list for PBXNativeTarget "PcbTo3DTests" */;
+			buildPhases = (
+				92BCB85017DA662E00B01308 /* Sources */,
+				92BCB85117DA662E00B01308 /* Frameworks */,
+				92BCB85217DA662E00B01308 /* Resources */,
+				92BCB85317DA662E00B01308 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				92BCB85A17DA662E00B01308 /* PBXTargetDependency */,
+			);
+			name = PcbTo3DTests;
+			productName = PcbTo3DTests;
+			productReference = 92BCB85517DA662E00B01308 /* PcbTo3DTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		92BCB82D17DA662D00B01308 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = FD;
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Firefly Design";
+			};
+			buildConfigurationList = 92BCB83017DA662D00B01308 /* Build configuration list for PBXProject "PcbTo3D" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 92BCB82C17DA662D00B01308;
+			productRefGroup = 92BCB83617DA662D00B01308 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				92BCB83417DA662D00B01308 /* PcbTo3D */,
+				92BCB85417DA662E00B01308 /* PcbTo3DTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		92BCB83317DA662D00B01308 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92BCB84317DA662D00B01308 /* InfoPlist.strings in Resources */,
+				92BCB84917DA662D00B01308 /* Credits.rtf in Resources */,
+				92BCB84F17DA662E00B01308 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		92BCB85217DA662E00B01308 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92BCB86017DA662E00B01308 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		92BCB85317DA662E00B01308 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		92BCB83117DA662D00B01308 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92BCB84517DA662D00B01308 /* main.m in Sources */,
+				92BCB84C17DA662D00B01308 /* FDAppDelegate.m in Sources */,
+				92BCB86E17DA6B7E00B01308 /* FDBoardView.m in Sources */,
+				927F5EC117DBA21A0047BB95 /* FDRhino.m in Sources */,
+				927F5EC417DBA2690047BB95 /* FDBoard.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		92BCB85017DA662E00B01308 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92BCB86317DA662E00B01308 /* PcbTo3DTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		92BCB85A17DA662E00B01308 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 92BCB83417DA662D00B01308 /* PcbTo3D */;
+			targetProxy = 92BCB85917DA662E00B01308 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		92BCB84117DA662D00B01308 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				92BCB84217DA662D00B01308 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		92BCB84717DA662D00B01308 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				92BCB84817DA662D00B01308 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		92BCB84D17DA662E00B01308 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				92BCB84E17DA662E00B01308 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		92BCB85E17DA662E00B01308 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				92BCB85F17DA662E00B01308 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		92BCB86417DA662E00B01308 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		92BCB86517DA662E00B01308 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		92BCB86717DA662E00B01308 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PcbTo3D/PcbTo3D-Prefix.pch";
+				INFOPLIST_FILE = "PcbTo3D/PcbTo3D-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		92BCB86817DA662E00B01308 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PcbTo3D/PcbTo3D-Prefix.pch";
+				INFOPLIST_FILE = "PcbTo3D/PcbTo3D-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		92BCB86A17DA662E00B01308 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/PcbTo3D.app/Contents/MacOS/PcbTo3D";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PcbTo3D/PcbTo3D-Prefix.pch";
+				INFOPLIST_FILE = "PcbTo3DTests/PcbTo3DTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		92BCB86B17DA662E00B01308 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/PcbTo3D.app/Contents/MacOS/PcbTo3D";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PcbTo3D/PcbTo3D-Prefix.pch";
+				INFOPLIST_FILE = "PcbTo3DTests/PcbTo3DTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		92BCB83017DA662D00B01308 /* Build configuration list for PBXProject "PcbTo3D" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				92BCB86417DA662E00B01308 /* Debug */,
+				92BCB86517DA662E00B01308 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		92BCB86617DA662E00B01308 /* Build configuration list for PBXNativeTarget "PcbTo3D" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				92BCB86717DA662E00B01308 /* Debug */,
+				92BCB86817DA662E00B01308 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		92BCB86917DA662E00B01308 /* Build configuration list for PBXNativeTarget "PcbTo3DTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				92BCB86A17DA662E00B01308 /* Debug */,
+				92BCB86B17DA662E00B01308 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 92BCB82D17DA662D00B01308 /* Project object */;
+}
