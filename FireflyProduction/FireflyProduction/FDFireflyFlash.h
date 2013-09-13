@@ -28,6 +28,7 @@
 - (void)massErase;
 
 - (void)writePages:(uint32_t)address data:(NSData *)data;
+- (void)writePages:(uint32_t)address data:(NSData *)data erase:(BOOL)erase;
 - (void)program:(FDExecutable *)executable;
 
 - (void)setDebugLock;

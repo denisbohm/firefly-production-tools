@@ -143,6 +143,11 @@
 
 - (void)writePages:(uint32_t)address data:(NSData *)data
 {
+    [self writePages:address data:data erase:NO];
+}
+
+- (void)writePages:(uint32_t)address data:(NSData *)data erase:(BOOL)erase
+{
     FDExecutableFunction *writePagesFunction = _fireflyFlashExecutable.functions[@"write_pages"];
     uint32_t offset = 0;
     while (offset < data.length) {
@@ -155,7 +160,7 @@
         NSData *subdata = [data subdataWithRange:NSMakeRange(offset, length)];
         [_serialWireDebug writeMemory:_cortexM.heapRange.location data:subdata];
         [_serialWireDebug writeMemory:EFM32_WDOG_CMD value:EFM32_WDOG_CMD_CLEAR];
-        [_cortexM run:writePagesFunction.address r0:address r1:_cortexM.heapRange.location r2:pages r3:0 timeout:5];
+        [_cortexM run:writePagesFunction.address r0:address r1:_cortexM.heapRange.location r2:pages r3:erase ? 1 : 0 timeout:5];
         offset += length;
         address += length;
     }
