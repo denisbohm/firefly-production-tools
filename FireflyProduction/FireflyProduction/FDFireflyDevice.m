@@ -54,7 +54,7 @@
 - (void)process:(NSData *)data
 {
     FDBinary *binary = [[FDBinary alloc] initWithData:data];
-    uint8_t code = [binary getUint8];
+    uint8_t code = [binary getUInt8];
     float ax = [binary getFloat32];
     float ay = [binary getFloat32];
     float az = [binary getFloat32];

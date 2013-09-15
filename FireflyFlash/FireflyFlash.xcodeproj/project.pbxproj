@@ -211,9 +211,9 @@
 		92E775121730958000A111DF /* FireflyFlash */ = {
 			isa = PBXGroup;
 			children = (
+				92E775211730958000A111DF /* MainMenu.xib */,
 				92E7751E1730958000A111DF /* FDAppDelegate.h */,
 				92E7751F1730958000A111DF /* FDAppDelegate.m */,
-				92E775211730958000A111DF /* MainMenu.xib */,
 				92E775131730958000A111DF /* Supporting Files */,
 			);
 			path = FireflyFlash;
