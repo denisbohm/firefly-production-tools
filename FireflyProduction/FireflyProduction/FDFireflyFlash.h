@@ -23,7 +23,7 @@
 
 - (void)initialize:(FDSerialWireDebug *)serialWireDebug;
 
-- (void)disableWatchdogByErasingIfNeeded;
+- (BOOL)disableWatchdogByErasingIfNeeded;
 
 - (void)massErase;
 

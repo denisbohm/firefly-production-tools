@@ -88,16 +88,16 @@
     _cortexM.breakLocation = haltFunction.address;
 }
 
-- (void)disableWatchdogByErasingIfNeeded
+- (BOOL)disableWatchdogByErasingIfNeeded
 {
     uint32_t wdogCtrl = [_serialWireDebug readMemory:EFM32_WDOG_CTRL];
     if ((wdogCtrl & EFM32_WDOG_CTRL_LOCK) == 0) {
         [_serialWireDebug writeMemory:EFM32_WDOG_CTRL value:EFM32_WDOG_CTRL_DEFAULT];
-        return;
+        return NO;
     }
     
     if ((wdogCtrl & EFM32_WDOG_CTRL_EN) == 0) {
-        return;
+        return NO;
     }
     
     FDLog(@"watchdog is enabled and locked - erasing and resetting device to clear watchdog");
@@ -110,6 +110,7 @@
     if (wdogCtrl & EFM32_WDOG_CTRL_EN) {
         FDLog(@"could not disable watchdog");
     }
+    return YES;
 }
 
 - (void)initialize:(FDSerialWireDebug *)serialWireDebug
