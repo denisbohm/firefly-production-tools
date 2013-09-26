@@ -8,10 +8,12 @@
 
 #import "FDAppDelegate.h"
 
-#import <FireflyProduction/FDBinary.h>
-#import <FireflyProduction/FDCrypto.h>
+#import <FireflyDeviceFramework/FDBinary.h>
+#import <FireflyDeviceFramework//FDCrypto.h>
+#import <FireflyDeviceFramework/FDFireflyIce.h>
+#import <FireflyDeviceFramework/FDFireflyIceChannelBLE.h>
+
 #import <FireflyProduction/FDExecutable.h>
-#import <FireflyProduction/FDFireflyDevice.h>
 #import <FireflyProduction/FDFireflyFlash.h>
 #import <FireflyProduction/FDGdbServer.h>
 #import <FireflyProduction/FDGdbServerSwd.h>
@@ -60,7 +62,7 @@
 
 @end
 
-@interface FDAppDelegate () <CBCentralManagerDelegate, FDUSBMonitorDelegate, FDUSBHIDMonitorDelegate, FDUSBHIDDeviceDelegate, FDFireflyDeviceDelegate, NSTableViewDataSource, FDLoggerConsumer, FDRadioTestDelegate>
+@interface FDAppDelegate () <CBCentralManagerDelegate, FDUSBMonitorDelegate, FDUSBHIDMonitorDelegate, FDUSBHIDDeviceDelegate, FDFireflyIceObserver, NSTableViewDataSource, FDLoggerConsumer, FDRadioTestDelegate>
 
 @property (assign) IBOutlet NSTableView *bluetoothTableView;
 @property CBCentralManager *centralManager;
@@ -754,7 +756,7 @@ static uint8_t secretKey[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x
     [device setReport:data];
 }
 
-- (void)fireflyDevice:(FDFireflyDevice *)fireflyDevice
+- (void)fireflyIceSensing:(FDFireflyIce *)fireflyIce
                    ax:(float)ax ay:(float)ay az:(float)az
                    mx:(float)mx my:(float)my mz:(float)mz
 {
@@ -767,7 +769,7 @@ static uint8_t secretKey[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x
     _mzSlider.floatValue = mz;
 }
 
-- (FDFireflyDevice *)getSelectedFireflyDevice
+- (FDFireflyIce *)getSelectedFireflyDevice
 {
     NSInteger row = _bluetoothTableView.selectedRow;
     if (row < 0) {
@@ -778,22 +780,24 @@ static uint8_t secretKey[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x
 
 - (IBAction)bluetoothConnect:(id)sender
 {
-    FDFireflyDevice *fireflyDevice = [self getSelectedFireflyDevice];
-    fireflyDevice.delegate = self;
-    [_centralManager connectPeripheral:fireflyDevice.peripheral options:nil];
+    FDFireflyIce *fireflyDevice = [self getSelectedFireflyDevice];
+    [fireflyDevice.observable addObserver:self];
+    FDFireflyIceChannelBLE * channel = (FDFireflyIceChannelBLE *)fireflyDevice.channels[@"BLE"];
+    [_centralManager connectPeripheral:channel.peripheral options:nil];
 }
 
 - (IBAction)bluetoothDisconnect:(id)sender
 {
-    FDFireflyDevice *fireflyDevice = [self getSelectedFireflyDevice];
-    fireflyDevice.delegate = nil;
-    [_centralManager cancelPeripheralConnection:fireflyDevice.peripheral];
+    FDFireflyIce *fireflyDevice = [self getSelectedFireflyDevice];
+    [fireflyDevice.observable removeObserver:self];
+    FDFireflyIceChannelBLE * channel = (FDFireflyIceChannelBLE *)fireflyDevice.channels[@"BLE"];
+    [_centralManager cancelPeripheralConnection:channel.peripheral];
 }
 
 - (IBAction)bluetoothWrite:(id)sender
 {
-    FDFireflyDevice *fireflyDevice = [self getSelectedFireflyDevice];
-    [fireflyDevice write];
+//    FDFireflyIce *fireflyDevice = [self getSelectedFireflyDevice];
+//    [fireflyDevice write];
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
@@ -827,10 +831,11 @@ static uint8_t secretKey[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x
     }
 }
 
-- (FDFireflyDevice *)getFireflyDeviceByPeripheral:(CBPeripheral *)peripheral
+- (FDFireflyIce *)getFireflyDeviceByPeripheral:(CBPeripheral *)peripheral
 {
-    for (FDFireflyDevice *fireflyDevice in _fireflyDevices) {
-        if (fireflyDevice.peripheral == peripheral) {
+    for (FDFireflyIce *fireflyDevice in _fireflyDevices) {
+        FDFireflyIceChannelBLE *channel = (FDFireflyIceChannelBLE *)fireflyDevice.channels[@"BLE"];
+        if (channel.peripheral == peripheral) {
             return fireflyDevice;
         }
     }
@@ -842,13 +847,15 @@ static uint8_t secretKey[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x
      advertisementData:(NSDictionary *)advertisementData
                   RSSI:(NSNumber *)RSSI
 {
-    FDFireflyDevice *fireflyDevice = [self getFireflyDeviceByPeripheral:peripheral];
+    FDFireflyIce *fireflyDevice = [self getFireflyDeviceByPeripheral:peripheral];
     if (fireflyDevice != nil) {
         return;
     }
     
     FDLog(@"didDiscoverPeripheral %@", peripheral);
-    fireflyDevice = [[FDFireflyDevice alloc] initWithPeripheral:peripheral];
+    fireflyDevice = [[FDFireflyIce alloc] init];
+    FDFireflyIceChannelBLE *channel = [[FDFireflyIceChannelBLE alloc] initWithPeripheral:peripheral];
+    [fireflyDevice addChannel:channel type:@"BLE"];
     [_fireflyDevices addObject:fireflyDevice];
     
     [_bluetoothTableView reloadData];
@@ -857,16 +864,17 @@ static uint8_t secretKey[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral
 {
     FDLog(@"didConnectPeripheral %@", peripheral.name);
-    FDFireflyDevice *fireflyDevice = [self getFireflyDeviceByPeripheral:peripheral];
-    [fireflyDevice didConnectPeripheral];
+    FDFireflyIce *fireflyDevice = [self getFireflyDeviceByPeripheral:peripheral];
+    FDFireflyIceChannelBLE *channel = (FDFireflyIceChannelBLE *)fireflyDevice.channels[@"BLE"];
+    [channel didConnectPeripheral];
 }
 
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
 {
     FDLog(@"didDisconnectPeripheral %@ : %@", peripheral.name, error);
-    FDFireflyDevice *fireflyDevice = [self getFireflyDeviceByPeripheral:peripheral];
-    [fireflyDevice didDisconnectPeripheralError:error];
+    FDFireflyIce *fireflyDevice = [self getFireflyDeviceByPeripheral:peripheral];
+    FDFireflyIceChannelBLE *channel = (FDFireflyIceChannelBLE *)fireflyDevice.channels[@"BLE"];
+    [channel didDisconnectPeripheralError:error];
 }
-
 
 @end
