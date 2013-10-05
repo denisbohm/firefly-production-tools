@@ -111,7 +111,7 @@
     FDBoardContainer *container = _board.container;
     _transform = [NSAffineTransform transform];
     
-    [_lines appendString:@"boardThickness = 0.85\n\n"];
+    [_lines appendString:@"boardThickness = 0.4\n\n"];
     
     [self convert:container];
     

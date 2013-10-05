@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>C5F1C35D-A72E-4527-BD6F-FDD7FCB021B8</string>
+	<key>IDESourceControlProjectName</key>
+	<string>FireflyProduction</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>1A737C81-14FB-4BC8-9AF7-1DC792A71132</key>
+		<string>https://github.com/denisbohm/firefly-arm-swd.git</string>
+		<key>21AD9E61-602F-4B2E-ACB5-DC31C1495232</key>
+		<string>https://github.com/denisbohm/firefly-sync.git</string>
+		<key>F03215A5-E6D4-4D28-9120-CEDA2FCE2813</key>
+		<string>https://github.com/denisbohm/firefly-production-tools.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>FireflyProduction/FireflyProduction.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>1A737C81-14FB-4BC8-9AF7-1DC792A71132</key>
+		<string>../../../../firefly-arm-swd</string>
+		<key>21AD9E61-602F-4B2E-ACB5-DC31C1495232</key>
+		<string>../../../../firefly-sync</string>
+		<key>F03215A5-E6D4-4D28-9120-CEDA2FCE2813</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/denisbohm/firefly-production-tools.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>F03215A5-E6D4-4D28-9120-CEDA2FCE2813</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>1A737C81-14FB-4BC8-9AF7-1DC792A71132</string>
+			<key>IDESourceControlWCCName</key>
+			<string>firefly-arm-swd</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>F03215A5-E6D4-4D28-9120-CEDA2FCE2813</string>
+			<key>IDESourceControlWCCName</key>
+			<string>firefly-production-tools</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>21AD9E61-602F-4B2E-ACB5-DC31C1495232</string>
+			<key>IDESourceControlWCCName</key>
+			<string>firefly-sync</string>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -35,6 +35,7 @@
 @property FDLogger *logger;
 
 - (void)start;
+- (void)stop;
 
 - (void)startTest:(NSString *)name delegate:(id<FDRadioTestDelegate>)delegate data:(NSData *)data;
 - (void)cancelTest:(NSString *)name;

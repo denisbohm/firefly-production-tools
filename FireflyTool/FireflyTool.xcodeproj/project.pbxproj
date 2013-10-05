@@ -1,0 +1,728 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		920597DD17FCAAC20027FAAD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 920597DC17FCAAC20027FAAD /* Cocoa.framework */; };
+		920597E717FCAAC20027FAAD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 920597E517FCAAC20027FAAD /* InfoPlist.strings */; };
+		920597E917FCAAC20027FAAD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 920597E817FCAAC20027FAAD /* main.m */; };
+		920597ED17FCAAC20027FAAD /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 920597EB17FCAAC20027FAAD /* Credits.rtf */; };
+		920597F017FCAAC20027FAAD /* FDAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 920597EF17FCAAC20027FAAD /* FDAppDelegate.m */; };
+		920597F317FCAAC20027FAAD /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 920597F117FCAAC20027FAAD /* MainMenu.xib */; };
+		920597F517FCAAC20027FAAD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 920597F417FCAAC20027FAAD /* Images.xcassets */; };
+		920597FC17FCAAC20027FAAD /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 920597FB17FCAAC20027FAAD /* XCTest.framework */; };
+		920597FD17FCAAC20027FAAD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 920597DC17FCAAC20027FAAD /* Cocoa.framework */; };
+		9205980517FCAAC20027FAAD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9205980317FCAAC20027FAAD /* InfoPlist.strings */; };
+		9205980717FCAAC20027FAAD /* FireflyToolTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9205980617FCAAC20027FAAD /* FireflyToolTests.m */; };
+		9205981C17FCAB230027FAAD /* FDFireflyIceMint.m in Sources */ = {isa = PBXBuildFile; fileRef = 9205981117FCAB230027FAAD /* FDFireflyIceMint.m */; };
+		9205981D17FCAB230027FAAD /* FDFireflyIceRadioTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9205981317FCAB230027FAAD /* FDFireflyIceRadioTest.m */; };
+		9205981E17FCAB230027FAAD /* FDFireflyIceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9205981517FCAB230027FAAD /* FDFireflyIceTest.m */; };
+		9205981F17FCAB230027FAAD /* FDSerialWireDebugTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 9205981717FCAB230027FAAD /* FDSerialWireDebugTask.m */; };
+		9205982017FCAB230027FAAD /* FDSerialWireDebugTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9205981917FCAB230027FAAD /* FDSerialWireDebugTest.m */; };
+		9205982117FCAB230027FAAD /* FireflyBoot.elf in Resources */ = {isa = PBXBuildFile; fileRef = 9205981A17FCAB230027FAAD /* FireflyBoot.elf */; };
+		9205982217FCAB230027FAAD /* FireflyIce.elf in Resources */ = {isa = PBXBuildFile; fileRef = 9205981B17FCAB230027FAAD /* FireflyIce.elf */; };
+		9205984317FCAEAF0027FAAD /* ARMSerialWireDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9205982C17FCAD290027FAAD /* ARMSerialWireDebug.framework */; };
+		9205984417FCAEAF0027FAAD /* FireflyDeviceFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9205983517FCAE240027FAAD /* FireflyDeviceFramework.framework */; };
+		9205984517FCAEAF0027FAAD /* FireflyProduction.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9205984017FCAE380027FAAD /* FireflyProduction.framework */; };
+		9205984717FCAEBA0027FAAD /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9205984617FCAEBA0027FAAD /* IOBluetooth.framework */; };
+		926CCCF817FCAFE000449599 /* ARMSerialWireDebug.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9205982C17FCAD290027FAAD /* ARMSerialWireDebug.framework */; };
+		926CCCF917FCAFE000449599 /* FireflyDeviceFramework.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9205983517FCAE240027FAAD /* FireflyDeviceFramework.framework */; };
+		926CCCFA17FCAFE000449599 /* FireflyProduction.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9205984017FCAE380027FAAD /* FireflyProduction.framework */; };
+		92DF4B7217FCC54E004C68C7 /* FDSerialWireDebugOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92DF4B7117FCC54E004C68C7 /* FDSerialWireDebugOperation.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		920597FE17FCAAC20027FAAD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 920597D117FCAAC20027FAAD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 920597D817FCAAC20027FAAD;
+			remoteInfo = FireflyTool;
+		};
+		9205982B17FCAD290027FAAD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9205982617FCAD290027FAAD /* ARMSerialWireDebug.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 92B8B82816FF70BD00BE38ED;
+			remoteInfo = ARMSerialWireDebug;
+		};
+		9205982D17FCAD290027FAAD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9205982617FCAD290027FAAD /* ARMSerialWireDebug.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 92B8B84016FF70BD00BE38ED;
+			remoteInfo = ARMSerialWireDebugTests;
+		};
+		9205983417FCAE240027FAAD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9205982F17FCAE240027FAAD /* FireflyDeviceFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 929EF51217EA2DEE0044F6F9;
+			remoteInfo = FireflyDeviceFramework;
+		};
+		9205983617FCAE240027FAAD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9205982F17FCAE240027FAAD /* FireflyDeviceFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 929EF52A17EA2DEE0044F6F9;
+			remoteInfo = FireflyDeviceFrameworkTests;
+		};
+		9205983F17FCAE380027FAAD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9205983817FCAE380027FAAD /* FireflyProduction.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 92E774D01730925800A111DF;
+			remoteInfo = FireflyProduction;
+		};
+		9205984117FCAE380027FAAD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9205983817FCAE380027FAAD /* FireflyProduction.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 92E774E81730925800A111DF;
+			remoteInfo = FireflyProductionTests;
+		};
+		926CCCF117FCAEF800449599 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9205982617FCAD290027FAAD /* ARMSerialWireDebug.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 92B8B82716FF70BD00BE38ED;
+			remoteInfo = ARMSerialWireDebug;
+		};
+		926CCCF317FCAEFB00449599 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9205982F17FCAE240027FAAD /* FireflyDeviceFramework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 929EF51117EA2DEE0044F6F9;
+			remoteInfo = FireflyDeviceFramework;
+		};
+		926CCCF517FCAEFE00449599 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9205983817FCAE380027FAAD /* FireflyProduction.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 92E774CF1730925800A111DF;
+			remoteInfo = FireflyProduction;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		926CCCF717FCAFA500449599 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				926CCCF817FCAFE000449599 /* ARMSerialWireDebug.framework in CopyFiles */,
+				926CCCF917FCAFE000449599 /* FireflyDeviceFramework.framework in CopyFiles */,
+				926CCCFA17FCAFE000449599 /* FireflyProduction.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		920597D917FCAAC20027FAAD /* FireflyTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FireflyTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		920597DC17FCAAC20027FAAD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		920597DF17FCAAC20027FAAD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		920597E017FCAAC20027FAAD /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		920597E117FCAAC20027FAAD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		920597E417FCAAC20027FAAD /* FireflyTool-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FireflyTool-Info.plist"; sourceTree = "<group>"; };
+		920597E617FCAAC20027FAAD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		920597E817FCAAC20027FAAD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		920597EA17FCAAC20027FAAD /* FireflyTool-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FireflyTool-Prefix.pch"; sourceTree = "<group>"; };
+		920597EC17FCAAC20027FAAD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		920597EE17FCAAC20027FAAD /* FDAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FDAppDelegate.h; sourceTree = "<group>"; };
+		920597EF17FCAAC20027FAAD /* FDAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FDAppDelegate.m; sourceTree = "<group>"; };
+		920597F217FCAAC20027FAAD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		920597F417FCAAC20027FAAD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		920597FA17FCAAC20027FAAD /* FireflyToolTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FireflyToolTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		920597FB17FCAAC20027FAAD /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		9205980217FCAAC20027FAAD /* FireflyToolTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FireflyToolTests-Info.plist"; sourceTree = "<group>"; };
+		9205980417FCAAC20027FAAD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		9205980617FCAAC20027FAAD /* FireflyToolTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FireflyToolTests.m; sourceTree = "<group>"; };
+		9205981017FCAB230027FAAD /* FDFireflyIceMint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFireflyIceMint.h; sourceTree = "<group>"; };
+		9205981117FCAB230027FAAD /* FDFireflyIceMint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFireflyIceMint.m; sourceTree = "<group>"; };
+		9205981217FCAB230027FAAD /* FDFireflyIceRadioTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFireflyIceRadioTest.h; sourceTree = "<group>"; };
+		9205981317FCAB230027FAAD /* FDFireflyIceRadioTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFireflyIceRadioTest.m; sourceTree = "<group>"; };
+		9205981417FCAB230027FAAD /* FDFireflyIceTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFireflyIceTest.h; sourceTree = "<group>"; };
+		9205981517FCAB230027FAAD /* FDFireflyIceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFireflyIceTest.m; sourceTree = "<group>"; };
+		9205981617FCAB230027FAAD /* FDSerialWireDebugTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDSerialWireDebugTask.h; sourceTree = "<group>"; };
+		9205981717FCAB230027FAAD /* FDSerialWireDebugTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDSerialWireDebugTask.m; sourceTree = "<group>"; };
+		9205981817FCAB230027FAAD /* FDSerialWireDebugTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDSerialWireDebugTest.h; sourceTree = "<group>"; };
+		9205981917FCAB230027FAAD /* FDSerialWireDebugTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDSerialWireDebugTest.m; sourceTree = "<group>"; };
+		9205981A17FCAB230027FAAD /* FireflyBoot.elf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FireflyBoot.elf; sourceTree = "<group>"; };
+		9205981B17FCAB230027FAAD /* FireflyIce.elf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FireflyIce.elf; sourceTree = "<group>"; };
+		9205982617FCAD290027FAAD /* ARMSerialWireDebug.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ARMSerialWireDebug.xcodeproj; path = "../../firefly-arm-swd/ARMSerialWireDebug.xcodeproj"; sourceTree = "<group>"; };
+		9205982F17FCAE240027FAAD /* FireflyDeviceFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FireflyDeviceFramework.xcodeproj; path = "../../firefly-sync/FireflyDeviceFramework/FireflyDeviceFramework.xcodeproj"; sourceTree = "<group>"; };
+		9205983817FCAE380027FAAD /* FireflyProduction.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FireflyProduction.xcodeproj; path = ../FireflyProduction/FireflyProduction.xcodeproj; sourceTree = "<group>"; };
+		9205984617FCAEBA0027FAAD /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
+		92DF4B7017FCC54E004C68C7 /* FDSerialWireDebugOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDSerialWireDebugOperation.h; sourceTree = "<group>"; };
+		92DF4B7117FCC54E004C68C7 /* FDSerialWireDebugOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDSerialWireDebugOperation.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		920597D617FCAAC20027FAAD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9205984317FCAEAF0027FAAD /* ARMSerialWireDebug.framework in Frameworks */,
+				9205984417FCAEAF0027FAAD /* FireflyDeviceFramework.framework in Frameworks */,
+				9205984517FCAEAF0027FAAD /* FireflyProduction.framework in Frameworks */,
+				9205984717FCAEBA0027FAAD /* IOBluetooth.framework in Frameworks */,
+				920597DD17FCAAC20027FAAD /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		920597F717FCAAC20027FAAD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				920597FD17FCAAC20027FAAD /* Cocoa.framework in Frameworks */,
+				920597FC17FCAAC20027FAAD /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		920597D017FCAAC20027FAAD = {
+			isa = PBXGroup;
+			children = (
+				9205982617FCAD290027FAAD /* ARMSerialWireDebug.xcodeproj */,
+				9205982F17FCAE240027FAAD /* FireflyDeviceFramework.xcodeproj */,
+				9205983817FCAE380027FAAD /* FireflyProduction.xcodeproj */,
+				920597E217FCAAC20027FAAD /* FireflyTool */,
+				9205980017FCAAC20027FAAD /* FireflyToolTests */,
+				920597DB17FCAAC20027FAAD /* Frameworks */,
+				920597DA17FCAAC20027FAAD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		920597DA17FCAAC20027FAAD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				920597D917FCAAC20027FAAD /* FireflyTool.app */,
+				920597FA17FCAAC20027FAAD /* FireflyToolTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		920597DB17FCAAC20027FAAD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9205984617FCAEBA0027FAAD /* IOBluetooth.framework */,
+				920597DC17FCAAC20027FAAD /* Cocoa.framework */,
+				920597FB17FCAAC20027FAAD /* XCTest.framework */,
+				920597DE17FCAAC20027FAAD /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		920597DE17FCAAC20027FAAD /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				920597DF17FCAAC20027FAAD /* AppKit.framework */,
+				920597E017FCAAC20027FAAD /* CoreData.framework */,
+				920597E117FCAAC20027FAAD /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		920597E217FCAAC20027FAAD /* FireflyTool */ = {
+			isa = PBXGroup;
+			children = (
+				920597E317FCAAC20027FAAD /* Supporting Files */,
+				920597F117FCAAC20027FAAD /* MainMenu.xib */,
+				920597F417FCAAC20027FAAD /* Images.xcassets */,
+				920597EE17FCAAC20027FAAD /* FDAppDelegate.h */,
+				920597EF17FCAAC20027FAAD /* FDAppDelegate.m */,
+				9205981017FCAB230027FAAD /* FDFireflyIceMint.h */,
+				9205981117FCAB230027FAAD /* FDFireflyIceMint.m */,
+				9205981217FCAB230027FAAD /* FDFireflyIceRadioTest.h */,
+				9205981317FCAB230027FAAD /* FDFireflyIceRadioTest.m */,
+				9205981417FCAB230027FAAD /* FDFireflyIceTest.h */,
+				9205981517FCAB230027FAAD /* FDFireflyIceTest.m */,
+				9205981617FCAB230027FAAD /* FDSerialWireDebugTask.h */,
+				9205981717FCAB230027FAAD /* FDSerialWireDebugTask.m */,
+				9205981817FCAB230027FAAD /* FDSerialWireDebugTest.h */,
+				9205981917FCAB230027FAAD /* FDSerialWireDebugTest.m */,
+				92DF4B7017FCC54E004C68C7 /* FDSerialWireDebugOperation.h */,
+				92DF4B7117FCC54E004C68C7 /* FDSerialWireDebugOperation.m */,
+			);
+			path = FireflyTool;
+			sourceTree = "<group>";
+		};
+		920597E317FCAAC20027FAAD /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				920597E417FCAAC20027FAAD /* FireflyTool-Info.plist */,
+				920597E517FCAAC20027FAAD /* InfoPlist.strings */,
+				920597E817FCAAC20027FAAD /* main.m */,
+				920597EA17FCAAC20027FAAD /* FireflyTool-Prefix.pch */,
+				920597EB17FCAAC20027FAAD /* Credits.rtf */,
+				9205981A17FCAB230027FAAD /* FireflyBoot.elf */,
+				9205981B17FCAB230027FAAD /* FireflyIce.elf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9205980017FCAAC20027FAAD /* FireflyToolTests */ = {
+			isa = PBXGroup;
+			children = (
+				9205980617FCAAC20027FAAD /* FireflyToolTests.m */,
+				9205980117FCAAC20027FAAD /* Supporting Files */,
+			);
+			path = FireflyToolTests;
+			sourceTree = "<group>";
+		};
+		9205980117FCAAC20027FAAD /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9205980217FCAAC20027FAAD /* FireflyToolTests-Info.plist */,
+				9205980317FCAAC20027FAAD /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9205982717FCAD290027FAAD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9205982C17FCAD290027FAAD /* ARMSerialWireDebug.framework */,
+				9205982E17FCAD290027FAAD /* ARMSerialWireDebugTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9205983017FCAE240027FAAD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9205983517FCAE240027FAAD /* FireflyDeviceFramework.framework */,
+				9205983717FCAE240027FAAD /* FireflyDeviceFrameworkTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9205983917FCAE380027FAAD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9205984017FCAE380027FAAD /* FireflyProduction.framework */,
+				9205984217FCAE380027FAAD /* FireflyProductionTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		920597D817FCAAC20027FAAD /* FireflyTool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9205980A17FCAAC20027FAAD /* Build configuration list for PBXNativeTarget "FireflyTool" */;
+			buildPhases = (
+				920597D517FCAAC20027FAAD /* Sources */,
+				920597D617FCAAC20027FAAD /* Frameworks */,
+				920597D717FCAAC20027FAAD /* Resources */,
+				926CCCF717FCAFA500449599 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				926CCCF617FCAEFE00449599 /* PBXTargetDependency */,
+				926CCCF417FCAEFB00449599 /* PBXTargetDependency */,
+				926CCCF217FCAEF800449599 /* PBXTargetDependency */,
+			);
+			name = FireflyTool;
+			productName = FireflyTool;
+			productReference = 920597D917FCAAC20027FAAD /* FireflyTool.app */;
+			productType = "com.apple.product-type.application";
+		};
+		920597F917FCAAC20027FAAD /* FireflyToolTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9205980D17FCAAC20027FAAD /* Build configuration list for PBXNativeTarget "FireflyToolTests" */;
+			buildPhases = (
+				920597F617FCAAC20027FAAD /* Sources */,
+				920597F717FCAAC20027FAAD /* Frameworks */,
+				920597F817FCAAC20027FAAD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				920597FF17FCAAC20027FAAD /* PBXTargetDependency */,
+			);
+			name = FireflyToolTests;
+			productName = FireflyToolTests;
+			productReference = 920597FA17FCAAC20027FAAD /* FireflyToolTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		920597D117FCAAC20027FAAD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = FD;
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = "Firefly Design";
+				TargetAttributes = {
+					920597F917FCAAC20027FAAD = {
+						TestTargetID = 920597D817FCAAC20027FAAD;
+					};
+				};
+			};
+			buildConfigurationList = 920597D417FCAAC20027FAAD /* Build configuration list for PBXProject "FireflyTool" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 920597D017FCAAC20027FAAD;
+			productRefGroup = 920597DA17FCAAC20027FAAD /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 9205982717FCAD290027FAAD /* Products */;
+					ProjectRef = 9205982617FCAD290027FAAD /* ARMSerialWireDebug.xcodeproj */;
+				},
+				{
+					ProductGroup = 9205983017FCAE240027FAAD /* Products */;
+					ProjectRef = 9205982F17FCAE240027FAAD /* FireflyDeviceFramework.xcodeproj */;
+				},
+				{
+					ProductGroup = 9205983917FCAE380027FAAD /* Products */;
+					ProjectRef = 9205983817FCAE380027FAAD /* FireflyProduction.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				920597D817FCAAC20027FAAD /* FireflyTool */,
+				920597F917FCAAC20027FAAD /* FireflyToolTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		9205982C17FCAD290027FAAD /* ARMSerialWireDebug.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ARMSerialWireDebug.framework;
+			remoteRef = 9205982B17FCAD290027FAAD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9205982E17FCAD290027FAAD /* ARMSerialWireDebugTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ARMSerialWireDebugTests.octest;
+			remoteRef = 9205982D17FCAD290027FAAD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9205983517FCAE240027FAAD /* FireflyDeviceFramework.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FireflyDeviceFramework.framework;
+			remoteRef = 9205983417FCAE240027FAAD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9205983717FCAE240027FAAD /* FireflyDeviceFrameworkTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = FireflyDeviceFrameworkTests.octest;
+			remoteRef = 9205983617FCAE240027FAAD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9205984017FCAE380027FAAD /* FireflyProduction.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FireflyProduction.framework;
+			remoteRef = 9205983F17FCAE380027FAAD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9205984217FCAE380027FAAD /* FireflyProductionTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = FireflyProductionTests.octest;
+			remoteRef = 9205984117FCAE380027FAAD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		920597D717FCAAC20027FAAD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				920597E717FCAAC20027FAAD /* InfoPlist.strings in Resources */,
+				9205982217FCAB230027FAAD /* FireflyIce.elf in Resources */,
+				920597F517FCAAC20027FAAD /* Images.xcassets in Resources */,
+				920597ED17FCAAC20027FAAD /* Credits.rtf in Resources */,
+				920597F317FCAAC20027FAAD /* MainMenu.xib in Resources */,
+				9205982117FCAB230027FAAD /* FireflyBoot.elf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		920597F817FCAAC20027FAAD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9205980517FCAAC20027FAAD /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		920597D517FCAAC20027FAAD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9205981C17FCAB230027FAAD /* FDFireflyIceMint.m in Sources */,
+				9205982017FCAB230027FAAD /* FDSerialWireDebugTest.m in Sources */,
+				9205981F17FCAB230027FAAD /* FDSerialWireDebugTask.m in Sources */,
+				9205981D17FCAB230027FAAD /* FDFireflyIceRadioTest.m in Sources */,
+				92DF4B7217FCC54E004C68C7 /* FDSerialWireDebugOperation.m in Sources */,
+				920597F017FCAAC20027FAAD /* FDAppDelegate.m in Sources */,
+				920597E917FCAAC20027FAAD /* main.m in Sources */,
+				9205981E17FCAB230027FAAD /* FDFireflyIceTest.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		920597F617FCAAC20027FAAD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9205980717FCAAC20027FAAD /* FireflyToolTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		920597FF17FCAAC20027FAAD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 920597D817FCAAC20027FAAD /* FireflyTool */;
+			targetProxy = 920597FE17FCAAC20027FAAD /* PBXContainerItemProxy */;
+		};
+		926CCCF217FCAEF800449599 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ARMSerialWireDebug;
+			targetProxy = 926CCCF117FCAEF800449599 /* PBXContainerItemProxy */;
+		};
+		926CCCF417FCAEFB00449599 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FireflyDeviceFramework;
+			targetProxy = 926CCCF317FCAEFB00449599 /* PBXContainerItemProxy */;
+		};
+		926CCCF617FCAEFE00449599 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FireflyProduction;
+			targetProxy = 926CCCF517FCAEFE00449599 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		920597E517FCAAC20027FAAD /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				920597E617FCAAC20027FAAD /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		920597EB17FCAAC20027FAAD /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				920597EC17FCAAC20027FAAD /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		920597F117FCAAC20027FAAD /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				920597F217FCAAC20027FAAD /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		9205980317FCAAC20027FAAD /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9205980417FCAAC20027FAAD /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		9205980817FCAAC20027FAAD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		9205980917FCAAC20027FAAD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		9205980B17FCAAC20027FAAD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FireflyTool/FireflyTool-Prefix.pch";
+				INFOPLIST_FILE = "FireflyTool/FireflyTool-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		9205980C17FCAAC20027FAAD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FireflyTool/FireflyTool-Prefix.pch";
+				INFOPLIST_FILE = "FireflyTool/FireflyTool-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		9205980E17FCAAC20027FAAD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FireflyTool.app/Contents/MacOS/FireflyTool";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FireflyTool/FireflyTool-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "FireflyToolTests/FireflyToolTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		9205980F17FCAAC20027FAAD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FireflyTool.app/Contents/MacOS/FireflyTool";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FireflyTool/FireflyTool-Prefix.pch";
+				INFOPLIST_FILE = "FireflyToolTests/FireflyToolTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		920597D417FCAAC20027FAAD /* Build configuration list for PBXProject "FireflyTool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9205980817FCAAC20027FAAD /* Debug */,
+				9205980917FCAAC20027FAAD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9205980A17FCAAC20027FAAD /* Build configuration list for PBXNativeTarget "FireflyTool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9205980B17FCAAC20027FAAD /* Debug */,
+				9205980C17FCAAC20027FAAD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9205980D17FCAAC20027FAAD /* Build configuration list for PBXNativeTarget "FireflyToolTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9205980E17FCAAC20027FAAD /* Debug */,
+				9205980F17FCAAC20027FAAD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 920597D117FCAAC20027FAAD /* Project object */;
+}

@@ -44,7 +44,8 @@
     NSString *path = [[NSBundle bundleForClass: [self class]] pathForResource:@"FireflyFlash" ofType:@"elf"];
     _fireflyFlashExecutable = [[FDExecutable alloc] init];
     [_fireflyFlashExecutable load:path];
-    
+    _fireflyFlashExecutable.sections = [_fireflyFlashExecutable combineAllSectionsType:FDExecutableSectionTypeProgram address:0x20000000 length:0x8000 pageSize:4];
+
     for (FDExecutableSection *section in _fireflyFlashExecutable.sections) {
         switch (section.type) {
             case FDExecutableSectionTypeData:

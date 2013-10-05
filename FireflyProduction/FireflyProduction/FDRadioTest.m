@@ -87,14 +87,21 @@
         _sendTimeout = 0.5;
         _sendRetries = 3;
         _retries = 3;
+        _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     }
     return self;
 }
 
 - (void)start
 {
-    _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
-    _timer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(check:) userInfo:nil repeats:YES];
+    _timer = [NSTimer timerWithTimeInterval:0.25 target:self selector:@selector(check:) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
+}
+
+- (void)stop
+{
+    [_timer invalidate];
+    _timer = nil;
 }
 
 - (void)timeout:(FDRadioTestContext *)context

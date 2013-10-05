@@ -14,10 +14,10 @@
         <customObject id="-3" userLabel="Application"/>
         <menu title="AMainMenu" systemMenu="main" id="29">
             <items>
-                <menuItem title="FireflyFlash" id="56">
-                    <menu key="submenu" title="FireflyFlash" systemMenu="apple" id="57">
+                <menuItem title="FireflyTool" id="56">
+                    <menu key="submenu" title="FireflyTool" systemMenu="apple" id="57">
                         <items>
-                            <menuItem title="About FireflyFlash" id="58">
+                            <menuItem title="About FireflyTool" id="58">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="orderFrontStandardAboutPanel:" target="-2" id="142"/>
@@ -36,7 +36,7 @@
                             <menuItem isSeparatorItem="YES" id="144">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Hide FireflyFlash" keyEquivalent="h" id="134">
+                            <menuItem title="Hide FireflyTool" keyEquivalent="h" id="134">
                                 <connections>
                                     <action selector="hide:" target="-1" id="367"/>
                                 </connections>
@@ -55,7 +55,7 @@
                             <menuItem isSeparatorItem="YES" id="149">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Quit FireflyFlash" keyEquivalent="q" id="136">
+                            <menuItem title="Quit FireflyTool" keyEquivalent="q" id="136">
                                 <connections>
                                     <action selector="terminate:" target="-3" id="449"/>
                                 </connections>
@@ -637,7 +637,7 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Help" systemMenu="help" id="491">
                         <items>
-                            <menuItem title="FireflyFlash Help" keyEquivalent="?" id="492">
+                            <menuItem title="FireflyTool Help" keyEquivalent="?" id="492">
                                 <connections>
                                     <action selector="showHelp:" target="-1" id="493"/>
                                 </connections>
@@ -647,188 +647,59 @@
                 </menuItem>
             </items>
         </menu>
-        <window title="FireflyFlash" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="536">
+        <window title="FireflyTool" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="371">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="534" height="375"/>
+            <rect key="contentRect" x="335" y="390" width="480" height="360"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
-            <value key="minSize" type="size" width="534" height="375"/>
-            <view key="contentView" id="537">
-                <rect key="frame" x="0.0" y="0.0" width="534" height="375"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <view key="contentView" id="372">
+                <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
+                <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <scrollView ambiguous="YES" misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pjP-ft-LbT">
-                        <rect key="frame" x="20" y="213" width="198" height="120"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <clipView key="contentView" ambiguous="YES" misplaced="YES" id="jUI-lQ-keb">
-                            <rect key="frame" x="1" y="1" width="196" height="118"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <subviews>
-                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" id="CHc-Oq-ABn">
-                                    <rect key="frame" x="0.0" y="0.0" width="196" height="118"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <size key="intercellSpacing" width="3" height="2"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
-                                    <tableColumns>
-                                        <tableColumn width="193" minWidth="40" maxWidth="1000" id="R4D-YL-Y5v">
-                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
-                                                <font key="font" metaFont="smallSystem"/>
-                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
-                                            </tableHeaderCell>
-                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="Mi4-fA-Ulc">
-                                                <font key="font" metaFont="system"/>
-                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        </tableColumn>
-                                    </tableColumns>
-                                </tableView>
-                            </subviews>
-                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" id="bmD-c1-LjN">
-                            <rect key="frame" x="1" y="-15" width="0.0" height="16"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" id="tQu-Ym-BZx">
-                            <rect key="frame" x="-15" y="1" width="16" height="0.0"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                    </scrollView>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Aq0-sz-Tjp">
-                        <rect key="frame" x="220" y="272" width="110" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Program" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="U9d-Xj-cuJ">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="swdProgram:" target="494" id="5P6-uy-a1I"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0nD-K9-D8t">
-                        <rect key="frame" x="220" y="239" width="110" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Reset" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="SVb-oe-3cR">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="swdReset:" target="494" id="8rC-2C-LLz"/>
-                        </connections>
-                    </button>
-                    <scrollView ambiguous="YES" misplaced="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f9E-7i-vyu">
-                        <rect key="frame" x="20" y="20" width="494" height="185"/>
+                    <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jJe-Sx-nHf">
+                        <rect key="frame" x="20" y="20" width="440" height="320"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <clipView key="contentView" ambiguous="YES" misplaced="YES" id="ggf-n5-3IO">
-                            <rect key="frame" x="1" y="1" width="492" height="183"/>
+                        <clipView key="contentView" id="6Vc-St-CD6">
+                            <rect key="frame" x="1" y="1" width="438" height="318"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <textView ambiguous="YES" importsGraphics="NO" findStyle="panel" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" spellingCorrection="YES" id="NP3-Vq-o1b">
-                                    <rect key="frame" x="0.0" y="0.0" width="492" height="183"/>
+                                <textView importsGraphics="NO" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="omE-lX-8Ed">
+                                    <rect key="frame" x="0.0" y="0.0" width="438" height="318"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <size key="minSize" width="492" height="183"/>
-                                    <size key="maxSize" width="503" height="10000000"/>
+                                    <size key="minSize" width="438" height="318"/>
+                                    <size key="maxSize" width="463" height="10000000"/>
                                     <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                    <size key="minSize" width="492" height="183"/>
-                                    <size key="maxSize" width="503" height="10000000"/>
+                                    <size key="minSize" width="438" height="318"/>
+                                    <size key="maxSize" width="463" height="10000000"/>
                                 </textView>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" id="Zgg-b0-09O">
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" id="qUU-qG-GtA">
                             <rect key="frame" x="-100" y="-100" width="87" height="18"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" id="e3t-1U-Uwa">
-                            <rect key="frame" x="477" y="1" width="16" height="183"/>
+                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" id="ezm-A5-JSj">
+                            <rect key="frame" x="423" y="1" width="16" height="318"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
-                    <pathControl verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RTy-s8-aGm">
-                        <rect key="frame" x="17" y="334" width="204" height="22"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="198" id="g3X-JK-PnB"/>
-                        </constraints>
-                        <pathCell key="cell" controlSize="small" selectable="YES" editable="YES" alignment="left" placeholderString="Select firmware ELF file..." pathStyle="popUp" id="jpN-ur-Zut">
-                            <font key="font" metaFont="smallSystem"/>
-                        </pathCell>
-                    </pathControl>
-                    <imageView fixedFrame="YES" alphaValue="0.25" translatesAutoresizingMaskIntoConstraints="NO" id="h2k-wJ-WRR">
-                        <rect key="frame" x="453" y="294" width="64" height="64"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <imageCell key="cell" enabled="NO" refusesFirstResponder="YES" alignment="left" imageFrameStyle="grayBezel" image="gdb" id="BGd-bK-aHR"/>
-                    </imageView>
-                    <imageView fixedFrame="YES" alphaValue="0.25" translatesAutoresizingMaskIntoConstraints="NO" id="krO-PB-Bjl">
-                        <rect key="frame" x="387" y="294" width="64" height="64"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <imageCell key="cell" enabled="NO" refusesFirstResponder="YES" alignment="left" imageFrameStyle="grayBezel" image="jtag" id="Feb-pm-nmf"/>
-                    </imageView>
-                    <imageView fixedFrame="YES" alphaValue="0.25" translatesAutoresizingMaskIntoConstraints="NO" id="I5z-Zz-BX8">
-                        <rect key="frame" x="490" y="265" width="24" height="24"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="running" id="Oi2-wi-IPv"/>
-                    </imageView>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QVL-Nm-vsw">
-                        <rect key="frame" x="220" y="305" width="110" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Connect" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="QsK-vi-8ez">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="swdConnect:" target="494" id="lPD-nO-Kku"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I7o-ox-5ix">
-                        <rect key="frame" x="220" y="206" width="110" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Disconnect" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="PJG-dz-8Xx">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="swdDisconnect:" target="494" id="ThY-zF-Hv8"/>
-                        </connections>
-                    </button>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="pjP-ft-LbT" firstAttribute="trailing" secondItem="RTy-s8-aGm" secondAttribute="trailing" id="FZR-sI-ql8"/>
-                    <constraint firstItem="pjP-ft-LbT" firstAttribute="top" secondItem="RTy-s8-aGm" secondAttribute="bottom" constant="8" symbolic="YES" id="TSU-TR-ONz"/>
-                    <constraint firstItem="f9E-7i-vyu" firstAttribute="top" secondItem="pjP-ft-LbT" secondAttribute="bottom" constant="8" symbolic="YES" id="aEL-TO-HTn"/>
+                    <constraint firstAttribute="bottom" secondItem="jJe-Sx-nHf" secondAttribute="bottom" constant="20" symbolic="YES" id="0D6-iQ-rzh"/>
+                    <constraint firstItem="jJe-Sx-nHf" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="20" symbolic="YES" id="QXN-bA-pJZ"/>
+                    <constraint firstItem="jJe-Sx-nHf" firstAttribute="top" secondItem="372" secondAttribute="top" constant="20" symbolic="YES" id="pw0-5d-oYd"/>
+                    <constraint firstAttribute="trailing" secondItem="jJe-Sx-nHf" secondAttribute="trailing" constant="20" symbolic="YES" id="w31-Fq-yaw"/>
                 </constraints>
             </view>
         </window>
         <customObject id="494" customClass="FDAppDelegate">
             <connections>
-                <outlet property="connectButton" destination="QVL-Nm-vsw" id="Utj-al-rWX"/>
-                <outlet property="disconnectButton" destination="I7o-ox-5ix" id="FqR-3U-h5G"/>
-                <outlet property="programButton" destination="Aq0-sz-Tjp" id="5s2-TM-hkM"/>
-                <outlet property="resetButton" destination="0nD-K9-D8t" id="Vlb-fM-XSJ"/>
-                <outlet property="swdGdbImageView" destination="h2k-wJ-WRR" id="RJK-tq-EeH"/>
-                <outlet property="swdJtagImageView" destination="krO-PB-Bjl" id="HGi-io-skJ"/>
-                <outlet property="swdPathControl" destination="RTy-s8-aGm" id="4Nz-Ka-RVA"/>
-                <outlet property="swdRunningImageView" destination="I5z-Zz-BX8" id="N6D-rr-vdJ"/>
-                <outlet property="swdTableView" destination="CHc-Oq-ABn" id="Cvz-EY-RnZ"/>
-                <outlet property="swdTextView" destination="NP3-Vq-o1b" id="KHO-kc-ZWb"/>
-                <outlet property="window" destination="536" id="701"/>
+                <outlet property="logView" destination="omE-lX-8Ed" id="SXa-qU-LIq"/>
+                <outlet property="window" destination="371" id="532"/>
             </connections>
         </customObject>
         <customObject id="420" customClass="NSFontManager"/>
-        <imageView id="928">
-            <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="929"/>
-        </imageView>
     </objects>
-    <resources>
-        <image name="gdb" width="48" height="48"/>
-        <image name="jtag" width="48" height="48"/>
-        <image name="running" width="24" height="24"/>
-    </resources>
 </document>
