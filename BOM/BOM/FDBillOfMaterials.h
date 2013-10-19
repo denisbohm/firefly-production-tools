@@ -50,6 +50,7 @@
 @property NSString *note;
 @property NSMutableSet *variants;
 @property BOOL doNotStuff;
+@property BOOL doNotSubstitute;
 
 @property NSString *namePrefix;
 @property NSUInteger nameNumber;
@@ -62,6 +63,7 @@
 
 @property NSString *orderingCode;
 @property BOOL doNotStuff;
+@property BOOL doNotSubstitute;
 @property NSMutableArray *parts;
 @property NSString *reference;
 @property NSUInteger number;

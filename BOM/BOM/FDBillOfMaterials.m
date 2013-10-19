@@ -162,6 +162,7 @@
     part.distributor = distributor;
     part.distributorOrderingCode = distributorOrderingCode;
     part.doNotStuff = true;
+    part.doNotSubstitute = true;
     FDItem *item = [[FDItem alloc] init];
     item.orderingCode = part.orderingCode;
     itemsByOrderingId[item.orderingCode] = item;
@@ -332,6 +333,9 @@
             } else
             if ([attributeName isEqualToString:@"DNS"]) {
                 part.doNotStuff = [attributeValue isEqualToString:@"true"];
+            } else
+            if ([attributeName isEqualToString:@"NS"]) {
+                part.doNotSubstitute = [attributeValue isEqualToString:@"true"];
             } else {
 //                NSLog(@"Unknown %@ Attribute %@", part.name, attributeName);
             }
@@ -384,12 +388,13 @@
         }
         
         [part parseName];
-        NSString *orderingId = [NSString stringWithFormat:@"%@ DNS=%@ NOTE=%@", part.orderingCode, part.doNotStuff ? @"YES" : @"NO", part.note];
+        NSString *orderingId = [NSString stringWithFormat:@"%@ DNS=%@ NS=%@ NOTE=%@", part.orderingCode, part.doNotStuff ? @"YES" : @"NO", part.doNotSubstitute ? @"YES" : @"NO", part.note];
         FDItem *item = itemsByOrderingId[orderingId];
         if (item == nil) {
             item = [[FDItem alloc] init];
             item.orderingCode = part.orderingCode;
             item.doNotStuff = part.doNotStuff;
+            item.doNotSubstitute = part.doNotSubstitute;
             itemsByOrderingId[orderingId] = item;
         }
         [item.parts addObject:part];
@@ -840,11 +845,11 @@
 - (void)exportForScreamingCircuits
 {
     FDSpreadsheet *spreadsheet = [[FDSpreadsheet alloc] init];
-    [spreadsheet create:@[@"Item #", @"Qty", @"Ref Des", @"Manufacturer", @"Mfg Part #", @"Distributor", @"Description", @"Package", @"Type"]];
+    [spreadsheet create:@[@"Item #", @"Qty", @"Ref Des", @"Manufacturer", @"Mfg Part #", @"Distributor", @"Description", @"Package", @"Type", @"DNS", @"NS"]];
     
     NSMutableString *export = [NSMutableString string];
     NSLog(@"Screaming Circuits Export");
-    [export appendString:@"Item #\tQty\tRef Des\tManufacturer\tMfg Part #\tDistributor\tDescription\tPackage\tType\n"];
+    [export appendString:@"Item #\tQty\tRef Des\tManufacturer\tMfg Part #\tDistributor\tDescription\tPackage\tType\tDNS\tNS\n"];
     NSUInteger uniquePartCount = 0;
     NSUInteger surfaceMountCount = 0;
     NSUInteger finePitchCount = 0;
@@ -894,8 +899,14 @@
             }
             [description appendString:@"(do not stuff)"];
         }
+        if (part.doNotSubstitute) {
+            if (description.length > 0) {
+                [description appendString:@" "];
+            }
+            [description appendString:@"(do not substitute)"];
+        }
 
-        [export appendFormat:@"%lu\t%lu\t%@\t%@\t%@\t%@\t%@\t%@\t%@\n", (unsigned long)item.number, (unsigned long)item.parts.count, item.reference, part.manufacturer, part.orderingCode, distributor, description, packageName, type];
+        [export appendFormat:@"%lu\t%lu\t%@\t%@\t%@\t%@\t%@\t%@\t%@\t%@\t%@\n", (unsigned long)item.number, (unsigned long)item.parts.count, item.reference, part.manufacturer, part.orderingCode, distributor, description, packageName, type, part.doNotStuff ? @"TRUE" : @"FALSE", part.doNotSubstitute ? @"TRUE" : @"FALSE"];
 
         [spreadsheet addRowWithStyle:part.doNotStuff ? @"s21" : nil];
         [spreadsheet addNumberCell:item.number];
@@ -907,6 +918,8 @@
         [spreadsheet addStringCell:description];
         [spreadsheet addStringCell:packageName];
         [spreadsheet addStringCell:type];
+        [spreadsheet addStringCell:part.doNotStuff ? @"TRUE" : @"FALSE"];
+        [spreadsheet addStringCell:part.doNotSubstitute ? @"TRUE" : @"FALSE"];
     }
     [export appendFormat:@"Total # of unique parts\t%lu\n", uniquePartCount];
     [export appendFormat:@"SMT placements per board\t%lu\n", surfaceMountCount];

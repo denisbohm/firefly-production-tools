@@ -8,8 +8,8 @@
 
 #import "FDFireflyIceMint.h"
 
-#import <FireflyDeviceFramework/FDBinary.h>
-#import <FireflyDeviceFramework/FDCrypto.h>
+#import <FireflyDevice/FDBinary.h>
+#import <FireflyDevice/FDCrypto.h>
 
 #import <FireflyProduction/FDExecutable.h>
 #import <FireflyProduction/FDFireflyFlash.h>

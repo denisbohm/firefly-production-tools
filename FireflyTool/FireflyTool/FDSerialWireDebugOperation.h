@@ -12,12 +12,19 @@
 #import <ARMSerialWireDebug/FDSerialWireDebug.h>
 #import <ARMSerialWireDebug/FDUSBDevice.h>
 
+@protocol FDSerialWireDebugOperationDelegate <NSObject>
+
+- (void)serialWireDebugOperationDetected:(BOOL)detected;
+
+@end
+
 @interface FDSerialWireDebugOperation : NSOperation
 
 @property BOOL run;
 @property FDLogger *logger;
 @property FDUSBDevice *usbDevice;
 @property FDSerialWireDebug *serialWireDebug;
+@property id<FDSerialWireDebugOperationDelegate> delegate;
 
 - (void)execute;
 

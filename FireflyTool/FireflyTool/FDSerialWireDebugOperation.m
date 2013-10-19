@@ -17,6 +17,12 @@
 #import <ARMSerialWireDebug/FDSerialWireDebug.h>
 #import <ARMSerialWireDebug/FDUSBDevice.h>
 
+@interface FDSerialWireDebugOperation ()
+
+@property BOOL detected;
+
+@end
+
 @implementation FDSerialWireDebugOperation
 
 - (id)init
@@ -62,12 +68,20 @@
 
     [_serialWireDebug halt];
     FDLog(@"CPU Halted %@", [_serialWireDebug isHalted] ? @"YES" : @"NO");
+    
+    FDLog(@"starting mass erase...");
+    [_serialWireDebug massErase];
+    [_serialWireDebug reset];
+    [_serialWireDebug halt];
+    [_serialWireDebug step];
+    [_serialWireDebug halt];
+    FDLog(@"mass erase complete");
 }
 
 - (void)execute
 {
     NSArray *tasks = @[
-//                       [[FDFireflyIceTest alloc] init],
+                       [[FDFireflyIceTest alloc] init],
 //                       [[FDFireflyIceRadioTest alloc] init],
                        [[FDFireflyIceMint alloc] init],
                        ];
@@ -84,15 +98,34 @@
         [self initialize];
         while (!self.isCancelled) {
             [NSThread sleepForTimeInterval:0.25];
-            if ([_serialWireDebug getGpioDetect] && [self run]) {
-                self.run = NO;
-                [NSThread sleepForTimeInterval:0.25];
-                [self attach];
-                [self execute];
+            if ([_serialWireDebug getGpioDetect]) {
+                if (!_detected) {
+                    _detected = YES;
+                    [_delegate serialWireDebugOperationDetected:_detected];
+                }
+                
+                if ([self run]) {
+                    [NSThread sleepForTimeInterval:0.5];
+                    @try {
+                        [self attach];
+                        [self execute];
+                        self.run = NO;
+                    } @catch (NSException *e) {
+                        FDLog(@"unexpected exception: %@\n%@", e, [e callStackSymbols]);
+                    }
+                }
+            } else {
+                if (_detected) {
+                    self.run = YES;
+                    _detected = NO;
+                    [_delegate serialWireDebugOperationDetected:_detected];
+                }
             }
         }
     } @catch (NSException *e) {
-        FDLog(@"unexpected exception: %@\n%@", e, [e callStackSymbols]);
+        if (![@"USBDeviceClosed" isEqualToString:e.name]) {
+            FDLog(@"unexpected exception: %@\n%@", e, [e callStackSymbols]);
+        }
     }
     [_usbDevice close];
 }

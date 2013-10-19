@@ -8,7 +8,7 @@
 
 #import "FDSerialWireDebugTest.h"
 
-#import <FireflyDeviceFramework/FDBinary.h>
+#import <FireflyDevice/FDBinary.h>
 
 #import <FireflyProduction/FDFireflyFlash.h>
 
@@ -72,8 +72,11 @@
     uint32_t logCountAfter = [self fd_log_get_count];
     uint32_t logCount = logCountAfter - logCountBefore;
     if (logCount > 0) {
+        uint32_t address = [self run:@"fd_log_get_message"];
+        NSData *data = [self.serialWireDebug readMemory:address length:128];
+        NSString *message = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
         @throw [NSException exceptionWithName:@"AssertionFailures"
-                                       reason:[NSString stringWithFormat:@"%d assertions failed during %@", logCount, name]
+                                       reason:[NSString stringWithFormat:@"%d assertions failed during %@ (first message: %@)", logCount, name, message]
                                      userInfo:nil];
     }
     return result;
@@ -115,7 +118,7 @@
     *x = v[0];
     *y = v[1];
     *z = v[2];
-    FDLog(@"%@ x = %0.3f, y = %0.3f, z = %0.3f", name, *x, *y, *z);
+    FDLog(@"%@ x = %f, y = %f, z = %f", name, *x, *y, *z);
 }
 
 - (float)toFloat:(uint32_t)v

@@ -17,8 +17,10 @@
 
 #import <FireflyProduction/FDRadioTest.h>
 
-@interface FDAppDelegate () <FDUSBMonitorDelegate, FDLoggerConsumer>
+@interface FDAppDelegate () <FDUSBMonitorDelegate, FDLoggerConsumer, FDSerialWireDebugOperationDelegate>
 
+@property (assign) IBOutlet NSTextField *jtagLabel;
+@property (assign) IBOutlet NSTextField *pcbaLabel;
 @property (assign) IBOutlet NSTextView *logView;
 
 @property FDLogger *logger;
@@ -83,10 +85,23 @@
     }
 }
 
+- (void)pcbaDetected:(BOOL)detected
+{
+    [_pcbaLabel setDrawsBackground:detected];
+}
+
+- (void)serialWireDebugOperationDetected:(BOOL)detected
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self pcbaDetected:detected];
+    });
+}
+
 - (void)operationComplete
 {
-    FDLog(@"operation complete");
     _operation = nil;
+    [_jtagLabel setDrawsBackground:NO];
+    [_pcbaLabel setDrawsBackground:NO];
 }
 
 - (void)usbMonitor:(FDUSBMonitor *)usbMonitor usbDeviceAdded:(FDUSBDevice *)usbDevice
@@ -96,10 +111,13 @@
     }
     
     [self clearLog];
-    FDLog(@"device added");
+    [_jtagLabel setDrawsBackground:YES];
+    [_pcbaLabel setDrawsBackground:NO];
+
     _operation = [[FDSerialWireDebugOperation alloc] init];
     _operation.logger = _logger;
     _operation.usbDevice = usbDevice;
+    _operation.delegate = self;
     __weak FDAppDelegate *appDelegate = self;
     [_operation setCompletionBlock:^{
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -111,9 +129,6 @@
 
 - (void)usbMonitor:(FDUSBMonitor *)usbMonitor usbDeviceRemoved:(FDUSBDevice *)usbDevice
 {
-    if (_operation.usbDevice == usbDevice) {
-        FDLog(@"device removed");
-    }
 }
 
 

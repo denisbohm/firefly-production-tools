@@ -15,6 +15,10 @@
 #define SCB_BASE (SCS_BASE +  0x0D00)
 #define SCB_VTOR (SCB_BASE + 0x8)
 
+#define SCB_AIRCR 0xE000ED0C
+#define SCB_AIRCR_VECTKEY 0x05FA0000
+#define SCB_AIRCR_VECTRESET 0x00000001
+
 @implementation FDSerialWireDebugTask
 
 - (void)run
@@ -35,8 +39,9 @@
 {
     [self.serialWireDebug halt];
     [self.serialWireDebug reset];
-    // !!! In "fresh" boards there seems to be interrupts pending, this seems to clear it (this needs more investigation) -denis
-    [self.serialWireDebug writeMemory:0xE000ED0C value:0x05FA0001];
+    // In "fresh" microcontrollers there seems to be interrupts pending, maybe due to preloaded boot loader?
+    // The following resets everything except the debug interface.
+    [self.serialWireDebug writeMemory:SCB_AIRCR value:SCB_AIRCR_VECTKEY | SCB_AIRCR_VECTRESET];
     [self.serialWireDebug step];
 }
 

@@ -8,7 +8,7 @@
 
 #import "FDFireflyIceTest.h"
 
-#import <FireflyDeviceFramework/FDBinary.h>
+#import <FireflyDevice/FDBinary.h>
 
 #import <ARMSerialWireDebug/FDCortexM.h>
 #import <ARMSerialWireDebug/FDSerialWireDebug.h>
@@ -50,6 +50,7 @@ enum GPIO_Port_TypeDef {
     [self loadExecutable:@"FireflyIceTest"];
     
     [self run:@"fd_processor_initialize"];
+    
     [self run:@"fd_log_initialize"];
     [self run:@"fd_event_initialize"];
     
@@ -76,6 +77,7 @@ enum GPIO_Port_TypeDef {
     [self invoke:@"fd_i2c1_power_on"];
     //
     [self invoke:@"fd_lp55231_initialize"];
+    [self invoke:@"fd_lp55231_power_on"];
     [self invoke:@"fd_lp55231_wake"];
     for (uint32_t i = 0; i < 9; ++i) {
         [self invoke:@"fd_lp55231_set_led_pwm" r0:i r1:255];
@@ -83,6 +85,7 @@ enum GPIO_Port_TypeDef {
     }
     //
     [self invoke:@"fd_mag3110_initialize"];
+    [self invoke:@"fd_mag3110_wake"];
     [NSThread sleepForTimeInterval:0.1];
     float mx, my, mz;
     [self invoke:@"fd_mag3110_read" x:&mx y:&my z:&mz];
@@ -121,6 +124,12 @@ enum GPIO_Port_TypeDef {
     if (![data isEqualToData:writeData]) {
         @throw [NSException exceptionWithName:@"ExternalFlashFailure" reason:@"external flash failure" userInfo:nil];
     }
+    
+    FDLog(@"erasing external flash...");
+    [self invoke:@"fd_w25q16dw_enable_write"];
+    [self invoke:@"fd_w25q16dw_chip_erase"];
+    [self invoke:@"fd_w25q16dw_wait_while_busy"];
+    FDLog(@"erase complete");
 
     [self GPIO_PinOutSet:gpioPortE pin:9]; // orange
     [self GPIO_PinOutClear:gpioPortA pin:15]; // green
