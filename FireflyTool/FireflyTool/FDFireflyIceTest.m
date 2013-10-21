@@ -59,19 +59,37 @@ enum GPIO_Port_TypeDef {
     [self GPIO_PinOutClear:gpioPortC pin:1]; // red
     [self GPIO_PinOutClear:gpioPortC pin:0]; // red
     
+    BOOL isCharging = ![self GPIO_PinInGet:gpioPortC pin:9];
+    FDLog(@"is charging: %@", isCharging ? @"YES" : @"NO");
+    
+    BOOL batteryConnected = NO;
+    
     [self invoke:@"fd_adc_initialize"];
     //
     [self invoke:@"fd_adc_start" r0:fd_adc_channel_temperature r1:false];
     float temperature = [self toFloat:[self invoke:@"fd_adc_get_temperature"]];
     FDLog(@"temperature = %0.3f", temperature);
+    if ((temperature < 20.0f) || (temperature > 35.0f)) {
+        @throw [NSException exceptionWithName:@"TemperatureOutOfRange" reason:[NSString stringWithFormat:@"temperature out of range: %f", temperature] userInfo:nil];
+    }
     //
     [self invoke:@"fd_adc_start" r0:fd_adc_channel_battery_voltage r1:false];
     float batteryVoltage = [self toFloat:[self invoke:@"fd_adc_get_battery_voltage"]];
     FDLog(@"batteryVoltage = %0.3f", batteryVoltage);
+    if (batteryConnected) {
+        if ((batteryVoltage < 3.5f) || (batteryVoltage > 4.5f)) {
+            @throw [NSException exceptionWithName:@"BatteryVoltageOutOfRange" reason:[NSString stringWithFormat:@"battery voltage out of range: %f", batteryVoltage] userInfo:nil];
+        }
+    }
     //
     [self invoke:@"fd_adc_start" r0:fd_adc_channel_charge_current r1:false];
     float chargeCurrent = [self toFloat:[self invoke:@"fd_adc_get_charge_current"]];
     FDLog(@"chargeCurrent = %0.3f", chargeCurrent);
+    if (batteryConnected) {
+        if ((chargeCurrent < 0.0f) || (chargeCurrent > 100.0f)) {
+            @throw [NSException exceptionWithName:@"ChargeCurrentOfRange" reason:[NSString stringWithFormat:@"charge current out of range: %f", chargeCurrent] userInfo:nil];
+        }
+    }
     
     [self invoke:@"fd_i2c1_initialize"];
     [self invoke:@"fd_i2c1_power_on"];
@@ -82,13 +100,18 @@ enum GPIO_Port_TypeDef {
     for (uint32_t i = 0; i < 9; ++i) {
         [self invoke:@"fd_lp55231_set_led_pwm" r0:i r1:255];
         [self invoke:@"fd_lp55231_set_led_pwm" r0:i r1:0];
+        [NSThread sleepForTimeInterval:0.250];
     }
     //
     [self invoke:@"fd_mag3110_initialize"];
     [self invoke:@"fd_mag3110_wake"];
     [NSThread sleepForTimeInterval:0.1];
     float mx, my, mz;
-    [self invoke:@"fd_mag3110_read" x:&mx y:&my z:&mz];
+    [self invoke:@"fd_mag3110_read" x:&mx y:&my z:&mz]; // -0.000015, 0.000003, 0.000054
+    float m = sqrt(mx * mx + my * my + mz * mz);
+    if ((m < 1.0e-6) || (m > 1.0e4)) {
+        @throw [NSException exceptionWithName:@"MagnetometerOfRange" reason:[NSString stringWithFormat:@"magnetometer out of range: %f", m] userInfo:nil];
+    }
     
     [self invoke:@"fd_spi_initialize"];
     //
@@ -100,7 +123,13 @@ enum GPIO_Port_TypeDef {
     [self invoke:@"fd_lis3dh_wake"];
     [NSThread sleepForTimeInterval:0.1];
     float ax, ay, az;
-    [self invoke:@"fd_lis3dh_read" x:&ax y:&ay z:&az];
+    [self invoke:@"fd_lis3dh_read" x:&ax y:&ay z:&az]; // -0.078125, -0.734375, 0.718750
+    {
+    float a = sqrt(ax * ax + ay * ay + az * az);
+    if ((a < 0.8) || (a > 1.2)) {
+        @throw [NSException exceptionWithName:@"AccelerometerOfRange" reason:[NSString stringWithFormat:@"accelerometer out of range: %f", a] userInfo:nil];
+    }
+    }
     
     // initialize devices on spi0 powered bus
     //    fd_spi_on(FD_SPI_BUS_0);

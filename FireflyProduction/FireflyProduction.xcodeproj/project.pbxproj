@@ -15,6 +15,7 @@
 		927E8574179F3AF90038CEFC /* FireflyFlash.elf in Resources */ = {isa = PBXBuildFile; fileRef = 927E8573179F3AF90038CEFC /* FireflyFlash.elf */; };
 		92898BDE179E35D0007B84B7 /* FDFireflyFlash.h in Headers */ = {isa = PBXBuildFile; fileRef = 92898BDC179E35D0007B84B7 /* FDFireflyFlash.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92898BDF179E35D0007B84B7 /* FDFireflyFlash.m in Sources */ = {isa = PBXBuildFile; fileRef = 92898BDD179E35D0007B84B7 /* FDFireflyFlash.m */; };
+		929D865418145E36001522C9 /* FireflyDevice.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 928CD63518118F5F00C75B73 /* FireflyDevice.framework */; };
 		92E774D41730925800A111DF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E774D31730925800A111DF /* Cocoa.framework */; };
 		92E774DE1730925800A111DF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92E774DC1730925800A111DF /* InfoPlist.strings */; };
 		92E774E21730925800A111DF /* FireflyProduction.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E774E11730925800A111DF /* FireflyProduction.m */; };
@@ -104,6 +105,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				929D865418145E36001522C9 /* FireflyDevice.framework in CopyFiles */,
 				9229C48817E4FFAF00B87C60 /* ARMSerialWireDebug.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

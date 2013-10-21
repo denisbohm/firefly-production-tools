@@ -47,13 +47,16 @@
 
 - (NSString *)getExecutablePath:(NSString *)name type:(NSString *)type
 {
-//    return [[NSBundle bundleForClass: [self class]] pathForResource:name ofType:@"elf"];
-    return [NSString stringWithFormat:@"/Users/denis/sandbox/denisbohm/firefly-ice-firmware/%@/%@/%@.elf", type, name, name];
+    return [[NSBundle bundleForClass: [self class]] pathForResource:name ofType:@"elf"];
+//    return [NSString stringWithFormat:@"/Users/denis/sandbox/denisbohm/firefly-ice-firmware/%@/%@/%@.elf", type, name, name];
 }
 
 - (FDExecutable *)readExecutable:(NSString *)name type:(NSString *)type
 {
     NSString *path = [self getExecutablePath:name type:type];
+    if (path == nil) {
+        @throw [NSException exceptionWithName:@"ExecutableNotFound" reason:[NSString stringWithFormat:@"executable not found: %@", name] userInfo:nil];
+    }
     FDExecutable *executable = [[FDExecutable alloc] init];
     [executable load:path];
     NSArray *sections = [executable combineSectionsType:FDExecutableSectionTypeProgram address:0 length:0x40000 pageSize:2048];

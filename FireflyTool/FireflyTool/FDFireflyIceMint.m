@@ -47,7 +47,15 @@ static uint8_t secretKey[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x
 {
     NSData *verify = [self.serialWireDebug readMemory:address length:(uint32_t)data.length];
     if (![data isEqualToData:verify]) {
-        @throw [NSException exceptionWithName:@"verify issue"reason:@"verify issue" userInfo:nil];
+        uint8_t *dataBytes = (uint8_t *)data.bytes;
+        uint8_t *verifyBytes = (uint8_t *)verify.bytes;
+        NSUInteger i;
+        for (i = 0; i < data.length; ++i) {
+            if (dataBytes[i] != verifyBytes[i]) {
+                break;
+            }
+        }
+        @throw [NSException exceptionWithName:@"verify issue"reason:[NSString stringWithFormat:@"verify issue at %lu %02x != %02x", (unsigned long)i, dataBytes[i], verifyBytes[i]] userInfo:nil];
     }
 }
 
@@ -59,6 +67,8 @@ static uint8_t secretKey[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x
     FDFireflyFlash *flash = [[FDFireflyFlash alloc] init];
     flash.logger = self.logger;
     [flash initialize:self.serialWireDebug];
+    FDLog(@"starting mass erase");
+    [flash massErase];
     
     FDLog(@"loading FireflyBoot info flash...");
     FDExecutable *fireflyBoot = [self readExecutable:@"FireflyBoot" type:@"THUMB Flash Release"];

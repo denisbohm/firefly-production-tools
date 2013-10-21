@@ -42,17 +42,18 @@
     serialEngine.timeout = 0; // !!! need to move swd to a separate thread and enable timeout -denis
     serialEngine.usbDevice = _usbDevice;
     _serialWireDebug = [[FDSerialWireDebug alloc] init];
+    _serialWireDebug.maskInterrupts = YES;
     _serialWireDebug.serialEngine = serialEngine;
     [_serialWireDebug initialize];
-    [_serialWireDebug setGpioIndicator:true];
+    [_serialWireDebug setGpioIndicator:YES];
 }
 
 - (void)hardReset
 {
-    [_serialWireDebug setGpioReset:true];
+    [_serialWireDebug setGpioReset:YES];
     [_serialWireDebug.serialEngine write];
     [NSThread sleepForTimeInterval:0.001];
-    [_serialWireDebug setGpioReset:false];
+    [_serialWireDebug setGpioReset:NO];
     [_serialWireDebug.serialEngine write];
     [NSThread sleepForTimeInterval:0.100];
 }

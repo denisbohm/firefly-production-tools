@@ -52,6 +52,11 @@
     [self run:@"GPIO_PinOutSet" r0:port r1:pin];
 }
 
+- (bool)GPIO_PinInGet:(uint32_t)port pin:(uint32_t)pin
+{
+    return [self run:@"GPIO_PinInGet" r0:port r1:pin] ? YES : NO;
+}
+
 - (uint32_t)fd_log_get_count
 {
     return [self run:@"fd_log_get_count" r0:0 r1:0];
