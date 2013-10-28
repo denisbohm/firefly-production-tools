@@ -385,6 +385,9 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Firefly Design";
 				TargetAttributes = {
+					920597D817FCAAC20027FAAD = {
+						DevelopmentTeam = TVNL896ZKT;
+					};
 					920597F917FCAAC20027FAAD = {
 						TestTargetID = 920597D817FCAAC20027FAAD;
 					};
@@ -665,7 +668,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FireflyTool/FireflyTool-Prefix.pch";
@@ -680,7 +683,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FireflyTool/FireflyTool-Prefix.pch";

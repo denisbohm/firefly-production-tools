@@ -262,7 +262,7 @@
     }
     uint8_t byte = ((uint8_t *)context.writeData.bytes)[context.writeIndex];
     uint8_t bytes[20] = {0x01, context.writeIndex++, byte};
-    [context.peripheral writeValue:[NSData dataWithBytes:bytes length:sizeof(bytes)] forCharacteristic:context.characteristic type:CBCharacteristicPropertyWrite];
+    [context.peripheral writeValue:[NSData dataWithBytes:bytes length:sizeof(bytes)] forCharacteristic:context.characteristic type:CBCharacteristicWriteWithResponse];
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error
