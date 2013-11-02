@@ -29,6 +29,7 @@
 - (BOOL)disableWatchdogByErasingIfNeeded;
 
 - (void)massErase;
+- (void)reset;
 
 - (void)writePages:(uint32_t)address data:(NSData *)data;
 - (void)writePages:(uint32_t)address data:(NSData *)data erase:(BOOL)erase;

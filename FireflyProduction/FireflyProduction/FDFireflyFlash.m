@@ -80,6 +80,15 @@
     _cortexM.breakLocation = haltFunction.address;
 }
 
+- (void)reset
+{
+    [self massErase];
+    [_serialWireDebug reset];
+    [_serialWireDebug run];
+    [NSThread sleepForTimeInterval:0.001];
+    [_serialWireDebug halt];
+}
+
 - (BOOL)disableWatchdogByErasingIfNeeded
 {
     uint32_t wdogCtrl = [_serialWireDebug readMemory:EFM32_WDOG_CTRL];
@@ -94,14 +103,14 @@
     
     FDLog(@"watchdog is enabled and locked - erasing and resetting device to clear watchdog");
     [self massErase];
-    [_serialWireDebug reset];
-    [_serialWireDebug run];
-    [NSThread sleepForTimeInterval:0.001];
-    [_serialWireDebug halt];
+    [self reset];
     wdogCtrl = [_serialWireDebug readMemory:EFM32_WDOG_CTRL];
     if (wdogCtrl & EFM32_WDOG_CTRL_EN) {
         FDLog(@"could not disable watchdog");
     }
+    
+    [self loadFireflyFlashFirmwareIntoRAM];
+
     return YES;
 }
 
