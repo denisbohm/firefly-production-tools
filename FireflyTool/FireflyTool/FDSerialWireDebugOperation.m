@@ -84,7 +84,7 @@
     NSArray *tasks = @[
                        [[FDFireflyIceTest alloc] init],
 //                       [[FDFireflyIceRadioTest alloc] init],
-//                       [[FDFireflyIceMint alloc] init],
+                       [[FDFireflyIceMint alloc] init],
                        ];
     for (FDSerialWireDebugTask *task in tasks) {
         task.logger = _logger;
