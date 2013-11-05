@@ -39,6 +39,8 @@ enum GPIO_Port_TypeDef {
 
 #define FD_SPI_BUS_1 1
 
+#define FD_LIS3DH_SCALE (1.0f / 4096.0f)
+
 @interface FDFireflyIceTest ()
 
 @end
@@ -99,6 +101,8 @@ enum GPIO_Port_TypeDef {
     [self invoke:@"fd_lp55231_wake"];
     for (uint32_t i = 0; i < 9; ++i) {
         [self invoke:@"fd_lp55231_set_led_pwm" r0:i r1:255];
+        float v = [self toFloat:[self invoke:@"fd_lp55231_test_led" r0:i]];
+        NSLog(@"led %u %0.3fV", i, v); // r = 2.1V, g = 3.1V, b=3.0V (at 5mA)
         [self invoke:@"fd_lp55231_set_led_pwm" r0:i r1:0];
         [NSThread sleepForTimeInterval:0.250];
     }
@@ -122,8 +126,11 @@ enum GPIO_Port_TypeDef {
     [self invoke:@"fd_lis3dh_initialize"];
     [self invoke:@"fd_lis3dh_wake"];
     [NSThread sleepForTimeInterval:0.1];
-    float ax, ay, az;
-    [self invoke:@"fd_lis3dh_read" x:&ax y:&ay z:&az]; // -0.078125, -0.734375, 0.718750
+    int16_t iax, iay, iaz;
+    [self invoke:@"fd_lis3dh_read" ix:&iax iy:&iay iz:&iaz]; // -0.078125, -0.734375, 0.718750
+    float ax = iax * FD_LIS3DH_SCALE;
+    float ay = iay * FD_LIS3DH_SCALE;
+    float az = iaz * FD_LIS3DH_SCALE;
     {
     float a = sqrt(ax * ax + ay * ay + az * az);
     if ((a < 0.8) || (a > 1.2)) {

@@ -47,16 +47,16 @@
     _swdMonitor.product = 0x002a;
     _swdMonitor.delegate = self;
     
-    /*
+#if 0
     _radioTest = [[FDRadioTest alloc] init];
     _radioTest.logger = self.logger;
     [_radioTest start];
     uint8_t bytes[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     NSData *writeData = [NSData dataWithBytes:bytes length:sizeof(bytes)];
-    [_radioTest startTest:@"hwid53d6b75003678324" delegate:nil data:writeData];
-     */
-    
+    [_radioTest startTest:@"hwid0123" delegate:nil data:writeData];
+#else
     [_swdMonitor start];
+#endif
 }
 
 - (void)clearLog

@@ -26,6 +26,7 @@
 - (uint32_t)invoke:(NSString *)name r0:(uint32_t)r0 r1:(uint32_t)r1;
 - (uint32_t)invoke:(NSString *)name r0:(uint32_t)r0;
 - (uint32_t)invoke:(NSString *)name;
+- (void)invoke:(NSString *)name ix:(int16_t *)x iy:(int16_t *)y iz:(int16_t *)z;
 - (float)toFloat:(uint32_t)v;
 - (void)getFloat:(float *)v count:(NSUInteger)count;
 - (void)invoke:(NSString *)name x:(float *)x y:(float *)y z:(float *)z;

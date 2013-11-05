@@ -81,9 +81,19 @@
     [_radioTest startTest:name delegate:self data:writeData];
     FDExecutableFunction *radio_test = self.executable.functions[@"fd_nrf8001_test_broadcast"];
     uint32_t address = self.cortexM.heapRange.location;
-    uint32_t result = [self.cortexM run:radio_test.address r0:address r1:sizeof(bytes) timeout:15.0];
-    FDLog(@"radio test return 0x%08x result", result);
+    NSException *exception = nil;
+    uint32_t result = 0;
+    @try {
+        result = [self.cortexM run:radio_test.address r0:address r1:sizeof(bytes) timeout:1000]; // ]15.0];
+    } @catch (NSException *e) {
+        exception = e;
+    }
     [_radioTest stop];
+    if (exception != nil) {
+        [self addNote:notes message:@"check radio (timeout)"];
+        return NO;
+    }
+    FDLog(@"radio test return 0x%08x result", result);
     
     FDRadioTestResult *radioTestResult = self.radioTestResult;
     if (!radioTestResult.pass) {

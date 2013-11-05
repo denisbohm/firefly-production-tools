@@ -13,6 +13,7 @@
 #import <FireflyProduction/FDFireflyFlash.h>
 
 #define SIZEOF_FLOAT 4
+#define SIZEOF_INT16 2
 
 @implementation FDSerialWireDebugTest
 
@@ -102,6 +103,30 @@
     return [self invoke:name r0:0 r1:0 r2:0];
 }
 
+- (void)getInt16:(int16_t *)v count:(NSUInteger)count
+{
+    uint32_t a = self.cortexM.heapRange.location;
+    for (NSUInteger i = 0; i < count; ++i) {
+        NSData *data = [self.cortexM.serialWireDebug readMemory:a length:4];
+        uint8_t *buffer = (uint8_t *)data.bytes;
+        int16_t f = [FDBinary unpackUInt16:buffer];
+        v[i] = f;
+        a += SIZEOF_INT16;
+    }
+}
+
+- (void)invoke:(NSString *)name ix:(int16_t *)x iy:(int16_t *)y iz:(int16_t *)z
+{
+    uint32_t a = self.cortexM.heapRange.location;
+    [self invoke:name r0:a r1:a + SIZEOF_INT16 r2:a + 2 * SIZEOF_INT16];
+    int16_t v[3];
+    [self getInt16:v count:3];
+    *x = v[0];
+    *y = v[1];
+    *z = v[2];
+    FDLog(@"%@ x = 0x%04x, y = 0x%04x, z = 0x%04x", name, *x, *y, *z);
+}
+
 - (void)getFloat:(float *)v count:(NSUInteger)count
 {
     uint32_t a = self.cortexM.heapRange.location;
@@ -110,7 +135,7 @@
         uint8_t *buffer = (uint8_t *)data.bytes;
         float f = [FDBinary unpackFloat32:buffer];
         v[i] = f;
-        a += 4;
+        a += SIZEOF_FLOAT;
     }
 }
 

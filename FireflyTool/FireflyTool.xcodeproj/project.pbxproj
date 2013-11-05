@@ -32,6 +32,7 @@
 		926CCCFA17FCAFE000449599 /* FireflyProduction.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9205984017FCAE380027FAAD /* FireflyProduction.framework */; };
 		928CD6491811903700C75B73 /* FireflyDevice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 928CD64418118F8800C75B73 /* FireflyDevice.framework */; };
 		928CD64A1811904400C75B73 /* FireflyDevice.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 928CD64418118F8800C75B73 /* FireflyDevice.framework */; };
+		92C0D8311825BB12001884EC /* FireflyTest.elf in Resources */ = {isa = PBXBuildFile; fileRef = 92C0D8301825BB12001884EC /* FireflyTest.elf */; };
 		92DF4B7217FCC54E004C68C7 /* FDSerialWireDebugOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92DF4B7117FCC54E004C68C7 /* FDSerialWireDebugOperation.m */; };
 		92E66A4718146C370054A9C2 /* FireflyIceTest.elf in Resources */ = {isa = PBXBuildFile; fileRef = 92E66A4618146C370054A9C2 /* FireflyIceTest.elf */; };
 /* End PBXBuildFile section */
@@ -174,6 +175,7 @@
 		9205983817FCAE380027FAAD /* FireflyProduction.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FireflyProduction.xcodeproj; path = ../FireflyProduction/FireflyProduction.xcodeproj; sourceTree = "<group>"; };
 		9205984617FCAEBA0027FAAD /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
 		928CD63818118F8800C75B73 /* FireflyDevice.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FireflyDevice.xcodeproj; path = "../../firefly-sync/FireflyDevice/FireflyDevice.xcodeproj"; sourceTree = "<group>"; };
+		92C0D8301825BB12001884EC /* FireflyTest.elf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FireflyTest.elf; sourceTree = "<group>"; };
 		92DF4B7017FCC54E004C68C7 /* FDSerialWireDebugOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDSerialWireDebugOperation.h; sourceTree = "<group>"; };
 		92DF4B7117FCC54E004C68C7 /* FDSerialWireDebugOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDSerialWireDebugOperation.m; sourceTree = "<group>"; };
 		92E66A4618146C370054A9C2 /* FireflyIceTest.elf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FireflyIceTest.elf; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 		920597E317FCAAC20027FAAD /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				92C0D8301825BB12001884EC /* FireflyTest.elf */,
 				92E66A4618146C370054A9C2 /* FireflyIceTest.elf */,
 				920597E417FCAAC20027FAAD /* FireflyTool-Info.plist */,
 				920597E517FCAAC20027FAAD /* InfoPlist.strings */,
@@ -495,6 +498,7 @@
 				920597F517FCAAC20027FAAD /* Images.xcassets in Resources */,
 				920597ED17FCAAC20027FAAD /* Credits.rtf in Resources */,
 				920597F317FCAAC20027FAAD /* MainMenu.xib in Resources */,
+				92C0D8311825BB12001884EC /* FireflyTest.elf in Resources */,
 				92E66A4718146C370054A9C2 /* FireflyIceTest.elf in Resources */,
 				9205982117FCAB230027FAAD /* FireflyBoot.elf in Resources */,
 			);
@@ -668,12 +672,14 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FireflyTool/FireflyTool-Prefix.pch";
 				INFOPLIST_FILE = "FireflyTool/FireflyTool-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -683,12 +689,14 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FireflyTool/FireflyTool-Prefix.pch";
 				INFOPLIST_FILE = "FireflyTool/FireflyTool-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
