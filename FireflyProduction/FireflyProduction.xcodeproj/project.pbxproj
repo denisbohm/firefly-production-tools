@@ -16,6 +16,8 @@
 		92898BDE179E35D0007B84B7 /* FDFireflyFlash.h in Headers */ = {isa = PBXBuildFile; fileRef = 92898BDC179E35D0007B84B7 /* FDFireflyFlash.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92898BDF179E35D0007B84B7 /* FDFireflyFlash.m in Sources */ = {isa = PBXBuildFile; fileRef = 92898BDD179E35D0007B84B7 /* FDFireflyFlash.m */; };
 		929D865418145E36001522C9 /* FireflyDevice.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 928CD63518118F5F00C75B73 /* FireflyDevice.framework */; };
+		92BF96241829F38700C37412 /* FDUsbTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 92BF96221829F38700C37412 /* FDUsbTest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		92BF96251829F38700C37412 /* FDUsbTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BF96231829F38700C37412 /* FDUsbTest.m */; };
 		92E774D41730925800A111DF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E774D31730925800A111DF /* Cocoa.framework */; };
 		92E774DE1730925800A111DF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92E774DC1730925800A111DF /* InfoPlist.strings */; };
 		92E774E21730925800A111DF /* FireflyProduction.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E774E11730925800A111DF /* FireflyProduction.m */; };
@@ -122,6 +124,8 @@
 		92898BDC179E35D0007B84B7 /* FDFireflyFlash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFireflyFlash.h; sourceTree = "<group>"; };
 		92898BDD179E35D0007B84B7 /* FDFireflyFlash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFireflyFlash.m; sourceTree = "<group>"; };
 		928CD62918118F5F00C75B73 /* FireflyDevice.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FireflyDevice.xcodeproj; path = "../../firefly-sync/FireflyDevice/FireflyDevice.xcodeproj"; sourceTree = "<group>"; };
+		92BF96221829F38700C37412 /* FDUsbTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDUsbTest.h; sourceTree = "<group>"; };
+		92BF96231829F38700C37412 /* FDUsbTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDUsbTest.m; sourceTree = "<group>"; };
 		92E774D01730925800A111DF /* FireflyProduction.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FireflyProduction.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92E774D31730925800A111DF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		92E774D61730925800A111DF /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -264,6 +268,8 @@
 				92E774E11730925800A111DF /* FireflyProduction.m */,
 				9214495817BED43200FC6BAF /* FDRadioTest.h */,
 				9214495917BED43200FC6BAF /* FDRadioTest.m */,
+				92BF96221829F38700C37412 /* FDUsbTest.h */,
+				92BF96231829F38700C37412 /* FDUsbTest.m */,
 			);
 			path = FireflyProduction;
 			sourceTree = "<group>";
@@ -312,6 +318,7 @@
 				92E775561730979E00A111DF /* FDGdbServer.h in Headers */,
 				92E775581730979E00A111DF /* FDGdbServerSwd.h in Headers */,
 				92E7755A1730979E00A111DF /* FDUSBHIDMonitor.h in Headers */,
+				92BF96241829F38700C37412 /* FDUsbTest.h in Headers */,
 				9214495A17BED43200FC6BAF /* FDRadioTest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -485,6 +492,7 @@
 			files = (
 				92E774E21730925800A111DF /* FireflyProduction.m in Sources */,
 				92E775531730979E00A111DF /* FDExecutable.m in Sources */,
+				92BF96251829F38700C37412 /* FDUsbTest.m in Sources */,
 				92E775571730979E00A111DF /* FDGdbServer.m in Sources */,
 				92E775591730979E00A111DF /* FDGdbServerSwd.m in Sources */,
 				92E7755B1730979E00A111DF /* FDUSBHIDMonitor.m in Sources */,

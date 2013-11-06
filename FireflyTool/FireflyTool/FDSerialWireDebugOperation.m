@@ -9,6 +9,7 @@
 #import "FDFireflyIceMint.h"
 #import "FDFireflyIceRadioTest.h"
 #import "FDFireflyIceTest.h"
+#import "FDFireflyIceUsbTest.h"
 #import "FDSerialWireDebugOperation.h"
 
 #import <ARMSerialWireDebug/FDCortexM.h>
@@ -82,8 +83,9 @@
 - (void)execute
 {
     NSArray *tasks = @[
-                       [[FDFireflyIceTest alloc] init],
+//                       [[FDFireflyIceTest alloc] init],
 //                       [[FDFireflyIceRadioTest alloc] init],
+//                       [[FDFireflyIceUsbTest alloc] init],
                        [[FDFireflyIceMint alloc] init],
                        ];
     for (FDSerialWireDebugTask *task in tasks) {

@@ -78,7 +78,7 @@
     [self initialize];
     [self start];
     uint8_t bytes[2] = {0, 1};
-    [self startTest:@"hwid53d6b75003678324" data:[NSData dataWithBytes:bytes length:sizeof(bytes)]];
+    [self startTest:@"hwidb3d4b75002678324" data:[NSData dataWithBytes:bytes length:sizeof(bytes)]];
 }
 
 - (void)initialize

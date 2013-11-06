@@ -166,7 +166,6 @@
     }
 }
 
-
 - (void)centralManagerPoweredOn
 {
     NSDictionary *options = @{CBCentralManagerScanOptionAllowDuplicatesKey:[NSNumber  numberWithBool:YES]};

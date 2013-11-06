@@ -58,7 +58,7 @@
 
 - (BOOL)testRadio:(NSMutableString *)notes
 {
-    [self loadExecutable:@"FireflyTest"];
+    [self loadExecutable:@"FireflyRadioTest"];
     [self run:@"fd_processor_initialize"];
     [self run:@"spi_initialize"];
     [self run:@"fd_bluetooth_reset"];
