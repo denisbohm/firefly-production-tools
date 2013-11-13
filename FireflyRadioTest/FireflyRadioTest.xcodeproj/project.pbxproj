@@ -419,6 +419,7 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 				);
+				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FireflyRadioTest/FireflyRadioTest-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -441,6 +442,7 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 				);
+				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FireflyRadioTest/FireflyRadioTest-Prefix.pch";
 				INFOPLIST_FILE = "FireflyRadioTestTests/FireflyRadioTestTests-Info.plist";
@@ -469,6 +471,7 @@
 				92B0631218269D0500F13768 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		92B0631318269D0500F13768 /* Build configuration list for PBXNativeTarget "FireflyRadioTestTests" */ = {
 			isa = XCConfigurationList;
@@ -477,6 +480,7 @@
 				92B0631518269D0500F13768 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
