@@ -14,6 +14,40 @@
 #import <IOBluetooth/IOBluetooth.h>
 #endif
 
+@interface CBUUID (StringExtraction)
+
+- (NSString *)representativeString;
+
+@end
+
+@implementation CBUUID (StringExtraction)
+
+- (NSString *)representativeString;
+{
+    NSData *data = [self data];
+    
+    NSUInteger bytesToConvert = [data length];
+    const unsigned char *uuidBytes = [data bytes];
+    NSMutableString *outputString = [NSMutableString stringWithCapacity:16];
+    
+    for (NSUInteger currentByteIndex = 0; currentByteIndex < bytesToConvert; currentByteIndex++)
+    {
+        switch (currentByteIndex)
+        {
+            case 3:
+            case 5:
+            case 7:
+            case 9:[outputString appendFormat:@"%02x-", uuidBytes[currentByteIndex]]; break;
+            default:[outputString appendFormat:@"%02x", uuidBytes[currentByteIndex]];
+        }
+        
+    }
+    
+    return outputString;
+}
+
+@end
+
 @interface FDRadioTestContext : NSObject
 
 @property NSString *name;
@@ -22,7 +56,8 @@
 @property NSDate *send;
 @property NSUInteger sendRetries;
 @property CBPeripheral *peripheral;
-@property CBCharacteristic *characteristic;
+@property CBCharacteristic *notifyCharacteristic;
+@property CBCharacteristic *writeCharacteristic;
 @property NSUInteger rssiCount;
 @property NSData *writeData;
 @property NSDate *writeStart;
@@ -49,7 +84,8 @@
 {
     _send = nil;
     _sendRetries = 0;
-    _characteristic = nil;
+    _notifyCharacteristic = nil;
+    _writeCharacteristic = nil;
     _writeStart = nil;
     _writeEnd = nil;
     _writeIndex = 0;
@@ -61,7 +97,8 @@
 @interface FDAppDelegate () <CBCentralManagerDelegate, CBPeripheralDelegate>
 
 @property CBCentralManager *centralManager;
-@property CBUUID *dataCharacteristicUUID;
+@property CBUUID *notifyCharacteristicUUID;
+@property CBUUID *writeCharacteristicUUID;
 @property NSMutableDictionary *tests;
 @property NSTimer *timer;
 @property NSTimeInterval timeout;
@@ -78,14 +115,14 @@
     [self initialize];
     [self start];
     uint8_t bytes[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    [self startTest:@"hwid1122334455667788" data:[NSData dataWithBytes:bytes length:sizeof(bytes)]];
+    [self startTest:@"hwid53d6b75003678324" data:[NSData dataWithBytes:bytes length:sizeof(bytes)]];
 }
 
 - (void)initialize
 {
     _tests = [NSMutableDictionary dictionary];
-    _dataCharacteristicUUID = [CBUUID UUIDWithString:@"310a0002-3333-5091-b0bd-b7a681846399"];
-//    _dataCharacteristicUUID = [CBUUID UUIDWithString:@"2a24"]; // Device Information: Model Number String
+    _notifyCharacteristicUUID = [CBUUID UUIDWithString:@"310a0004-0000-1b95-5091-b0bdb7a68184"];
+    _writeCharacteristicUUID = [CBUUID UUIDWithString:@"310a0003-0000-1b95-5091-b0bdb7a68184"];
     _timeout = 1000; // 10.0;
     _sendTimeout = 10; // 0.5;
     _sendRetries = 100; // 3;
@@ -214,7 +251,7 @@
     NSLog(@"didConnectPeripheral %@", peripheral.name);
     FDRadioTestContext *context = _tests[peripheral.name];
     if (context != nil) {
-//        [peripheral discoverServices:nil];
+        [peripheral discoverServices:nil];
     }
 }
 
@@ -245,32 +282,44 @@
 
 - (void)setCharacteristicValue:(FDRadioTestContext *)context retry:(BOOL)retry
 {
-    NSLog(@"setCharacteristicValue retry=%@", retry ? @"YES" : @"NO");
     //    [context.peripheral readRSSI];
     
     context.send = [NSDate date];
+    NSUInteger writeIndex = context.writeIndex;
     if (retry) {
+        --writeIndex;
         ++context.sendRetries;
     } else {
         context.sendRetries = 0;
         ++context.writeCount;
     }
-    uint8_t byte = ((uint8_t *)context.writeData.bytes)[context.writeIndex];
-    uint8_t bytes[19] = {0x01, context.writeIndex++, byte};
-    [context.peripheral writeValue:[NSData dataWithBytes:bytes length:sizeof(bytes)] forCharacteristic:context.characteristic type:CBCharacteristicWriteWithoutResponse];
+    uint8_t byte = ((uint8_t *)context.writeData.bytes)[writeIndex];
+    uint8_t bytes[20] = {0x01, writeIndex, byte};
+    NSData *value = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+    if (!retry) {
+        context.writeIndex++;
+    }
+    [context.peripheral writeValue:value forCharacteristic:context.writeCharacteristic type:CBCharacteristicWriteWithResponse];
+    NSLog(@"setCharacteristicValue retry=%@ value=%@", retry ? @"YES" : @"NO", value);
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error
 {
-    NSLog(@"didDiscoverCharacteristicsForService %@ : %@", peripheral.name, error);
+    NSLog(@"didDiscoverCharacteristicsForService %@ : %@", [service.UUID representativeString], error);
     FDRadioTestContext *context = _tests[peripheral.name];
     if (context != nil) {
         for (CBCharacteristic *characteristic in service.characteristics) {
-            NSLog(@"characteristic %@", characteristic);
-            if ([characteristic.UUID isEqualTo:_dataCharacteristicUUID]) {
-                NSLog(@"found characteristic");
-                context.characteristic = characteristic;
-                [peripheral setNotifyValue:YES forCharacteristic:characteristic];
+            NSLog(@"characteristic %@ UUID %@", characteristic, [characteristic.UUID representativeString]);
+            if ([characteristic.UUID isEqualTo:_notifyCharacteristicUUID]) {
+                NSLog(@"found notify characteristic");
+                context.notifyCharacteristic = characteristic;
+            }
+            if ([characteristic.UUID isEqualTo:_writeCharacteristicUUID]) {
+                NSLog(@"found write characteristic");
+                context.writeCharacteristic = characteristic;
+            }
+            if ((context.notifyCharacteristic != nil) && (context.writeCharacteristic != nil)) {
+                [peripheral setNotifyValue:YES forCharacteristic:context.notifyCharacteristic];
                 context.writeStart = [NSDate date];
                 [self setCharacteristicValue:context retry:NO];
             }
@@ -306,6 +355,8 @@
             } else {
                 if (n == context.writeCount) {
                     [self setCharacteristicValue:context retry:NO];
+                } else {
+                    NSLog(@"unexpected characteristic update");
                 }
             }
         }
