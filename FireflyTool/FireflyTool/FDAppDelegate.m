@@ -22,8 +22,10 @@
 @property (assign) IBOutlet NSTextField *jtagLabel;
 @property (assign) IBOutlet NSTextField *pcbaLabel;
 @property (assign) IBOutlet NSTextView *logView;
+@property (assign) IBOutlet NSButton *testBatteryCheckBox;
 
 @property FDLogger *logger;
+@property NSMutableDictionary *resources;
 @property FDUSBMonitor *swdMonitor;
 @property NSOperationQueue *operationQueue;
 @property FDSerialWireDebugOperation *operation;
@@ -47,6 +49,9 @@
     _swdMonitor.product = 0x002a;
     _swdMonitor.delegate = self;
     
+    _resources = [NSMutableDictionary dictionary];
+    _resources[@"testBattery"] = @YES;
+    
 #if 0
     _radioTest = [[FDRadioTest alloc] init];
     _radioTest.logger = self.logger;
@@ -57,6 +62,11 @@
 #else
     [_swdMonitor start];
 #endif
+}
+
+- (IBAction)resourceChange:(id)sender
+{
+    _resources[@"testBattery"] = [NSNumber numberWithBool:_testBatteryCheckBox.state == NSOnState];
 }
 
 - (void)clearLog
@@ -116,6 +126,7 @@
 
     _operation = [[FDSerialWireDebugOperation alloc] init];
     _operation.logger = _logger;
+    _operation.resources = _resources;
     _operation.usbDevice = usbDevice;
     _operation.delegate = self;
     __weak FDAppDelegate *appDelegate = self;

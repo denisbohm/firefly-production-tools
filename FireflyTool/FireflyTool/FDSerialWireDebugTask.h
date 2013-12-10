@@ -17,6 +17,7 @@
 @interface FDSerialWireDebugTask : NSObject
 
 @property FDLogger *logger;
+@property NSDictionary *resources;
 @property FDSerialWireDebug *serialWireDebug;
 @property FDCortexM *cortexM;
 

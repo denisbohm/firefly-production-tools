@@ -64,7 +64,7 @@ enum GPIO_Port_TypeDef {
     BOOL isCharging = ![self GPIO_PinInGet:gpioPortC pin:9];
     FDLog(@"is charging: %@", isCharging ? @"YES" : @"NO");
     
-    BOOL batteryConnected = NO;
+    BOOL testBattery = [self.resources[@"testBattery"] boolValue];
     
     [self invoke:@"fd_adc_initialize"];
     //
@@ -78,7 +78,7 @@ enum GPIO_Port_TypeDef {
     [self invoke:@"fd_adc_start" r0:fd_adc_channel_battery_voltage r1:false];
     float batteryVoltage = [self toFloat:[self invoke:@"fd_adc_get_battery_voltage"]];
     FDLog(@"batteryVoltage = %0.3f", batteryVoltage);
-    if (batteryConnected) {
+    if (testBattery) {
         if ((batteryVoltage < 3.5f) || (batteryVoltage > 4.5f)) {
             @throw [NSException exceptionWithName:@"BatteryVoltageOutOfRange" reason:[NSString stringWithFormat:@"battery voltage out of range: %f", batteryVoltage] userInfo:nil];
         }
@@ -87,7 +87,7 @@ enum GPIO_Port_TypeDef {
     [self invoke:@"fd_adc_start" r0:fd_adc_channel_charge_current r1:false];
     float chargeCurrent = [self toFloat:[self invoke:@"fd_adc_get_charge_current"]];
     FDLog(@"chargeCurrent = %0.3f", chargeCurrent);
-    if (batteryConnected) {
+    if (testBattery) {
         if ((chargeCurrent < 0.0f) || (chargeCurrent > 100.0f)) {
             @throw [NSException exceptionWithName:@"ChargeCurrentOfRange" reason:[NSString stringWithFormat:@"charge current out of range: %f", chargeCurrent] userInfo:nil];
         }
@@ -136,6 +136,16 @@ enum GPIO_Port_TypeDef {
     if ((a < 0.8) || (a > 1.2)) {
         @throw [NSException exceptionWithName:@"AccelerometerOfRange" reason:[NSString stringWithFormat:@"accelerometer out of range: %f", a] userInfo:nil];
     }
+    }
+    
+    
+    [self GPIO_PinOutClear:gpioPortD pin:5]; // NRF_RESETN_PORT_PIN
+    [NSThread sleepForTimeInterval:0.1];
+    [self GPIO_PinOutSet:gpioPortD pin:5]; // NRF_RESETN_PORT_PIN
+    [NSThread sleepForTimeInterval:0.1]; // wait for nRF8001 to come out of reset (62ms)
+    BOOL radioNotReady = [self GPIO_PinInGet:gpioPortD pin:4]; // NRF_RDYN_PORT_PIN
+    if (radioNotReady) {
+        @throw [NSException exceptionWithName:@"nRF8001NotReady" reason:@"nRF8001 not ready" userInfo:nil];
     }
     
     // initialize devices on spi0 powered bus
