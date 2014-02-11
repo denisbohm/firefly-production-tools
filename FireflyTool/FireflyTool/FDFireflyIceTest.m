@@ -71,7 +71,7 @@ enum GPIO_Port_TypeDef {
     [self invoke:@"fd_adc_start" r0:fd_adc_channel_temperature r1:false];
     float temperature = [self toFloat:[self invoke:@"fd_adc_get_temperature"]];
     FDLog(@"temperature = %0.3f", temperature);
-    if ((temperature < 20.0f) || (temperature > 35.0f)) {
+    if ((temperature < 15.0f) || (temperature > 35.0f)) {
         @throw [NSException exceptionWithName:@"TemperatureOutOfRange" reason:[NSString stringWithFormat:@"temperature out of range: %f", temperature] userInfo:nil];
     }
     //
