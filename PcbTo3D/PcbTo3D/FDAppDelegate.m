@@ -32,8 +32,10 @@
     _scriptPath = @"/Users/denis/sandbox/denisbohm/firefly-ice-thingiverse";
 //    _boardPath = @"/Users/denis/sandbox/denisbohm/firefly-ice-electronics";
 //    _boardName = @"firefly-ice-blue";
-    _boardPath = @"/Users/denis/sandbox/zero2one/hardware";
-    _boardName = @"LUMObackMod";
+//    _boardPath = @"/Users/denis/sandbox/zero2one/hardware";
+//    _boardName = @"LUMObackMod";
+    _boardPath = @"/Users/denis/sandbox/firefly/design/device/hardware/motor";
+    _boardName = @"mouth-piece";
     
     NSString *path = [[_boardPath stringByAppendingPathComponent:_boardName] stringByAppendingPathExtension:@"brd"];
     NSError *error = nil;

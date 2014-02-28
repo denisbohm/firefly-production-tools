@@ -41,13 +41,37 @@
         }
     }
     
+    for (FDBoardPad* pad in container.pads) {
+        [_transformStack addObject:[_transform copy]];
+        NSAffineTransform* xform = [NSAffineTransform transform];
+        [xform translateXBy:pad.x yBy:pad.y];
+        if (pad.mirror) {
+            [xform scaleXBy:-1 yBy:1];
+        }
+        [xform rotateByDegrees:pad.rotate];
+        [_transform prependTransform:xform];
+        
+        NSPoint p = [_transform transformPoint:NSMakePoint(0, 0)];
+        double dx = pad.drill;
+        double dy = pad.drill;
+        if ([@"long" isEqualToString:pad.shape]) {
+            dx *= 2.0;
+        }
+        NSSize s = [_transform transformSize:NSMakeSize(dx, dy)];
+        [_lines appendFormat:@"PlacePad(%f, %f, %f, %f, %f, %d)\n", p.x, p.y, ABS(s.width), ABS(s.height), 1.0, 1];
+        [_lines appendFormat:@"PlacePad(%f, %f, %f, %f, %f, %d)\n", p.x, p.y, ABS(s.width), ABS(s.height), 1.0, 16];
+        
+        _transform = [_transformStack lastObject];
+        [_transformStack removeLastObject];
+    }
+    
     for (FDBoardSmd* smd in container.smds) {
         [_transformStack addObject:[_transform copy]];
         NSAffineTransform* xform = [NSAffineTransform transform];
         [xform translateXBy:smd.x yBy:smd.y];
         [xform rotateByDegrees:smd.rotate];
         if (smd.mirror) {
-            [xform scaleXBy:1 yBy:1];
+            [xform scaleXBy:-1 yBy:1];
         }
         [_transform prependTransform:xform];
 
@@ -63,7 +87,7 @@
 
         NSPoint p = [_transform transformPoint:NSMakePoint(0, 0)];
         NSSize s = [_transform transformSize:NSMakeSize(smd.dx, smd.dy)];
-        [_lines appendFormat:@"PlaceSmd(%f, %f, %f, %f, %f, %d)\n", p.x, p.y, ABS(s.width), ABS(s.height), smd.roundness, layer];
+        [_lines appendFormat:@"PlaceSmd(%f, %f, %f, %f, %f, %d)\n", p.x, p.y, ABS(s.width), ABS(s.height), smd.roundness / 100.0, layer];
 
         _transform = [_transformStack lastObject];
         [_transformStack removeLastObject];
@@ -111,7 +135,7 @@
     FDBoardContainer *container = _board.container;
     _transform = [NSAffineTransform transform];
     
-    [_lines appendString:@"boardThickness = 0.4\n\n"];
+    [_lines appendString:@"boardThickness = 1.6\n\n"];
     
     [self convert:container];
     
@@ -127,7 +151,7 @@
         _transform = [NSAffineTransform transform];
         [_transform translateXBy:instance.x yBy:instance.y];
         if (instance.mirror) {
-            [_transform scaleXBy:1 yBy:1];
+            [_transform scaleXBy:-1 yBy:1];
         }
         [_transform rotateByDegrees:instance.rotate];
         

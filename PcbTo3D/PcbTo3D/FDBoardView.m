@@ -52,7 +52,7 @@
     double radius = sqrt((x1 - c.x) * (x1 - c.x) + (y1 - c.y) * (y1 - c.y));
     double startAngle = atan2(y1 - c.y, x1 - c.x) * 180 / M_PI;
     double endAngle = startAngle + curve;
-    [path appendBezierPathWithArcWithCenter:c radius:radius startAngle:startAngle endAngle:endAngle clockwise:NO];
+    [path appendBezierPathWithArcWithCenter:c radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
 }
 
 - (void)drawContainer:(FDBoardContainer *)container
@@ -168,10 +168,10 @@
         
         NSAffineTransform* xform = [NSAffineTransform transform];
         [xform translateXBy:smd.x yBy:smd.y];
-        [xform rotateByDegrees:smd.rotate];
         if (smd.mirror) {
-            [xform scaleXBy:1 yBy:-1];
+            [xform scaleXBy:-1 yBy:1];
         }
+        [xform rotateByDegrees:smd.rotate];
         [xform concat];
         
         NSBezierPath* path = [NSBezierPath bezierPath];
@@ -194,7 +194,7 @@
         NSAffineTransform* xform = [NSAffineTransform transform];
         [xform translateXBy:pad.x yBy:pad.y];
         if (pad.mirror) {
-            [xform scaleXBy:1 yBy:-1];
+            [xform scaleXBy:-1 yBy:1];
         }
         [xform rotateByDegrees:pad.rotate];
         [xform concat];

@@ -90,18 +90,13 @@
     return self;
 }
 
-static double cot(double z)
-{
-    return 1.0 / tan(z);
-}
-
 + (NSPoint)getCenterOfCircleX1:(double)x1 y1:(double)y1 x2:(double)x2 y2:(double)y2 angle:(double)angle
 {
     double xm = (x1 + x2) / 2.0;
     double ym = (y1 + y2) / 2.0;
     double a = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) / 2.0;
     double theta = (angle * M_PI / 180.0) / 2.0;
-    double b = a * cot(theta);
+    double b = a / tan(theta);
     if (y1 == y2) {
         return NSMakePoint(xm, ym + b);
     }
@@ -109,9 +104,28 @@ static double cot(double z)
         return NSMakePoint(xm + b, ym);
     }
     double im = (x2 - x1) / (y2 - y1);
-    double xc = -b / sqrt(im * im + 1) + xm;
-    double yc = im * (xm - xc) + ym;
-    return NSMakePoint(xc, yc);
+    double xc1 = -b / sqrt(im * im + 1) + xm;
+    double yc1 = im * (xm - xc1) + ym;
+    double xc2 = b / sqrt(im * im + 1) + xm;
+    double yc2 = im * (xm - xc2) + ym;
+    
+    double ar = angle * M_PI / 180.0;
+    
+    double a1 = atan2(y1 - yc1, x1 - xc1);
+    double a2 = atan2(y2 - yc1, x2 - xc1);
+    double a12 = a2 - a1;
+    double ad = a12 - ar;
+    
+    double b1 = atan2(y1 - yc2, x1 - xc2);
+    double b2 = atan2(y2 - yc2, x2 - xc2);
+    double b12 = b2 - b1;
+    double bd = b12 - ar;
+    
+    if (abs(ad) < abs(bd)) {
+        return NSMakePoint(xc1, yc1);
+    } else {
+        return NSMakePoint(xc2, yc2);
+    }
 }
 
 @end
