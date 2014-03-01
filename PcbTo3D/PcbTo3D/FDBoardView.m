@@ -52,7 +52,7 @@
     double radius = sqrt((x1 - c.x) * (x1 - c.x) + (y1 - c.y) * (y1 - c.y));
     double startAngle = atan2(y1 - c.y, x1 - c.x) * 180 / M_PI;
     double endAngle = startAngle + curve;
-    [path appendBezierPathWithArcWithCenter:c radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
+    [path appendBezierPathWithArcWithCenter:c radius:radius startAngle:startAngle endAngle:endAngle clockwise:NO];
 }
 
 - (void)drawContainer:(FDBoardContainer *)container
@@ -77,7 +77,6 @@
         [path stroke];
     }
     
-    /*
     for (FDBoardPolygon* polygon in container.polygons) {
         [self setLayerColors:polygon.layer];
         NSBezierPath* path = [NSBezierPath bezierPath];
@@ -110,7 +109,6 @@
         [path fill];
         [path stroke];
     }
-     */
     
     [[NSColor blackColor] setStroke];
     for (FDBoardVia* hole in container.holes) {

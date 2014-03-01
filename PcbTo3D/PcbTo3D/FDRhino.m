@@ -26,6 +26,20 @@
     return self;
 }
 
++ (void)addCurve:(NSMutableString *)lines x1:(double)x1 y1:(double)y1 x2:(double)x2 y2:(double)y2 curve:(double)curve transform:(NSAffineTransform *)transform
+{
+    NSPoint c = [FDBoard getCenterOfCircleX1:x1 y1:y1 x2:x2 y2:y2 angle:curve];
+    double radius = sqrt((x1 - c.x) * (x1 - c.x) + (y1 - c.y) * (y1 - c.y));
+    double startAngle = atan2(y1 - c.y, x1 - c.x) * 180.0 / M_PI;
+    double radians = (startAngle + curve / 2.0) * M_PI / 180.0;
+    double xm = c.x + radius * cos(radians);
+    double ym = c.y + radius * sin(radians);
+    NSPoint p1 = [transform transformPoint:NSMakePoint(x1, y1)];
+    NSPoint p2 = [transform transformPoint:NSMakePoint(x2, y2)];
+    NSPoint pm = [transform transformPoint:NSMakePoint(xm, ym)];
+    [lines appendFormat:@", (%f, %f, 0, %f, %f, 0, %f, %f, 0)", p1.x, p1.y, p2.x, p2.y, pm.x, pm.y];
+}
+
 - (void)convert:(FDBoardContainer *)container
 {
     for (FDBoardCircle* circle in container.circles) {
@@ -98,30 +112,22 @@
         [_lines appendString:@"PlacePolygon(["];
         for (NSInteger i = 0; i < polygon.vertices.count; ++i) {
             FDBoardVertex *vertex = polygon.vertices[i];
-            /*
+            NSPoint p = [_transform transformPoint:NSMakePoint(vertex.x, vertex.y)];
             if (vertex.curve != 0) {
-                double x1 = vertex.x;
-                double y1 = vertex.y;
                 FDBoardVertex *v2 = polygon.vertices[i + 1];
-                double x2 = v2.x;
-                double y2 = v2.y;
                 if (first) {
                     first = NO;
-                    [path moveToPoint:NSMakePoint(x1, y1)];
+                    [_lines appendFormat:@"(%f, %f, 0)", p.x, p.y];
                 }
-                [FDBoardView addCurve:path x1:x1 y1:y1 x2:x2 y2:y2 curve:vertex.curve];
+                [FDRhino addCurve:_lines x1:vertex.x y1:vertex.y x2:v2.x y2:v2.y curve:vertex.curve transform:_transform];
             } else {
-             */
-                NSPoint p = [_transform transformPoint:NSMakePoint(vertex.x, vertex.y)];
                 if (first) {
                     first = NO;
                     [_lines appendFormat:@"(%f, %f, 0)", p.x, p.y];
                 } else {
                     [_lines appendFormat:@", (%f, %f, 0)", p.x, p.y];
                 }
-            /*
             }
-             */
         }
         FDBoardVertex *vertex = polygon.vertices[0];
         NSPoint p = [_transform transformPoint:NSMakePoint(vertex.x, vertex.y)];
@@ -135,7 +141,7 @@
     FDBoardContainer *container = _board.container;
     _transform = [NSAffineTransform transform];
     
-    [_lines appendString:@"boardThickness = 1.6\n\n"];
+    [_lines appendString:@"boardThickness = 0.8\n\n"];
     
     [self convert:container];
     

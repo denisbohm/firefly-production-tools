@@ -90,6 +90,13 @@
     return self;
 }
 
+static double ccwdiff(double a1, double a2) {
+    if (a2 < a1) {
+        a2 += 2.0 * M_PI;
+    }
+    return a2 - a1;
+}
+
 + (NSPoint)getCenterOfCircleX1:(double)x1 y1:(double)y1 x2:(double)x2 y2:(double)y2 angle:(double)angle
 {
     double xm = (x1 + x2) / 2.0;
@@ -113,12 +120,12 @@
     
     double a1 = atan2(y1 - yc1, x1 - xc1);
     double a2 = atan2(y2 - yc1, x2 - xc1);
-    double a12 = a2 - a1;
+    double a12 = ccwdiff(a1, a2);
     double ad = a12 - ar;
     
     double b1 = atan2(y1 - yc2, x1 - xc2);
     double b2 = atan2(y2 - yc2, x2 - xc2);
-    double b12 = b2 - b1;
+    double b12 = ccwdiff(b1, b2);
     double bd = b12 - ar;
     
     if (abs(ad) < abs(bd)) {
