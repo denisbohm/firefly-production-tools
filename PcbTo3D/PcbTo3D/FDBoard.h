@@ -99,6 +99,7 @@
 
 @property NSMutableDictionary *packages;
 @property FDBoardContainer *container;
+@property double thickness;
 
 + (NSPoint)getCenterOfCircleX1:(double)x1 y1:(double)y1 x2:(double)x2 y2:(double)y2 angle:(double)angle;
 

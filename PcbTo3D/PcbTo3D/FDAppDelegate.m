@@ -12,6 +12,9 @@
 
 @interface FDAppDelegate ()
 
+@property (assign) IBOutlet NSPathControl *scriptPathControl;
+@property (assign) IBOutlet NSPathControl *boardPathControl;
+@property (assign) IBOutlet NSTextField *boardThicknessTextField;
 @property (assign) IBOutlet FDBoardView *boardView;
 @property NSString *scriptPath;
 @property NSString *boardPath;
@@ -24,25 +27,59 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    [self convert];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
+    NSString *boardPath = [userDefaults stringForKey:@"boardPath"];
+    if (boardPath) {
+        _boardPathControl.URL = [[NSURL alloc] initFileURLWithPath:boardPath];
+    }
+    
+    NSString *boardThickness = [userDefaults stringForKey:@"boardThickness"];
+    if (boardThickness) {
+        _boardThicknessTextField.stringValue = boardThickness;
+    }
+
+    NSString *scriptPath = [userDefaults stringForKey:@"scriptPath"];
+    if (scriptPath) {
+        _scriptPathControl.URL = [[NSURL alloc] initFileURLWithPath:scriptPath];
+    }
 }
 
-- (void)convert
+- (void)applicationWillTerminate:(NSNotification *)notification
 {
-    _scriptPath = @"/Users/denis/sandbox/denisbohm/firefly-ice-thingiverse";
-    _boardPath = @"/Users/denis/sandbox/denisbohm/firefly-ice-electronics";
-    _boardName = @"firefly-ice-blue";
-//    _boardPath = @"/Users/denis/sandbox/zero2one/hardware";
-//    _boardName = @"LUMObackMod";
-//    _boardPath = @"/Users/denis/sandbox/firefly/design/device/hardware/motor";
-//    _boardName = @"mouth-piece";
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     
-    NSString *path = [[_boardPath stringByAppendingPathComponent:_boardName] stringByAppendingPathExtension:@"brd"];
+    NSString *boardThickness = _boardThicknessTextField.stringValue;
+    [userDefaults setObject:boardThickness forKey:@"boardThickness"];
+    
+    NSString *boardPath = _boardPathControl.URL.path;
+    [userDefaults setObject:boardPath forKey:@"boardPath"];
+    
+    NSString *scriptPath = _scriptPathControl.URL.path;
+    [userDefaults setObject:scriptPath forKey:@"scriptPath"];
+}
+
+- (IBAction)convert:(id)sender
+{
+    NSString *scriptPath = _scriptPathControl.URL.path;
+    if (!scriptPath) {
+        return;
+    }
+    _scriptPath = scriptPath;
+    NSString *boardPath = _boardPathControl.URL.path;
+    if (!boardPath) {
+        return;
+    }
+    _boardPath = [boardPath stringByDeletingLastPathComponent];
+    _boardName = [boardPath lastPathComponent];
+    
+    NSString *path = [_boardPath stringByAppendingPathComponent:_boardName];
     NSError *error = nil;
     NSString *xml = [[NSString alloc] initWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
     NSXMLDocument *document = [[NSXMLDocument alloc] initWithXMLString:xml options:0 error:&error];
 
     _board = [[FDBoard alloc] init];
+    _board.thickness = [[_boardThicknessTextField stringValue] doubleValue];
     [self loadDocument:document container:_board.container];
     
     _boardView.board = _board;
@@ -52,7 +89,7 @@
     rhino.board = _board;
     rhino.lines = [NSMutableString stringWithContentsOfFile:[[_scriptPath stringByAppendingPathComponent:@"3d"] stringByAppendingPathExtension:@"py"] encoding:NSUTF8StringEncoding error:&error];
     [rhino convert];
-    NSString *output = [[_scriptPath stringByAppendingPathComponent:_boardName] stringByAppendingPathExtension:@"py"];
+    NSString *output = [[[_scriptPath stringByAppendingPathComponent:_boardName] stringByDeletingPathExtension] stringByAppendingPathExtension:@"py"];
     [rhino.lines writeToFile:output atomically:NO encoding:NSUTF8StringEncoding error:&error];
 }
 

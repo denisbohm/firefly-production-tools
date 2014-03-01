@@ -84,6 +84,7 @@
 {
     self = [super init];
     if (self) {
+        _thickness = 1.6;
         _packages = [NSMutableDictionary dictionary];
         _container = [[FDBoardContainer alloc] init];
     }

@@ -656,24 +656,85 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="536" customClass="FDBoardView">
-                        <rect key="frame" x="20" y="20" width="637" height="505"/>
+                        <rect key="frame" x="20" y="20" width="637" height="479"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     </customView>
+                    <pathControl verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Apg-S6-IIA">
+                        <rect key="frame" x="212" y="504" width="178" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="172" id="Mu8-cn-Wmw"/>
+                        </constraints>
+                        <pathCell key="cell" controlSize="small" selectable="YES" editable="YES" alignment="left" placeholderString="Select board file..." pathStyle="popUp" id="WhW-bb-oae">
+                            <font key="font" metaFont="smallSystem"/>
+                        </pathCell>
+                    </pathControl>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ol6-ty-S2l">
+                        <rect key="frame" x="15" y="501" width="197" height="28"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Generate Rhino3D Python Script" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cQF-L4-oep">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="convert:" target="494" id="B45-0r-Xn9"/>
+                        </connections>
+                    </button>
+                    <pathControl verticalHuggingPriority="750" fixedFrame="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PCa-Kw-xci">
+                        <rect key="frame" x="480" y="505" width="178" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <pathCell key="cell" controlSize="small" selectable="YES" editable="YES" alignment="left" placeholderString="Select script directory..." pathStyle="popUp" id="wLI-lo-xz8">
+                            <font key="font" metaFont="smallSystem"/>
+                        </pathCell>
+                    </pathControl>
+                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fLi-F3-o8k">
+                        <rect key="frame" x="400" y="508" width="75" height="19"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="1.6" placeholderString="board thickness" drawsBackground="YES" id="deL-cO-IeI">
+                            <numberFormatter key="formatter" formatterBehavior="default10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="309" minimumFractionDigits="0" maximumFractionDigits="3" id="q8X-Ow-dun">
+                                <real key="roundingIncrement" value="0.0"/>
+                                <real key="minimum" value="0.10000000000000001"/>
+                                <real key="maximum" value="1.6000000000000001"/>
+                                <metadata>
+                                    <bool key="localizesFormat" value="YES"/>
+                                    <real key="inspectorSampleValue" value="1.6000000000000001"/>
+                                </metadata>
+                            </numberFormatter>
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="536" firstAttribute="top" secondItem="372" secondAttribute="top" constant="20" symbolic="YES" id="539"/>
-                    <constraint firstItem="536" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="20" symbolic="YES" id="540"/>
-                    <constraint firstAttribute="trailing" secondItem="536" secondAttribute="trailing" constant="20" symbolic="YES" id="541"/>
-                    <constraint firstAttribute="bottom" secondItem="536" secondAttribute="bottom" constant="20" symbolic="YES" id="542"/>
+                    <constraint firstItem="536" firstAttribute="top" secondItem="Ol6-ty-S2l" secondAttribute="bottom" constant="8" symbolic="YES" id="87w-Dk-nG4"/>
+                    <constraint firstItem="536" firstAttribute="leading" secondItem="Ol6-ty-S2l" secondAttribute="leading" id="Imb-AI-LfS"/>
+                    <constraint firstItem="Ol6-ty-S2l" firstAttribute="top" secondItem="372" secondAttribute="top" constant="20" symbolic="YES" id="MGp-FS-2cz"/>
+                    <constraint firstAttribute="bottom" secondItem="536" secondAttribute="bottom" constant="20" symbolic="YES" id="ceJ-qk-H7Q"/>
+                    <constraint firstAttribute="trailing" secondItem="536" secondAttribute="trailing" constant="20" symbolic="YES" id="dsR-9u-CY5"/>
+                    <constraint firstItem="Ol6-ty-S2l" firstAttribute="baseline" secondItem="Apg-S6-IIA" secondAttribute="baseline" id="mB0-Ot-XZE"/>
+                    <constraint firstItem="Apg-S6-IIA" firstAttribute="leading" secondItem="Ol6-ty-S2l" secondAttribute="trailing" constant="8" symbolic="YES" id="reu-e6-WyG"/>
+                    <constraint firstItem="Ol6-ty-S2l" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="20" symbolic="YES" id="rl1-4G-2PM"/>
                 </constraints>
             </view>
         </window>
         <customObject id="494" customClass="FDAppDelegate">
             <connections>
+                <outlet property="boardPathControl" destination="Apg-S6-IIA" id="jwH-8o-cfF"/>
+                <outlet property="boardThicknessTextField" destination="fLi-F3-o8k" id="n49-x9-DUN"/>
                 <outlet property="boardView" destination="536" id="543"/>
+                <outlet property="scriptPathControl" destination="PCa-Kw-xci" id="JvX-og-Dnk"/>
                 <outlet property="window" destination="371" id="532"/>
             </connections>
         </customObject>
         <customObject id="420" customClass="NSFontManager"/>
+        <pathControl verticalHuggingPriority="750" allowsExpansionToolTips="YES" id="V4v-Mu-Wiw">
+            <rect key="frame" x="0.0" y="0.0" width="179" height="20"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <pathCell key="cell" controlSize="small" selectable="YES" editable="YES" alignment="left" pathStyle="navigationBar" id="rAr-hJ-aVH">
+                <font key="font" metaFont="smallSystem"/>
+                <url key="url" string="file://localhost/Applications/"/>
+            </pathCell>
+        </pathControl>
     </objects>
 </document>

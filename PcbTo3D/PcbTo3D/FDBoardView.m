@@ -231,6 +231,9 @@
 
 - (void)drawRect:(NSRect)dirtyRect
 {
+    [[NSColor whiteColor] setFill];
+    NSRectFill(dirtyRect);
+    
     double scale = 20.0;
     
     NSAffineTransform* xform = [NSAffineTransform transform];
