@@ -118,6 +118,9 @@ static double ccwdiff(double a1, double a2) {
     double yc2 = im * (xm - xc2) + ym;
     
     double ar = angle * M_PI / 180.0;
+    if (ar < 0) {
+        ar += 2.0 * M_PI;
+    }
     
     double a1 = atan2(y1 - yc1, x1 - xc1);
     double a2 = atan2(y2 - yc1, x2 - xc1);
