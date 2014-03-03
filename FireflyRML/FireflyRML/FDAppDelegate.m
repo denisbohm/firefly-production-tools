@@ -26,6 +26,7 @@
     [_serialPopUpButton removeAllItems];
     NSMutableArray *serialPorts = [NSMutableArray arrayWithArray:[FDSerialPort findSerialPorts]];
     [serialPorts removeObject:@"/dev/cu.Bluetooth-Incoming-Port"];
+    [serialPorts removeObject:@"/dev/cu.Bluetooth-Modem"];
     [_serialPopUpButton addItemsWithTitles:serialPorts];
 }
 
