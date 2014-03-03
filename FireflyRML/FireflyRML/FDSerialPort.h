@@ -16,9 +16,25 @@
 
 @end
 
+@protocol FDSerialPortMatcher <NSObject>
+
+- (BOOL)matches:(io_object_t)service;
+
+@end
+
+@interface FDSerialPortMatcherUSB : NSObject<FDSerialPortMatcher>
+
++ (FDSerialPortMatcherUSB *)matcher:(uint16_t)vid pid:(uint16_t)pid;
+
+@property uint16_t vid;
+@property uint16_t pid;
+
+@end
+
 @interface FDSerialPort : NSObject
 
 + (NSArray *)findSerialPorts;
++ (NSArray *)findSerialPorts:(NSSet *)matchers;
 
 @property id<FDSerialPortDelegate> delegate;
 @property NSString *path;

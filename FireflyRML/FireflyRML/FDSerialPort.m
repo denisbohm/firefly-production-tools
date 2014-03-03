@@ -32,9 +32,53 @@
 #include <IOKit/serial/ioss.h>
 #endif
 #include <IOKit/IOBSD.h>
+#include <IOKit/usb/IOUSBLib.h>
 
 // Hold the original termios attributes so we can reset them
 static struct termios gOriginalTTYAttrs;
+
+@implementation FDSerialPortMatcherUSB
+
++ (FDSerialPortMatcherUSB *)matcher:(uint16_t)vid pid:(uint16_t)pid
+{
+    return [[FDSerialPortMatcherUSB alloc] init:vid pid:pid];
+}
+
+- (id)init:(uint16_t)vid pid:(uint16_t)pid
+{
+    if (self = [super init]) {
+        _vid = vid;
+        _pid = pid;
+    }
+    return self;
+}
+
+- (BOOL)matches:(io_object_t)serialService
+{
+    // walk up the hierarchy until we find the entry with USB vendor id and product id
+    io_registry_entry_t parent;
+    kern_return_t result = IORegistryEntryGetParentEntry(serialService, kIOServicePlane, &parent);
+    while (result == KERN_SUCCESS) {
+        CFTypeRef vendorIdAsCFNumber  = IORegistryEntrySearchCFProperty(parent, kIOServicePlane, CFSTR(kUSBVendorID),  kCFAllocatorDefault, 0);
+        CFTypeRef productIdAsCFNumber = IORegistryEntrySearchCFProperty(parent, kIOServicePlane, CFSTR(kUSBProductID), kCFAllocatorDefault, 0);
+        if (vendorIdAsCFNumber && productIdAsCFNumber) {
+            int vid = 0;
+            CFNumberGetValue((CFNumberRef)vendorIdAsCFNumber, kCFNumberIntType, &vid);
+            CFRelease(vendorIdAsCFNumber);
+            int pid = 0;
+            CFNumberGetValue((CFNumberRef)productIdAsCFNumber, kCFNumberIntType, &pid);
+            CFRelease(productIdAsCFNumber);
+            IOObjectRelease(parent);
+            return (vid == _vid) && (pid == _pid);
+        }
+        io_registry_entry_t oldparent = parent;
+        result = IORegistryEntryGetParentEntry(parent, kIOServicePlane, &parent);
+        IOObjectRelease(oldparent);
+    }
+    return NO;
+}
+
+@end
 
 @interface FDSerialPort ()
 
@@ -47,69 +91,56 @@ static struct termios gOriginalTTYAttrs;
 
 + (NSArray *)findSerialPorts
 {
+    return [FDSerialPort findSerialPorts:nil];
+}
+
++ (NSArray *)findSerialPorts:(NSSet *)matchers;
+{
     NSMutableArray *paths = [NSMutableArray array];
-    kern_return_t       kernResult;
-    mach_port_t         masterPort;
-    CFMutableDictionaryRef  classesToMatch;
     
-    kernResult = IOMasterPort(MACH_PORT_NULL, &masterPort);
-    if (KERN_SUCCESS != kernResult)
-    {
+    mach_port_t masterPort;
+    kern_return_t kernResult = IOMasterPort(MACH_PORT_NULL, &masterPort);
+    if (KERN_SUCCESS != kernResult) {
         printf("IOMasterPort returned %d\n", kernResult);
         goto exit;
     }
     
     // Serial devices are instances of class IOSerialBSDClient.
-    classesToMatch = IOServiceMatching(kIOSerialBSDServiceValue);
-    if (classesToMatch == NULL)
-    {
+    CFMutableDictionaryRef classesToMatch = IOServiceMatching(kIOSerialBSDServiceValue);
+    if (classesToMatch == NULL) {
         printf("IOServiceMatching returned a NULL dictionary.\n");
-    }
-    else {
-        CFDictionarySetValue(classesToMatch,
-                             CFSTR(kIOSerialBSDTypeKey),
-                             CFSTR(kIOSerialBSDAllTypes));
-        
-        // Each serial device object has a property with key
-        // kIOSerialBSDTypeKey and a value that is one of
-        // kIOSerialBSDAllTypes, kIOSerialBSDModemType,
-        // or kIOSerialBSDRS232Type. You can change the
-        // matching dictionary to find other types of serial
-        // devices by changing the last parameter in the above call
-        // to CFDictionarySetValue.
+    } else {
+        // We can search for kIOSerialBSDAllTypes, kIOSerialBSDModemType, or kIOSerialBSDRS232Type.
+        CFDictionarySetValue(classesToMatch, CFSTR(kIOSerialBSDTypeKey), CFSTR(kIOSerialBSDAllTypes));
     }
     
     io_iterator_t matchingServices;
     kernResult = IOServiceGetMatchingServices(masterPort, classesToMatch, &matchingServices);
-    if (KERN_SUCCESS != kernResult)
-    {
+    if (KERN_SUCCESS != kernResult) {
         printf("IOServiceGetMatchingServices returned %d\n", kernResult);
         goto exit;
     }
     
-    io_object_t     service;
-    while((service= IOIteratorNext(matchingServices)))
-    {
-        CFTypeRef   deviceFilePathAsCFString;
-        
-        // Get the callout device's path (/dev/cu.xxxxx).
-        // The callout device should almost always be
-        // used. You would use the dialin device (/dev/tty.xxxxx) when
-        // monitoring a serial port for
-        // incoming calls, for example, a fax listener.
-        
-        deviceFilePathAsCFString = IORegistryEntryCreateCFProperty(service,
-                                                                   CFSTR(kIOCalloutDeviceKey),
-                                                                   kCFAllocatorDefault,
-                                                                   0);
-        if (deviceFilePathAsCFString)
-        {
-            NSString *path = (__bridge NSString *)(deviceFilePathAsCFString);
-            [paths addObject:path];
+    io_object_t service;
+    while ((service = IOIteratorNext(matchingServices))) {
+        BOOL matches = YES;
+        if (matchers != nil) {
+            matches = NO;
+            for (id<FDSerialPortMatcher> matcher in matchers) {
+                if ([matcher matches:service]) {
+                    matches = YES;
+                    break;
+                }
+            }
         }
         
-        
-        // Release the io_service_t now that we are done with it.
+        if (matches) {
+            CFTypeRef deviceFilePathAsCFString = IORegistryEntryCreateCFProperty(service, CFSTR(kIOCalloutDeviceKey), kCFAllocatorDefault, 0);
+            if (deviceFilePathAsCFString) {
+                NSString *path = (__bridge NSString *)(deviceFilePathAsCFString);
+                [paths addObject:path];
+            }
+        }
         
         (void) IOObjectRelease(service);
     }
