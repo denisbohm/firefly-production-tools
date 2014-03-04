@@ -124,18 +124,21 @@
     NSString *schematicPath = _schematicPathControl.URL.path;
     bom.schematicPath = schematicPath;
     NSArray *titles = [bom readOptions];
+    NSMutableSet *optionsSet = [NSMutableSet set];
     NSMutableArray *options = [NSMutableArray array];
     for (NSString *title in titles) {
         [options addObject:[FDOption option:title value:YES]];
+        [optionsSet addObject:title];
     }
     _optionDataSource.options = options;
     [_optionsTableView reloadData];
+    bom.options = optionsSet;
     
     NSNumber *qty1 = [self comboBoxNumber:_qty1ComboBox];
     NSNumber *qty2 = [self comboBoxNumber:_qty2ComboBox];
     NSNumber *qty3 = [self comboBoxNumber:_qty3ComboBox];
     bom.quantities = @[qty1, qty2, qty3];
-    [bom read];
+    [bom read]; // !!! really should read all parts (not just all options on) so get all pricing and availability -denis
     [bom getPricingAndAvailability];
     
     NSMutableSet *sellerNameSet = [NSMutableSet set];

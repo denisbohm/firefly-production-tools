@@ -600,9 +600,6 @@
 
 - (FDPartBuy *)getMultipleSellerBuy:(FDItem *)item itemQuantity:(NSUInteger)itemQuantity sellers:(NSArray *)sellers
 {
-    if ([@"nRF8001-R2Q32-T" isEqualToString:item.orderingCode]) {
-        NSLog(@"nice breakpoint");
-    }
     NSMutableArray *partialPartBuys = [NSMutableArray array];
     for (FDPartSeller *seller in sellers) {
         if ((_sellers != nil) && ![_sellers containsObject:seller.name]) {

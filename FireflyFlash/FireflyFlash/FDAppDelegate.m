@@ -220,6 +220,23 @@
     [_swdJtagImageView setAlphaValue:0.25];
 }
 
+- (void)verify:(uint32_t)address data:(NSData *)data
+{
+    FDSerialWireDebug *serialWireDebug = _gdbServerSwd.serialWireDebug;
+    NSData *verify = [serialWireDebug readMemory:address length:(uint32_t)data.length];
+    if (![data isEqualToData:verify]) {
+        uint8_t *dataBytes = (uint8_t *)data.bytes;
+        uint8_t *verifyBytes = (uint8_t *)verify.bytes;
+        NSUInteger i;
+        for (i = 0; i < data.length; ++i) {
+            if (dataBytes[i] != verifyBytes[i]) {
+                break;
+            }
+        }
+        @throw [NSException exceptionWithName:@"verify issue"reason:[NSString stringWithFormat:@"verify issue at %lu %02x != %02x", (unsigned long)i, dataBytes[i], verifyBytes[i]] userInfo:nil];
+    }
+}
+
 - (IBAction)swdProgram:(id)sender
 {
     FDSerialWireDebug *serialWireDebug = _gdbServerSwd.serialWireDebug;
@@ -234,26 +251,23 @@
     FDLog(@"reading %@", firmwarePath);
     FDExecutable *executable = [[FDExecutable alloc] init];
     [executable load:firmwarePath];
-    FDLog(@"mass erase");
-    [serialWireDebug massErase];
-    for (FDExecutableSection *section in executable.sections) {
-        switch (section.type) {
-            case FDExecutableSectionTypeProgram: {
-                FDLog(@"loading flash");
-                [serialWireDebug writeMemory:section.address data:section.data];
-                NSData *verify = [serialWireDebug readMemory:section.address length:(uint32_t)section.data.length];
-                if ([section.data isEqualToData:verify]) {
-                    FDLog(@"flash verified");
-                } else {
-                    FDLog(@"flash program failure");
-                }
-            } break;
-            case FDExecutableSectionTypeData:
-                FDLog(@"loading RAM");
-                [serialWireDebug writeMemory:section.address data:section.data];
-                break;
-        }
-    }
+    NSArray *sections = [executable combineSectionsType:FDExecutableSectionTypeProgram address:0 length:0x40000 pageSize:2048];
+    executable.sections = sections;
+    
+    FDLog(@"Loading FireflyFlash into RAM...");
+    FDFireflyFlash *flash = [[FDFireflyFlash alloc] init];
+    flash.logger = self.logger;
+    [flash initialize:serialWireDebug];
+    
+    FDLog(@"starting mass erase");
+    [flash massErase];
+
+    FDLog(@"loading firmware into flash...");
+    FDExecutableSection *section = executable.sections[0];
+    uint32_t address = 0x00000000;
+    [flash writePages:address data:section.data erase:YES];
+    [self verify:address data:section.data];
+
     FDLog(@"resetting");
     [serialWireDebug reset];
     [serialWireDebug run];
