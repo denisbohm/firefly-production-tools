@@ -108,7 +108,7 @@
 
 - (void)read;
 
-- (void)getPricingAndAvailability;
+- (void)getPricingAndAvailability:(NSString *)apikey;
 
 - (void)exportForScreamingCircuits;
 

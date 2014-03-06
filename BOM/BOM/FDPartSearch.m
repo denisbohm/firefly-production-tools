@@ -85,7 +85,6 @@ static FDPartStock *_unknown;
 
 @interface FDPartSearch ()
 @property NSString *url;
-@property NSString *apikey;
 @end
 
 @implementation FDPartSearch
@@ -94,7 +93,6 @@ static FDPartStock *_unknown;
 {
     if (self = [super init]) {
         _url = @"http://octopart.com/api/v3/parts/match";
-        _apikey = @"ab62eb9c";
     }
     return self;
 }

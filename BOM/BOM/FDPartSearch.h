@@ -38,6 +38,8 @@
 
 @interface FDPartSearch : NSObject
 
+@property NSString *apikey;
+
 - (NSArray *)findOffersWithManufacturerPartNumber:(NSString *)manufacturerPartNumber;
 
 @end

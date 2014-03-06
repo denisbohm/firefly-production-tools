@@ -12,6 +12,7 @@
 		922E6EA21731DAF700B0DC9A /* jtag.png in Resources */ = {isa = PBXBuildFile; fileRef = 922E6EA01731DAF700B0DC9A /* jtag.png */; };
 		922E6EA41731E63900B0DC9A /* running.png in Resources */ = {isa = PBXBuildFile; fileRef = 922E6EA31731E63900B0DC9A /* running.png */; };
 		924A83991731A76F0041EB46 /* FireflyFlash.icns in Resources */ = {isa = PBXBuildFile; fileRef = 924A83981731A76F0041EB46 /* FireflyFlash.icns */; };
+		92AAD0CF18C67370009081D2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92AAD0CE18C67370009081D2 /* Images.xcassets */; };
 		92DBE9C51730AF4700702ABA /* FireflyProduction.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DBE9C21730AF0400702ABA /* FireflyProduction.framework */; };
 		92DBE9CC1730AFA600702ABA /* FireflyProduction.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92DBE9C21730AF0400702ABA /* FireflyProduction.framework */; };
 		92DBE9D81730B01B00702ABA /* ARMSerialWireDebug.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92DBE9D31730B00B00702ABA /* ARMSerialWireDebug.framework */; };
@@ -101,6 +102,7 @@
 		922E6EA31731E63900B0DC9A /* running.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = running.png; sourceTree = "<group>"; };
 		924A83951731A5550041EB46 /* FireflyFlash.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = FireflyFlash.entitlements; sourceTree = "<group>"; };
 		924A83981731A76F0041EB46 /* FireflyFlash.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = FireflyFlash.icns; sourceTree = SOURCE_ROOT; };
+		92AAD0CE18C67370009081D2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		92DBE9BC1730AF0400702ABA /* FireflyProduction.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FireflyProduction.xcodeproj; path = ../FireflyProduction/FireflyProduction.xcodeproj; sourceTree = "<group>"; };
 		92DBE9CD1730B00A00702ABA /* ARMSerialWireDebug.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ARMSerialWireDebug.xcodeproj; path = "../../firefly-arm-swd/ARMSerialWireDebug.xcodeproj"; sourceTree = "<group>"; };
 		92E775091730958000A111DF /* FireflyFlash.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FireflyFlash.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -215,6 +217,7 @@
 				92E775211730958000A111DF /* MainMenu.xib */,
 				92E7751E1730958000A111DF /* FDAppDelegate.h */,
 				92E7751F1730958000A111DF /* FDAppDelegate.m */,
+				92AAD0CE18C67370009081D2 /* Images.xcassets */,
 			);
 			path = FireflyFlash;
 			sourceTree = "<group>";
@@ -306,6 +309,11 @@
 				CLASSPREFIX = FD;
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Firefly Design";
+				TargetAttributes = {
+					92E775081730958000A111DF = {
+						DevelopmentTeam = TVNL896ZKT;
+					};
+				};
 			};
 			buildConfigurationList = 92E775041730958000A111DF /* Build configuration list for PBXProject "FireflyFlash" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -372,6 +380,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				92E775171730958000A111DF /* InfoPlist.strings in Resources */,
+				92AAD0CF18C67370009081D2 /* Images.xcassets in Resources */,
 				92E7751D1730958000A111DF /* Credits.rtf in Resources */,
 				92E775231730958000A111DF /* MainMenu.xib in Resources */,
 				924A83991731A76F0041EB46 /* FireflyFlash.icns in Resources */,
@@ -545,7 +554,8 @@
 		92E7753B1730958000A111DF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -560,7 +570,8 @@
 		92E7753C1730958000A111DF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

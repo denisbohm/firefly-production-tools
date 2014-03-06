@@ -3,7 +3,7 @@
     {
       "size" : "16x16",
       "idiom" : "mac",
-      "filename" : "icon_16x16.png",
+      "filename" : "FireflyFlash16x16.png",
       "scale" : "1x"
     },
     {
@@ -15,7 +15,7 @@
     {
       "size" : "32x32",
       "idiom" : "mac",
-      "filename" : "icon_32x32.png",
+      "filename" : "FireflyFlash32x32.png",
       "scale" : "1x"
     },
     {
@@ -27,7 +27,7 @@
     {
       "size" : "128x128",
       "idiom" : "mac",
-      "filename" : "icon_128x128.png",
+      "filename" : "FireflyFlash128x128.png",
       "scale" : "1x"
     },
     {
@@ -39,7 +39,7 @@
     {
       "size" : "256x256",
       "idiom" : "mac",
-      "filename" : "icon_256x256.png",
+      "filename" : "FireflyFlash256x256.png",
       "scale" : "1x"
     },
     {
@@ -51,7 +51,7 @@
     {
       "size" : "512x512",
       "idiom" : "mac",
-      "filename" : "icon_512x512.png",
+      "filename" : "FireflyFlash512x512.png",
       "scale" : "1x"
     },
     {

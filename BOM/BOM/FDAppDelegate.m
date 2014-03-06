@@ -64,6 +64,7 @@
 
 @interface FDAppDelegate ()
 
+@property (assign) IBOutlet NSTextField *octopartKeyTextField;
 @property (assign) IBOutlet NSPathControl *schematicPathControl;
 @property (assign) IBOutlet NSTableView *optionsTableView;
 @property (assign) IBOutlet NSTableView *sellersTableView;
@@ -92,6 +93,11 @@
         _schematicPathControl.URL = [[NSURL alloc] initFileURLWithPath:schematicPath];
     }
     
+    NSString *octopartKey = [userDefaults stringForKey:@"octopartKey"];
+    if (octopartKey) {
+        _octopartKeyTextField.stringValue = octopartKey;
+    }
+    
     _optionDataSource = [[FDOptionDataSource alloc] init];
     [_optionsTableView setDataSource:_optionDataSource];
     _optionsTableView.delegate = _optionDataSource;
@@ -107,9 +113,9 @@
 
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
-    NSString *schematicPath = _schematicPathControl.URL.path;
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setObject:schematicPath forKey:@"schematicPath"];
+    [userDefaults setObject:_schematicPathControl.URL.path forKey:@"schematicPath"];
+    [userDefaults setObject:_octopartKeyTextField.stringValue forKey:@"octopartKey"];
 }
 
 - (NSNumber *)comboBoxNumber:(NSComboBox *)comboBox
@@ -139,7 +145,7 @@
     NSNumber *qty3 = [self comboBoxNumber:_qty3ComboBox];
     bom.quantities = @[qty1, qty2, qty3];
     [bom read]; // !!! really should read all parts (not just all options on) so get all pricing and availability -denis
-    [bom getPricingAndAvailability];
+    [bom getPricingAndAvailability:_octopartKeyTextField.stringValue];
     
     NSMutableSet *sellerNameSet = [NSMutableSet set];
     for (FDBuy *buy in bom.buys) {
@@ -215,7 +221,7 @@
         }
     }
     _bom.sellers = options;
-    [_bom getPricingAndAvailability];
+    [_bom getPricingAndAvailability:_octopartKeyTextField.stringValue];
     [self setPriceDescription:_price1Label buy:_bom.buys[0]];
     [self setPriceDescription:_price2Label buy:_bom.buys[1]];
     [self setPriceDescription:_price3Label buy:_bom.buys[2]];

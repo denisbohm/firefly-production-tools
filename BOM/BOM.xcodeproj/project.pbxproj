@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9202A681179AD949006C4AA9 /* FDPartSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 9202A680179AD949006C4AA9 /* FDPartSearch.m */; };
+		92AAD0C918C6729E009081D2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92AAD0C818C6729E009081D2 /* Images.xcassets */; };
 		92B51A6A1745508E00D4A423 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92B51A691745508E00D4A423 /* Cocoa.framework */; };
 		92B51A741745508E00D4A423 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92B51A721745508E00D4A423 /* InfoPlist.strings */; };
 		92B51A761745508E00D4A423 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B51A751745508E00D4A423 /* main.m */; };
@@ -36,6 +37,7 @@
 /* Begin PBXFileReference section */
 		9202A67F179AD949006C4AA9 /* FDPartSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDPartSearch.h; sourceTree = "<group>"; };
 		9202A680179AD949006C4AA9 /* FDPartSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDPartSearch.m; sourceTree = "<group>"; };
+		92AAD0C818C6729E009081D2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		92B51A661745508E00D4A423 /* BOM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BOM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		92B51A691745508E00D4A423 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		92B51A6C1745508E00D4A423 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -135,6 +137,7 @@
 				9202A680179AD949006C4AA9 /* FDPartSearch.m */,
 				92B51AA21745513000D4A423 /* FDSpreadsheet.h */,
 				92B51AA31745513000D4A423 /* FDSpreadsheet.m */,
+				92AAD0C818C6729E009081D2 /* Images.xcassets */,
 			);
 			path = BOM;
 			sourceTree = "<group>";
@@ -217,8 +220,13 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = FD;
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Firefly Design";
+				TargetAttributes = {
+					92B51A651745508E00D4A423 = {
+						DevelopmentTeam = TVNL896ZKT;
+					};
+				};
 			};
 			buildConfigurationList = 92B51A611745508E00D4A423 /* Build configuration list for PBXProject "BOM" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -244,6 +252,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				92B51A741745508E00D4A423 /* InfoPlist.strings in Resources */,
+				92AAD0C918C6729E009081D2 /* Images.xcassets in Resources */,
 				92B51A7A1745508E00D4A423 /* Credits.rtf in Resources */,
 				92B51A801745508E00D4A423 /* MainMenu.xib in Resources */,
 				92B51AA1174550FE00D4A423 /* spreadsheet.xml in Resources */,
@@ -347,7 +356,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -380,7 +388,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -405,6 +412,8 @@
 		92B51A981745508E00D4A423 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BOM/BOM-Prefix.pch";
@@ -417,6 +426,8 @@
 		92B51A991745508E00D4A423 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BOM/BOM-Prefix.pch";

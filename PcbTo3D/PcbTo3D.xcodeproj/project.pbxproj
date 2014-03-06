@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		927F5EC117DBA21A0047BB95 /* FDRhino.m in Sources */ = {isa = PBXBuildFile; fileRef = 927F5EC017DBA21A0047BB95 /* FDRhino.m */; };
 		927F5EC417DBA2690047BB95 /* FDBoard.m in Sources */ = {isa = PBXBuildFile; fileRef = 927F5EC317DBA2690047BB95 /* FDBoard.m */; };
+		92AAD0C718C66B77009081D2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92AAD0C618C66B77009081D2 /* Images.xcassets */; };
 		92BCB83917DA662D00B01308 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92BCB83817DA662D00B01308 /* Cocoa.framework */; };
 		92BCB84317DA662D00B01308 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92BCB84117DA662D00B01308 /* InfoPlist.strings */; };
 		92BCB84517DA662D00B01308 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BCB84417DA662D00B01308 /* main.m */; };
@@ -37,6 +38,7 @@
 		927F5EC017DBA21A0047BB95 /* FDRhino.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDRhino.m; sourceTree = "<group>"; };
 		927F5EC217DBA2690047BB95 /* FDBoard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDBoard.h; sourceTree = "<group>"; };
 		927F5EC317DBA2690047BB95 /* FDBoard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDBoard.m; sourceTree = "<group>"; };
+		92AAD0C618C66B77009081D2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		92BCB83517DA662D00B01308 /* PcbTo3D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PcbTo3D.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		92BCB83817DA662D00B01308 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		92BCB83B17DA662D00B01308 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -133,6 +135,7 @@
 				927F5EC017DBA21A0047BB95 /* FDRhino.m */,
 				927F5EC217DBA2690047BB95 /* FDBoard.h */,
 				927F5EC317DBA2690047BB95 /* FDBoard.m */,
+				92AAD0C618C66B77009081D2 /* Images.xcassets */,
 			);
 			path = PcbTo3D;
 			sourceTree = "<group>";
@@ -216,6 +219,11 @@
 				CLASSPREFIX = FD;
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Firefly Design";
+				TargetAttributes = {
+					92BCB83417DA662D00B01308 = {
+						DevelopmentTeam = TVNL896ZKT;
+					};
+				};
 			};
 			buildConfigurationList = 92BCB83017DA662D00B01308 /* Build configuration list for PBXProject "PcbTo3D" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -241,6 +249,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				92BCB84317DA662D00B01308 /* InfoPlist.strings in Resources */,
+				92AAD0C718C66B77009081D2 /* Images.xcassets in Resources */,
 				92BCB84917DA662D00B01308 /* Credits.rtf in Resources */,
 				92BCB84F17DA662E00B01308 /* MainMenu.xib in Resources */,
 			);
@@ -399,6 +408,8 @@
 		92BCB86717DA662E00B01308 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PcbTo3D/PcbTo3D-Prefix.pch";
@@ -411,6 +422,8 @@
 		92BCB86817DA662E00B01308 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PcbTo3D/PcbTo3D-Prefix.pch";

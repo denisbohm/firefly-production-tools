@@ -716,9 +716,10 @@
     return buy;
 }
 
-- (void)getPricingAndAvailability
+- (void)getPricingAndAvailability:(NSString *)apikey
 {
     FDPartSearch *partSearch = [[FDPartSearch alloc] init];
+    partSearch.apikey = apikey;
     NSMutableArray *buys = [NSMutableArray array];
     for (NSUInteger i = 0; i < _quantities.count; ++i) {
         [buys addObject:[self getBestBuy:partSearch quantityIndex:i]];
