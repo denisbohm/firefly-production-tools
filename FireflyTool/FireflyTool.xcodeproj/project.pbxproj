@@ -28,6 +28,8 @@
 		9205984317FCAEAF0027FAAD /* ARMSerialWireDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9205982C17FCAD290027FAAD /* ARMSerialWireDebug.framework */; };
 		9205984517FCAEAF0027FAAD /* FireflyProduction.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9205984017FCAE380027FAAD /* FireflyProduction.framework */; };
 		9205984717FCAEBA0027FAAD /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9205984617FCAEBA0027FAAD /* IOBluetooth.framework */; };
+		92547FCB18CE4D4900591A02 /* FireflyDevice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92FDC12918CBBD7600363A01 /* FireflyDevice.framework */; };
+		92547FCC18CE4D5100591A02 /* FireflyDevice.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92FDC12918CBBD7600363A01 /* FireflyDevice.framework */; };
 		926CCCF817FCAFE000449599 /* ARMSerialWireDebug.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9205982C17FCAD290027FAAD /* ARMSerialWireDebug.framework */; };
 		926CCCFA17FCAFE000449599 /* FireflyProduction.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9205984017FCAE380027FAAD /* FireflyProduction.framework */; };
 		92BF961C1829F01500C37412 /* FDFireflyIceUsbTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BF961B1829F01500C37412 /* FDFireflyIceUsbTest.m */; };
@@ -72,6 +74,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 92E774E81730925800A111DF;
 			remoteInfo = FireflyProductionTests;
+		};
+		92547FC318CE4D4200591A02 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 928CD63818118F8800C75B73 /* FireflyDevice.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 92DF1392180B01AE00A1B849;
+			remoteInfo = FireflyDevice.framework;
 		};
 		926CCCF117FCAEF800449599 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -124,6 +133,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				92547FCC18CE4D5100591A02 /* FireflyDevice.framework in CopyFiles */,
 				926CCCF817FCAFE000449599 /* ARMSerialWireDebug.framework in CopyFiles */,
 				926CCCFA17FCAFE000449599 /* FireflyProduction.framework in CopyFiles */,
 			);
@@ -181,6 +191,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92547FCB18CE4D4900591A02 /* FireflyDevice.framework in Frameworks */,
 				9205984517FCAEAF0027FAAD /* FireflyProduction.framework in Frameworks */,
 				9205984317FCAEAF0027FAAD /* ARMSerialWireDebug.framework in Frameworks */,
 				9205984717FCAEBA0027FAAD /* IOBluetooth.framework in Frameworks */,
@@ -348,6 +359,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				92547FC418CE4D4200591A02 /* PBXTargetDependency */,
 				926CCCF617FCAEFE00449599 /* PBXTargetDependency */,
 				926CCCF217FCAEF800449599 /* PBXTargetDependency */,
 			);
@@ -543,6 +555,11 @@
 			isa = PBXTargetDependency;
 			target = 920597D817FCAAC20027FAAD /* FireflyTool */;
 			targetProxy = 920597FE17FCAAC20027FAAD /* PBXContainerItemProxy */;
+		};
+		92547FC418CE4D4200591A02 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FireflyDevice.framework;
+			targetProxy = 92547FC318CE4D4200591A02 /* PBXContainerItemProxy */;
 		};
 		926CCCF217FCAEF800449599 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

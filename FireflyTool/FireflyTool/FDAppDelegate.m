@@ -69,7 +69,7 @@
     _resources[@"testBattery"] = [NSNumber numberWithBool:_testBatteryCheckBox.state == NSOnState];
 }
 
-- (void)clearLog
+- (IBAction)clearLog:(id)sender
 {
     NSTextStorage* textStorage = _logView.textStorage;
     [textStorage deleteCharactersInRange:NSMakeRange(0, textStorage.length)];
@@ -120,7 +120,7 @@
         return;
     }
     
-    [self clearLog];
+    [self clearLog:self];
     [_jtagLabel setDrawsBackground:YES];
     [_pcbaLabel setDrawsBackground:NO];
 
