@@ -119,10 +119,10 @@
     
     cortexM.programRange.location = ramStart;
     cortexM.programRange.length = programLength;
-    cortexM.stackRange.location = ramStart + ramLength - stackLength;
-    cortexM.stackRange.length = stackLength;
-    cortexM.heapRange.location = cortexM.stackRange.location - heapLength;
-    cortexM.heapRange.length = heapLength;
+    cortexM.stackRange.location = (UInt32)(ramStart + ramLength - stackLength);
+    cortexM.stackRange.length = (UInt32)stackLength;
+    cortexM.heapRange.location = (UInt32)(cortexM.stackRange.location - heapLength);
+    cortexM.heapRange.length = (UInt32)heapLength;
     
     if (cortexM.heapRange.location < (cortexM.programRange.location + cortexM.programRange.length)) {
         @throw [NSException exceptionWithName:@"CORTEXOUTOFRAM" reason:@"Cortex out of RAM" userInfo:nil];

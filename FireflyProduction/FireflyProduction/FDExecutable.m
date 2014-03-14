@@ -464,7 +464,7 @@ static int get_array_length(Dwarf_Debug dbg, Dwarf_Die die, int *length) {
     
     FDExecutableFunction *function = [[FDExecutableFunction alloc] init];
     function.name = [NSString stringWithCString:name encoding:NSASCIIStringEncoding];
-    function.address = lowpc;
+    function.address = (uint32_t)lowpc;
     [_functions setObject:function forKey:function.name];
     
 //    NSLog(@"function %@ %@", function.name, type);
@@ -718,7 +718,7 @@ static int get_array_length(Dwarf_Debug dbg, Dwarf_Die die, int *length) {
         FDExecutableSection *section = [sectionByAddress objectForKey:key];
         if (section) {
             [sectionByAddress removeObjectForKey:key];
-            section.address = phdr.p_paddr;
+            section.address = (uint32_t)phdr.p_paddr;
             key = [NSNumber numberWithLong:section.address];
             [sectionByAddress setObject:section forKey:key];
         }
