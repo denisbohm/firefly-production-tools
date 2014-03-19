@@ -22,7 +22,6 @@
 		92E774D41730925800A111DF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E774D31730925800A111DF /* Cocoa.framework */; };
 		92E774DE1730925800A111DF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92E774DC1730925800A111DF /* InfoPlist.strings */; };
 		92E774E21730925800A111DF /* FireflyProduction.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E774E11730925800A111DF /* FireflyProduction.m */; };
-		92E774EA1730925800A111DF /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E774E91730925800A111DF /* SenTestingKit.framework */; };
 		92E774EB1730925800A111DF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E774D31730925800A111DF /* Cocoa.framework */; };
 		92E774EE1730925800A111DF /* FireflyProduction.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E774D01730925800A111DF /* FireflyProduction.framework */; };
 		92E774F41730925800A111DF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92E774F21730925800A111DF /* InfoPlist.strings */; };
@@ -144,8 +143,7 @@
 		92E774DF1730925800A111DF /* FireflyProduction-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FireflyProduction-Prefix.pch"; sourceTree = "<group>"; };
 		92E774E01730925800A111DF /* FireflyProduction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FireflyProduction.h; sourceTree = "<group>"; };
 		92E774E11730925800A111DF /* FireflyProduction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FireflyProduction.m; sourceTree = "<group>"; };
-		92E774E81730925800A111DF /* FireflyProductionTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FireflyProductionTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		92E774E91730925800A111DF /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		92E774E81730925800A111DF /* FireflyProductionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FireflyProductionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		92E774F11730925800A111DF /* FireflyProductionTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FireflyProductionTests-Info.plist"; sourceTree = "<group>"; };
 		92E774F31730925800A111DF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		92E774F51730925800A111DF /* FireflyProductionTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FireflyProductionTests.h; sourceTree = "<group>"; };
@@ -184,7 +182,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				92E774EA1730925800A111DF /* SenTestingKit.framework in Frameworks */,
 				92E774EB1730925800A111DF /* Cocoa.framework in Frameworks */,
 				92E774EE1730925800A111DF /* FireflyProduction.framework in Frameworks */,
 			);
@@ -229,7 +226,7 @@
 			isa = PBXGroup;
 			children = (
 				92E774D01730925800A111DF /* FireflyProduction.framework */,
-				92E774E81730925800A111DF /* FireflyProductionTests.octest */,
+				92E774E81730925800A111DF /* FireflyProductionTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -243,7 +240,6 @@
 				92E775641730993F00A111DF /* IOBluetooth.framework */,
 				92E775621730991F00A111DF /* IOKit.framework */,
 				92E774D31730925800A111DF /* Cocoa.framework */,
-				92E774E91730925800A111DF /* SenTestingKit.framework */,
 				92E774D51730925800A111DF /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -372,8 +368,8 @@
 			);
 			name = FireflyProductionTests;
 			productName = FireflyProductionTests;
-			productReference = 92E774E81730925800A111DF /* FireflyProductionTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = 92E774E81730925800A111DF /* FireflyProductionTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -661,12 +657,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\\\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\\\"",
+					"$(inherited)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FireflyProduction/FireflyProduction-Prefix.pch";
 				INFOPLIST_FILE = "FireflyProductionTests/FireflyProductionTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -674,12 +672,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\\\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\\\"",
+					"$(inherited)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FireflyProduction/FireflyProduction-Prefix.pch";
 				INFOPLIST_FILE = "FireflyProductionTests/FireflyProductionTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};
