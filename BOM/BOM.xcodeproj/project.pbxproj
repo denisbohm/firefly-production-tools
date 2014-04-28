@@ -15,7 +15,6 @@
 		92B51A7A1745508E00D4A423 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 92B51A781745508E00D4A423 /* Credits.rtf */; };
 		92B51A7D1745508E00D4A423 /* FDAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B51A7C1745508E00D4A423 /* FDAppDelegate.m */; };
 		92B51A801745508E00D4A423 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92B51A7E1745508E00D4A423 /* MainMenu.xib */; };
-		92B51A881745508E00D4A423 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92B51A871745508E00D4A423 /* SenTestingKit.framework */; };
 		92B51A891745508E00D4A423 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92B51A691745508E00D4A423 /* Cocoa.framework */; };
 		92B51A911745508E00D4A423 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92B51A8F1745508E00D4A423 /* InfoPlist.strings */; };
 		92B51A941745508E00D4A423 /* BOMTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B51A931745508E00D4A423 /* BOMTests.m */; };
@@ -51,8 +50,7 @@
 		92B51A7B1745508E00D4A423 /* FDAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FDAppDelegate.h; sourceTree = "<group>"; };
 		92B51A7C1745508E00D4A423 /* FDAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FDAppDelegate.m; sourceTree = "<group>"; };
 		92B51A7F1745508E00D4A423 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		92B51A861745508E00D4A423 /* BOMTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BOMTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		92B51A871745508E00D4A423 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		92B51A861745508E00D4A423 /* BOMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BOMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		92B51A8E1745508E00D4A423 /* BOMTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BOMTests-Info.plist"; sourceTree = "<group>"; };
 		92B51A901745508E00D4A423 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		92B51A921745508E00D4A423 /* BOMTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BOMTests.h; sourceTree = "<group>"; };
@@ -77,7 +75,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				92B51A881745508E00D4A423 /* SenTestingKit.framework in Frameworks */,
 				92B51A891745508E00D4A423 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -99,7 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				92B51A661745508E00D4A423 /* BOM.app */,
-				92B51A861745508E00D4A423 /* BOMTests.octest */,
+				92B51A861745508E00D4A423 /* BOMTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -108,7 +105,6 @@
 			isa = PBXGroup;
 			children = (
 				92B51A691745508E00D4A423 /* Cocoa.framework */,
-				92B51A871745508E00D4A423 /* SenTestingKit.framework */,
 				92B51A6B1745508E00D4A423 /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -210,8 +206,8 @@
 			);
 			name = BOMTests;
 			productName = BOMTests;
-			productReference = 92B51A861745508E00D4A423 /* BOMTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = 92B51A861745508E00D4A423 /* BOMTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -220,6 +216,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = FD;
+				LastTestingUpgradeCheck = 0510;
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Firefly Design";
 				TargetAttributes = {
@@ -442,13 +439,15 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/BOM.app/Contents/MacOS/BOM";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\\\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\\\"",
+					"$(inherited)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BOM/BOM-Prefix.pch";
 				INFOPLIST_FILE = "BOMTests/BOMTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -457,13 +456,15 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/BOM.app/Contents/MacOS/BOM";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\\\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\\\"",
+					"$(inherited)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BOM/BOM-Prefix.pch";
 				INFOPLIST_FILE = "BOMTests/BOMTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};

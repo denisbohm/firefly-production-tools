@@ -328,7 +328,7 @@
             } else
             if ([attributeName isEqualToString:@"VARIANTS"]) {
                 for (NSString *token in [attributeValue componentsSeparatedByString:@","]) {
-                    [part.variants addObject:attributeValue];
+                    [part.variants addObject:token];
                 }
             } else
             if ([attributeName isEqualToString:@"DNS"]) {

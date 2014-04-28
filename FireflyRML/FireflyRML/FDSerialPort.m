@@ -359,9 +359,9 @@ error:
 	if (n < 0) {
 		NSLog(@"Error opening serial port %@ - %s(%d).\n", _path, strerror(errno), errno);
 	} else
-        if (n > 0) {
-            [_writeBuffer replaceBytesInRange:NSMakeRange(0, n) withBytes:nil length:0];
-        }
+    if (n > 0) {
+        [_writeBuffer replaceBytesInRange:NSMakeRange(0, n) withBytes:nil length:0];
+    }
     
     //    NSLog(@"%lu bytes remaining to be written", _writeBuffer.length);
     if (_writeBuffer.length <= 0) {
