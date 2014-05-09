@@ -41,17 +41,61 @@ enum GPIO_Port_TypeDef {
 
 #define FD_LIS3DH_SCALE (1.0f / 4096.0f)
 
-@interface FDFireflyIceTest ()
+@interface FDFireflyIceTestLed : NSObject 
+@property NSString *name;
+@property uint32_t n;
+@property float expect;
+@end
+
+@implementation FDFireflyIceTestLed
+
++ (FDFireflyIceTestLed *)led:(NSString *)name n:(uint32_t)n expect:(float)expect
+{
+    FDFireflyIceTestLed *led = [[FDFireflyIceTestLed alloc] init];
+    led.name = name;
+    led.n = n;
+    led.expect = expect;
+    return led;
+}
 
 @end
 
+@interface FDFireflyIceTest ()
+@property NSArray *leds;
+@end
+
 @implementation FDFireflyIceTest
+
+- (id)init
+{
+    if (self = [super init]) {
+        _leds = @[
+                  [FDFireflyIceTestLed led:@"D3 blue" n:1 expect:2.96],
+                  [FDFireflyIceTestLed led:@"D3 green" n:2 expect:2.63],
+                  [FDFireflyIceTestLed led:@"D2 blue" n:3 expect:2.96],
+                  [FDFireflyIceTestLed led:@"D2 green" n:4 expect:2.63],
+                  [FDFireflyIceTestLed led:@"D1 blue" n:5 expect:2.96],
+                  [FDFireflyIceTestLed led:@"D1 green" n:6 expect:2.63],
+                  [FDFireflyIceTestLed led:@"D3 red" n:7 expect:1.88],
+                  [FDFireflyIceTestLed led:@"D2 red" n:8 expect:1.88],
+                  [FDFireflyIceTestLed led:@"D1 red" n:9 expect:1.88],
+                  ];
+    }
+    return self;
+}
 
 - (void)run
 {
     [self loadExecutable:@"FireflyIceTest"];
     
+    FDLog(@"initializing processor");
     [self run:@"fd_processor_initialize"];
+    
+    FDLog(@"initializing USB crystal");
+    [self run:@"fd_test_hfxo_initialize"];
+    
+    FDLog(@"initializing RTC crystal");
+    [self run:@"fd_test_rtc_initialize"];
     
     [self run:@"fd_log_initialize"];
     [self run:@"fd_event_initialize"];
@@ -61,11 +105,21 @@ enum GPIO_Port_TypeDef {
     [self GPIO_PinOutClear:gpioPortC pin:1]; // red
     [self GPIO_PinOutClear:gpioPortC pin:0]; // red
     
+    FDLog(@"testing RTC & USB crystals");
+    uint32_t countExpected = 32768 / 10; // 100 ms @ 32768 kHz
+    uint32_t countMin = countExpected - 2;
+    uint32_t countMax = countExpected + 2;
+    uint32_t count = [self invoke:@"fd_test_rtc"];
+    if ((count < countMin) || (count > countMax)) {
+        @throw [NSException exceptionWithName:@"RTCOutOfRange" reason:[NSString stringWithFormat:@"RTC out of range: %d (expected %d)", count, countExpected] userInfo:nil];
+    }
+    
     BOOL isCharging = ![self GPIO_PinInGet:gpioPortC pin:9];
     FDLog(@"is charging: %@", isCharging ? @"YES" : @"NO");
     
     BOOL testBattery = [self.resources[@"testBattery"] boolValue];
     
+    FDLog(@"testing adc...");
     [self invoke:@"fd_adc_initialize"];
     //
     [self invoke:@"fd_adc_start" r0:fd_adc_channel_temperature r1:false];
@@ -93,20 +147,28 @@ enum GPIO_Port_TypeDef {
         }
     }
     
+    FDLog(@"testing leds...");
     [self invoke:@"fd_i2c1_initialize"];
     [self invoke:@"fd_i2c1_power_on"];
     //
     [self invoke:@"fd_lp55231_initialize"];
     [self invoke:@"fd_lp55231_power_on"];
     [self invoke:@"fd_lp55231_wake"];
-    for (uint32_t i = 0; i < 9; ++i) {
-        [self invoke:@"fd_lp55231_set_led_pwm" r0:i r1:255];
-        float v = [self toFloat:[self invoke:@"fd_lp55231_test_led" r0:i]];
-        NSLog(@"led %u %0.3fV", i, v); // r = 2.1V, g = 3.1V, b=3.0V (at 5mA)
-        [self invoke:@"fd_lp55231_set_led_pwm" r0:i r1:0];
-        [NSThread sleepForTimeInterval:0.250];
+    for (FDFireflyIceTestLed *led in _leds) {
+        [self invoke:@"fd_lp55231_set_led_pwm" r0:led.n r1:255];
+        [NSThread sleepForTimeInterval:0.1];
+        float v = [self toFloat:[self invoke:@"fd_lp55231_test_led" r0:led.n]];
+        [self invoke:@"fd_lp55231_set_led_pwm" r0:led.n r1:0];
+        NSLog(@"led %@ %0.3fV", led.name, v);
+        float tolerance = 0.2;
+        float min = led.expect - tolerance;
+        float max = led.expect + tolerance;
+        if ((v < min) || (v > max)) {
+            @throw [NSException exceptionWithName:@"LEDVoltageOutOfRange" reason:[NSString stringWithFormat:@"LED %@ voltage out of range: %f (expected %f +/- %f", led.name, v, led.expect, tolerance] userInfo:nil];
+        }
     }
-    //
+    
+    FDLog(@"testing magnetometer...");
     [self invoke:@"fd_mag3110_initialize"];
     [self invoke:@"fd_mag3110_wake"];
     [NSThread sleepForTimeInterval:0.1];
@@ -117,6 +179,7 @@ enum GPIO_Port_TypeDef {
         @throw [NSException exceptionWithName:@"MagnetometerOfRange" reason:[NSString stringWithFormat:@"magnetometer out of range: %f", m] userInfo:nil];
     }
     
+    FDLog(@"testing accelerometer...");
     [self invoke:@"fd_spi_initialize"];
     //
     // initialize devices on spi1 bus
@@ -138,16 +201,20 @@ enum GPIO_Port_TypeDef {
     }
     }
     
-    
+    FDLog(@"testing radio ready...");
+    [self GPIO_PinOutSet:gpioPortD pin:3]; // NRF_REQN_PORT_PIN
     [self GPIO_PinOutClear:gpioPortD pin:5]; // NRF_RESETN_PORT_PIN
     [NSThread sleepForTimeInterval:0.1];
     [self GPIO_PinOutSet:gpioPortD pin:5]; // NRF_RESETN_PORT_PIN
     [NSThread sleepForTimeInterval:0.1]; // wait for nRF8001 to come out of reset (62ms)
+    [self GPIO_PinOutClear:gpioPortD pin:3]; // NRF_REQN_PORT_PIN
+    [NSThread sleepForTimeInterval:0.1];
     BOOL radioNotReady = [self GPIO_PinInGet:gpioPortD pin:4]; // NRF_RDYN_PORT_PIN
     if (radioNotReady) {
         @throw [NSException exceptionWithName:@"nRF8001NotReady" reason:@"nRF8001 not ready" userInfo:nil];
     }
     
+    FDLog(@"testing external flash...");
     // initialize devices on spi0 powered bus
     //    fd_spi_on(FD_SPI_BUS_0);
     //    fd_spi_wake(FD_SPI_BUS_0);
@@ -181,6 +248,7 @@ enum GPIO_Port_TypeDef {
     [self GPIO_PinOutClear:gpioPortA pin:15]; // green
     [self GPIO_PinOutSet:gpioPortC pin:1]; // red
     [self GPIO_PinOutSet:gpioPortC pin:0]; // red
+    FDLog(@"all tests passed");
 }
 
 @end

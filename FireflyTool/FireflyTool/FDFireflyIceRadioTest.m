@@ -26,7 +26,7 @@
 - (id)init
 {
     if (self = [super init]) {
-        _radioTestSpeed = 100;
+        _radioTestSpeed = 50;
         _radioTestStrength = -80;
         _radioTest = [[FDRadioTest alloc] init];
     }
@@ -41,7 +41,7 @@
 - (void)radioTest:(FDRadioTest *)radioTest complete:(NSString *)name result:(FDRadioTestResult *)result
 {
     FDLog(@"completed radio test for %@: %@ %0.2f %0.3f", name, result.pass ? @"pass" : @"fail", result.rssi, result.duration);
-    
+    _radioTestResult = result;
     if (!result.pass) {
         FDLog(@"radio test failed");
     }
@@ -84,7 +84,7 @@
     NSException *exception = nil;
     uint32_t result = 0;
     @try {
-        result = [self.cortexM run:radio_test.address r0:address r1:sizeof(bytes) timeout:1000]; // ]15.0];
+        result = [self.cortexM run:radio_test.address r0:address r1:sizeof(bytes) timeout:15.0];
     } @catch (NSException *e) {
         exception = e;
     }

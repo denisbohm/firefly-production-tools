@@ -32,8 +32,6 @@
 		92E775571730979E00A111DF /* FDGdbServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E775491730979E00A111DF /* FDGdbServer.m */; };
 		92E775581730979E00A111DF /* FDGdbServerSwd.h in Headers */ = {isa = PBXBuildFile; fileRef = 92E7754A1730979E00A111DF /* FDGdbServerSwd.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92E775591730979E00A111DF /* FDGdbServerSwd.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E7754B1730979E00A111DF /* FDGdbServerSwd.m */; };
-		92E7755A1730979E00A111DF /* FDUSBHIDMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 92E7754C1730979E00A111DF /* FDUSBHIDMonitor.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		92E7755B1730979E00A111DF /* FDUSBHIDMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E7754D1730979E00A111DF /* FDUSBHIDMonitor.m */; };
 		92E7755D173098D000A111DF /* ARMSerialWireDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E7755C173098D000A111DF /* ARMSerialWireDebug.framework */; };
 		92E77560173098FB00A111DF /* libdwarf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E7755E173098FB00A111DF /* libdwarf.a */; };
 		92E77561173098FB00A111DF /* libelf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E7755F173098FB00A111DF /* libelf.a */; };
@@ -154,8 +152,6 @@
 		92E775491730979E00A111DF /* FDGdbServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDGdbServer.m; sourceTree = "<group>"; };
 		92E7754A1730979E00A111DF /* FDGdbServerSwd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDGdbServerSwd.h; sourceTree = "<group>"; };
 		92E7754B1730979E00A111DF /* FDGdbServerSwd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDGdbServerSwd.m; sourceTree = "<group>"; };
-		92E7754C1730979E00A111DF /* FDUSBHIDMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDUSBHIDMonitor.h; sourceTree = "<group>"; };
-		92E7754D1730979E00A111DF /* FDUSBHIDMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDUSBHIDMonitor.m; sourceTree = "<group>"; };
 		92E7755C173098D000A111DF /* ARMSerialWireDebug.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARMSerialWireDebug.framework; path = "../../firefly-arm-swd/build/Release/ARMSerialWireDebug.framework"; sourceTree = "<group>"; };
 		92E7755E173098FB00A111DF /* libdwarf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdwarf.a; path = /usr/local/lib/libdwarf.a; sourceTree = "<absolute>"; };
 		92E7755F173098FB00A111DF /* libelf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libelf.a; path = /usr/local/lib/libelf.a; sourceTree = "<absolute>"; };
@@ -267,8 +263,6 @@
 				92E775491730979E00A111DF /* FDGdbServer.m */,
 				92E7754A1730979E00A111DF /* FDGdbServerSwd.h */,
 				92E7754B1730979E00A111DF /* FDGdbServerSwd.m */,
-				92E7754C1730979E00A111DF /* FDUSBHIDMonitor.h */,
-				92E7754D1730979E00A111DF /* FDUSBHIDMonitor.m */,
 				92E774E01730925800A111DF /* FireflyProduction.h */,
 				92E774E11730925800A111DF /* FireflyProduction.m */,
 				9214495817BED43200FC6BAF /* FDRadioTest.h */,
@@ -322,7 +316,6 @@
 				92898BDE179E35D0007B84B7 /* FDFireflyFlash.h in Headers */,
 				92E775561730979E00A111DF /* FDGdbServer.h in Headers */,
 				92E775581730979E00A111DF /* FDGdbServerSwd.h in Headers */,
-				92E7755A1730979E00A111DF /* FDUSBHIDMonitor.h in Headers */,
 				92BF96241829F38700C37412 /* FDUsbTest.h in Headers */,
 				9214495A17BED43200FC6BAF /* FDRadioTest.h in Headers */,
 			);
@@ -502,7 +495,6 @@
 				92BF96251829F38700C37412 /* FDUsbTest.m in Sources */,
 				92E775571730979E00A111DF /* FDGdbServer.m in Sources */,
 				92E775591730979E00A111DF /* FDGdbServerSwd.m in Sources */,
-				92E7755B1730979E00A111DF /* FDUSBHIDMonitor.m in Sources */,
 				92898BDF179E35D0007B84B7 /* FDFireflyFlash.m in Sources */,
 				9214495B17BED43200FC6BAF /* FDRadioTest.m in Sources */,
 			);

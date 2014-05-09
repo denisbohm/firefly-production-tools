@@ -45,26 +45,34 @@
     _pid = 0x0003;
     
     [self loadExecutable:@"FireflyUsbTest"];
+    
+    FDLog(@"initializing processor");
+    
     [self run:@"fd_processor_initialize"];
+
     [self run:@"fd_processor_wake"];
     
     FDLog(@"starting USB test for pid 0x%04x", _pid);
-    [_usbTest start];
     uint8_t bytes[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     NSData *writeData = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+    /*
+    _usbTest = [[FDUsbTest alloc] init];
+    [_usbTest start];
     [_usbTest startTest:_pid delegate:self data:writeData];
+     */
     FDExecutableFunction *usb_test = self.executable.functions[@"fd_usb_test"];
     uint32_t address = self.cortexM.heapRange.location;
     NSException *exception = nil;
     uint32_t result = 0;
     @try {
-        result = [self.cortexM run:usb_test.address r0:_pid r1:address r2:sizeof(bytes) timeout:5.0];
+        result = [self.cortexM run:usb_test.address r0:_pid r1:address r2:sizeof(bytes) timeout:10.0];
     } @catch (NSException *e) {
         exception = e;
     }
+    [_usbTest cancelTest:_pid];
     [_usbTest stop];
     if (exception != nil) {
-        [self addNote:notes message:@"check USB (timeout)"];
+        [self addNote:notes message:@"check USB (test timed out)"];
         return NO;
     }
     FDLog(@"USB test return 0x%08x result", result);

@@ -38,6 +38,7 @@
 @property NSMutableArray *updates;
 @property NSUInteger retries;
 @property BOOL connect;
+@property NSData *writeValue;
 
 @end
 
@@ -67,6 +68,7 @@
 @interface FDRadioTest () <CBCentralManagerDelegate, CBPeripheralDelegate>
 
 @property CBCentralManager *centralManager;
+@property CBUUID *dataServiceUUID;
 @property CBUUID *dataCharacteristicUUID;
 @property NSMutableDictionary *tests;
 @property NSTimer *timer;
@@ -82,7 +84,8 @@
 {
     if (self = [super init]) {
         _tests = [NSMutableDictionary dictionary];
-        _dataCharacteristicUUID = [CBUUID UUIDWithString:@"2a24"]; // Device Information: Model Number String
+        _dataServiceUUID = [CBUUID UUIDWithString:@"310a0001-1b95-5091-b0bd-b7a681846399"];
+        _dataCharacteristicUUID = [CBUUID UUIDWithString:@"310a0002-1b95-5091-b0bd-b7a681846399"];
         _timeout = 10.0;
         _sendTimeout = 0.5;
         _sendRetries = 3;
@@ -168,9 +171,10 @@
 
 - (void)centralManagerPoweredOn
 {
+    NSLog(@"centralManagerPoweredOn");
     NSDictionary *options = @{CBCentralManagerScanOptionAllowDuplicatesKey:[NSNumber  numberWithBool:YES]};
     [_centralManager scanForPeripheralsWithServices:nil options:options];
-//    [_centralManager scanForPeripheralsWithServices:@[[CBUUID UUIDWithString:@"180A"]] options:nil]; // Device Information
+//    [_centralManager scanForPeripheralsWithServices:@[[CBUUID UUIDWithString:@"180A"]] options:options]; // Device Information
 }
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central
@@ -195,10 +199,11 @@
                   RSSI:(NSNumber *)RSSI
 {
     NSString *name = peripheral.name;
+    NSLog(@"didDiscoverPeripheral %@", peripheral.name);
     FDRadioTestContext *context = _tests[name];
     if (context != nil) {
         if (context.peripheral == nil) {
-            FDLog(@"starting radio test sequence");
+            NSLog(@"starting radio test sequence");
             context.RSSI = RSSI;
             context.start = [NSDate date];
             context.peripheral = peripheral;
@@ -211,20 +216,21 @@
 
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral
 {
-    FDLog(@"didConnectPeripheral %@", peripheral.name);
+    NSLog(@"didConnectPeripheral %@", peripheral.name);
     FDRadioTestContext *context = _tests[peripheral.name];
     if (context != nil) {
+        NSLog(@"found data service");
         [peripheral discoverServices:nil];
     }
 }
 
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
 {
-    FDLog(@"didDisconnectPeripheral %@ : %@", peripheral.name, error);
+    NSLog(@"didDisconnectPeripheral %@ : %@", peripheral.name, error);
     FDRadioTestContext *context = _tests[peripheral.name];
     if (context != nil) {
         if ((context.writeEnd == nil) && (context.retries < _retries)) {
-            FDLog(@"unexpected disconnect, retry opening connection");
+            NSLog(@"unexpected disconnect, retry opening connection");
             [self retry:context];
         } else {
             [_tests removeObjectForKey:peripheral.name];
@@ -241,15 +247,18 @@
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error
 {
-    FDLog(@"didDiscoverServices %@ : %@", peripheral.name, error);
+    NSLog(@"didDiscoverServices %@ : %@", peripheral.name, error);
     for (CBService *service in peripheral.services) {
-        [peripheral discoverCharacteristics:nil forService:service];
+        NSLog(@"service UUID %@", service.UUID);
+        if ([service.UUID isEqualTo:_dataServiceUUID]) {
+            [peripheral discoverCharacteristics:nil forService:service];
+        }
     }
 }
 
 - (void)setCharacteristicValue:(FDRadioTestContext *)context retry:(BOOL)retry
 {
-    FDLog(@"setCharacteristicValue retry=%@", retry ? @"YES" : @"NO");
+    NSLog(@"setCharacteristicValue retry=%@", retry ? @"YES" : @"NO");
 //    [context.peripheral readRSSI];
     
     context.send = [NSDate date];
@@ -261,18 +270,27 @@
     }
     uint8_t byte = ((uint8_t *)context.writeData.bytes)[context.writeIndex];
     uint8_t bytes[20] = {0x01, context.writeIndex++, byte};
-    [context.peripheral writeValue:[NSData dataWithBytes:bytes length:sizeof(bytes)] forCharacteristic:context.characteristic type:CBCharacteristicWriteWithResponse];
+    NSData *value = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+    context.writeValue = value;
+    [context.peripheral writeValue:value forCharacteristic:context.characteristic type:CBCharacteristicWriteWithResponse];
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error
 {
-    FDLog(@"didDiscoverCharacteristicsForService %@ : %@", peripheral.name, error);
+    NSLog(@"didDiscoverCharacteristicsForService %@ : %@", service.UUID, error);
     FDRadioTestContext *context = _tests[peripheral.name];
     if (context != nil) {
         for (CBCharacteristic *characteristic in service.characteristics) {
+            NSLog(@"characteristic UUID %@", characteristic.UUID);
             if ([characteristic.UUID isEqualTo:_dataCharacteristicUUID]) {
+                if ((characteristic.properties & CBCharacteristicPropertyWrite) == 0) {
+                    continue;
+                }
+//                if ((characteristic.properties & CBCharacteristicPropertyNotify) == 0) {
+//                    continue;
+//                }
                 context.characteristic = characteristic;
-                [peripheral setNotifyValue:YES forCharacteristic:characteristic];
+//                [peripheral setNotifyValue:YES forCharacteristic:characteristic];
                 context.writeStart = [NSDate date];
                 [self setCharacteristicValue:context retry:NO];
             }
@@ -282,7 +300,7 @@
 
 - (void)peripheralDidUpdateRSSI:(CBPeripheral *)peripheral error:(NSError *)error
 {
-    FDLog(@"peripheralDidUpdateRSSI %@ : %@", peripheral.name, error);
+    NSLog(@"peripheralDidUpdateRSSI %@ : %@", peripheral.name, error);
     FDRadioTestContext *context = _tests[peripheral.name];
     if (context != nil) {
         ++context.rssiCount;
@@ -293,14 +311,16 @@
     }
 }
 
-- (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error;
+- (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error;
 {
-    FDLog(@"didUpdateValueForCharacteristic %@ : %@ (error %@)", peripheral.name, characteristic.value, error);
+    NSLog(@"didWriteValueForCharacteristic %@ : %@ (error %@)", peripheral.name, characteristic.value, error);
     FDRadioTestContext *context = _tests[peripheral.name];
     if (context != nil) {
-        [context.updates addObject:characteristic.value];
-        if (characteristic.value.length == 20) {
-            uint8_t n = ((uint8_t *)characteristic.value.bytes)[0];
+        NSData *value = context.writeValue; // characteristic.value;
+        [context.updates addObject:value];
+//        if (characteristic.value.length == 20) {
+        uint8_t n = (uint8_t)context.writeCount; // ((uint8_t *)value.bytes)[0];
+        NSLog(@"didWrite %d %lu %lu", n, (unsigned long)context.writeCount, (unsigned long)context.writeData.length);
             if (n == context.writeData.length) {
                 context.writeEnd = [NSDate date];
                 [_centralManager cancelPeripheralConnection:peripheral];
@@ -309,7 +329,7 @@
                     [self setCharacteristicValue:context retry:NO];
                 }
             }
-        }
+//        }
     }
 }
 

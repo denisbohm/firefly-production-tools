@@ -8,8 +8,6 @@
 
 #import "FDSerialWireDebugTest.h"
 
-#import <Foundation/Foundation.h>
-
 @interface FDFireflyIceTest : FDSerialWireDebugTest
 
 @end

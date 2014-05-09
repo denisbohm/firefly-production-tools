@@ -8,10 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-@interface FDExecutableFunction : NSObject
+@interface FDExecutableSymbol : NSObject
 
 @property NSString *name;
 @property uint32_t address;
+
+@end
+
+@interface FDExecutableFunction : FDExecutableSymbol
 
 @end
 
@@ -31,6 +35,7 @@ typedef enum {
 
 @property NSArray *sections;
 @property NSMutableDictionary *functions;
+@property NSMutableDictionary *globals;
 
 - (void)load:(NSString *)filename;
 

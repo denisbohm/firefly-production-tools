@@ -30,11 +30,27 @@
     self.cortexM = [self setupCortexRanges:self.executable stackLength:256 heapLength:128];
     FDExecutableFunction *halt = self.executable.functions[@"halt"];
     self.cortexM.breakLocation = halt.address;
+    
+    /*
+    NSDictionary *globals = self.executable.globals;
+    NSArray *types = @[@"data", @"text", @"fast", @"rodata"];
+    for (NSString *type in types) {
+        FDExecutableSymbol *loadStart = globals[[NSString stringWithFormat:@"__%@_load_start__", type]];
+        FDExecutableSymbol *start = globals[[NSString stringWithFormat:@"__%@_start__", type]];
+        FDExecutableSymbol *end = globals[[NSString stringWithFormat:@"__%@_end__", type]];
+        NSLog(@"memory_copy 0x%08x 0x%08x 0x%08x", loadStart.address, start.address, end.address);
+    }
+     */
 }
 
 - (uint32_t)run:(NSString *)name r0:(uint32_t)r0 r1:(uint32_t)r1
 {
     FDExecutableFunction *function = _executable.functions[name];
+    if (function == nil) {
+        @throw [NSException exceptionWithName:@"UnknownFunction"
+                                       reason:[NSString stringWithFormat:@"unknown function %@", name]
+                                     userInfo:nil];
+    }
     return [self.cortexM run:function.address r0:r0 r1:r1 timeout:5.0];
 }
 
@@ -55,7 +71,8 @@
 
 - (bool)GPIO_PinInGet:(uint32_t)port pin:(uint32_t)pin
 {
-    return [self run:@"GPIO_PinInGet" r0:port r1:pin] ? YES : NO;
+    uint32_t value = [self run:@"GPIO_PinInGet" r0:port r1:pin];
+    return value ? YES : NO;
 }
 
 - (uint32_t)fd_log_get_count

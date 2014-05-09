@@ -20,6 +20,9 @@ struct srcfilesdata {
 };
 
 
+@implementation FDExecutableSymbol
+@end
+
 @implementation FDExecutableFunction
 @end
 
@@ -36,6 +39,7 @@ struct srcfilesdata {
     if (self = [super init]) {
         _sections = [NSArray array];
         _functions = [NSMutableDictionary dictionary];
+        _globals = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -592,6 +596,42 @@ static int get_array_length(Dwarf_Debug dbg, Dwarf_Die die, int *length) {
     }
 }
 
+- (void)readSymtab:(Elf *)elf scn:(Elf_Scn *)scn shdr:(GElf_Shdr *)shdr
+{
+    // edata points to our symbol table
+    Elf_Data *edata = NULL;
+    edata = elf_getdata(scn, edata);
+    
+    // how many symbols are there? this number comes from the size of
+    // the section divided by the entry size
+    unsigned long symbol_count = shdr->sh_size / shdr->sh_entsize;
+    
+    // loop through to grab all symbols
+    for(int i = 0; i < symbol_count; i++)
+    {
+        // libelf grabs the symbol data using gelf_getsym()
+        GElf_Sym sym;
+        gelf_getsym(edata, i, &sym);
+        
+        // type of symbol binding
+        if (ELF32_ST_BIND(sym.st_info) != STB_GLOBAL) {
+            continue;
+        }
+
+        // type of symbol
+        if (ELF32_ST_TYPE(sym.st_info) != STT_NOTYPE) {
+            continue;
+        }
+        
+        char* cname = elf_strptr(elf, shdr->sh_link, sym.st_name);
+        NSString *name = [NSString stringWithCString:cname encoding:NSASCIIStringEncoding];
+        FDExecutableSymbol *symbol = [[FDExecutableSymbol alloc] init];
+        symbol.name = name;
+        symbol.address = (uint32_t)sym.st_value;
+        _globals[name] = symbol;
+    }
+}
+
 - (void)loadProgram:(const char *)filename
 {
     if (elf_version(EV_CURRENT) == EV_NONE) {
@@ -635,6 +675,9 @@ static int get_array_length(Dwarf_Debug dbg, Dwarf_Die die, int *length) {
                                            reason:[NSString stringWithFormat:@"getshdr() failed: %s.",
                  elf_errmsg(-1)]
                                          userInfo:nil];
+        }
+        if (shdr.sh_type == SHT_SYMTAB) {
+            [self readSymtab:e scn:scn shdr:&shdr];
         }
         if (shdr.sh_type != SHT_PROGBITS) {
             continue;
