@@ -21,11 +21,13 @@
 {
     [self clearInterrupts];
     
-    FDFireflyFlash *flash = [[FDFireflyFlash alloc] init];
+    NSString *processor = self.resources[@"processor"];
+    FDFireflyFlash *flash = [FDFireflyFlash fireflyFlash:processor];
     [flash initialize:self.serialWireDebug];
     [flash disableWatchdogByErasingIfNeeded];
     
-    self.executable = [self readExecutable:name];
+    NSString *searchPath = self.resources[@"searchPath"];
+    self.executable = [self readExecutable:name searchPath:searchPath];
     [self writeExecutableIntoRam:self.executable];
     self.cortexM = [self setupCortexRanges:self.executable stackLength:256 heapLength:128];
     FDExecutableFunction *halt = self.executable.functions[@"halt"];

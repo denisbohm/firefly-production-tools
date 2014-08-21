@@ -71,6 +71,7 @@
     [_serialWireDebug halt];
     FDLog(@"CPU Halted %@", [_serialWireDebug isHalted] ? @"YES" : @"NO");
     
+    /*
     FDLog(@"starting mass erase...");
     [_serialWireDebug massErase];
     [_serialWireDebug reset];
@@ -78,12 +79,13 @@
     [_serialWireDebug step];
     [_serialWireDebug halt];
     FDLog(@"mass erase complete");
+     */
 }
 
 - (void)execute
 {
     NSArray *tasks = @[
-                       [[FDFireflyIceTest alloc] init],
+//                       [[FDFireflyIceTest alloc] init],
 //                       [[FDFireflyIceRadioTest alloc] init],
 //                       [[FDFireflyIceUsbTest alloc] init],
                        [[FDFireflyIceMint alloc] init],

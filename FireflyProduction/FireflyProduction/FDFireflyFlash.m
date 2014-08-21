@@ -10,7 +10,6 @@
 #import "FDFireflyFlash.h"
 
 #import <ARMSerialWireDebug/FDCortexM.h>
-#import <ARMSerialWireDebug/FDEFM32.h>
 #import <ARMSerialWireDebug/FDSerialWireDebug.h>
 
 #define FIREFLY_FLASH_STACK_LENGTH 128
@@ -25,22 +24,61 @@
 
 @implementation FDFireflyFlash
 
++ (FDFireflyFlash *)fireflyFlash:(NSString *)processor
+{
+    NSString *className = [NSString stringWithFormat:@"FDFireflyFlash%@", processor];
+    Class class = NSClassFromString(className);
+    FDFireflyFlash *fireflyFlash = [[class alloc] init];
+    fireflyFlash.processor = processor;
+    return fireflyFlash;
+}
+
 - (id)init
 {
     if (self = [super init]) {
         _logger = [[FDLogger alloc] init];
-        _flashResource = @"FireflyFlash";
     }
     return self;
 }
 
+- (void)setupProcessor
+{
+    @throw [NSException exceptionWithName:@"unimplemented" reason:@"unimplemented" userInfo:nil];
+}
+
+- (void)massErase
+{
+    @throw [NSException exceptionWithName:@"UnknownFamily" reason:@"unknown family" userInfo:nil];
+}
+
+- (BOOL)disableWatchdogByErasingIfNeeded
+{
+    return NO;
+}
+
+- (void)feedWatchdog
+{
+}
+
+- (void)setDebugLock
+{
+}
+
+- (BOOL)debugLock
+{
+    return NO;
+}
+
+// See the firefly-ice-firmware project in github for source code to generate the FireflyFlash elf files. -denis
 - (void)loadFireflyFlashFirmwareIntoRAM
 {
-//    NSString *path = @"/Users/denis/sandbox/denisbohm/firefly-ice-firmware/THUMB RAM Debug/FireflyFlash.elf";
-    // See the firefly-ice-firmware project in github for source code to generate the FireflyFlash.elf -denis
-    NSString *path = [[NSBundle mainBundle] pathForResource:_flashResource ofType:@"elf"];
-    if (path == nil) {
-        path = [[NSBundle bundleForClass:[self class]] pathForResource:_flashResource ofType:@"elf"];
+    NSString *flashResource = [NSString stringWithFormat:@"FireflyFlash%@", _processor];
+    NSString *path = [NSString stringWithFormat:@"%@/THUMB RAM Debug/%@.elf", _searchPath, flashResource];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        path = [[NSBundle mainBundle] pathForResource:flashResource ofType:@"elf"];
+        if (path == nil) {
+            path = [[NSBundle bundleForClass:[self class]] pathForResource:flashResource ofType:@"elf"];
+        }
     }
     _fireflyFlashExecutable = [[FDExecutable alloc] init];
     [_fireflyFlashExecutable load:path];
@@ -66,13 +104,13 @@
     _cortexM.serialWireDebug = _serialWireDebug;
     _cortexM.logger.consumer = _logger.consumer;
     
-    uint32_t programLength = _fireflyFlashProgramEnd - EFM32_RAM_ADDRESS;
+    uint32_t programLength = _fireflyFlashProgramEnd - _ramAddress;
     
-    _cortexM.programRange.location = EFM32_RAM_ADDRESS;
+    _cortexM.programRange.location = _ramAddress;
     _cortexM.programRange.length = programLength;
-    _cortexM.stackRange.location = EFM32_RAM_ADDRESS + programLength;
+    _cortexM.stackRange.location = _ramAddress + programLength;
     _cortexM.stackRange.length = FIREFLY_FLASH_STACK_LENGTH;
-    _cortexM.heapRange.location = EFM32_RAM_ADDRESS + programLength + FIREFLY_FLASH_STACK_LENGTH;
+    _cortexM.heapRange.location = _ramAddress + programLength + FIREFLY_FLASH_STACK_LENGTH;
     _cortexM.heapRange.length = _ramSize - programLength - FIREFLY_FLASH_STACK_LENGTH;
     _pagesPerWrite = _cortexM.heapRange.length / _pageSize;
     
@@ -89,84 +127,13 @@
     [_serialWireDebug halt];
 }
 
-- (BOOL)disableWatchdogByErasingIfNeeded
-{
-    uint32_t wdogCtrl = [_serialWireDebug readMemory:EFM32_WDOG_CTRL];
-    if ((wdogCtrl & EFM32_WDOG_CTRL_LOCK) == 0) {
-        [_serialWireDebug writeMemory:EFM32_WDOG_CTRL value:EFM32_WDOG_CTRL_DEFAULT];
-        return NO;
-    }
-    
-    if ((wdogCtrl & EFM32_WDOG_CTRL_EN) == 0) {
-        return NO;
-    }
-    
-    FDLog(@"watchdog is enabled and locked - erasing and resetting device to clear watchdog");
-    [self massErase];
-    [self reset];
-    wdogCtrl = [_serialWireDebug readMemory:EFM32_WDOG_CTRL];
-    if (wdogCtrl & EFM32_WDOG_CTRL_EN) {
-        FDLog(@"could not disable watchdog");
-    }
-    
-    [self loadFireflyFlashFirmwareIntoRAM];
-
-    return YES;
-}
-
-- (void)configure:(FDSerialWireDebug *)serialWireDebug
-{
-    _serialWireDebug = serialWireDebug;
-    _logger = _serialWireDebug.logger;
-    [self loadFireflyFlashFirmwareIntoRAM];
-    [self setupCortexM];
-}
-
-- (void)setupEFM32
-{
-    _family = [_serialWireDebug readMemoryUInt8:EFM32_PART_FAMILY];
-
-    _flashSize = [_serialWireDebug readMemoryUInt16:EFM32_MEM_INFO_FLASH] * 1024;
-
-    uint8_t mem_info_page_size = [_serialWireDebug readMemoryUInt8:EFM32_MEM_INFO_PAGE_SIZE];
-    _pageSize = 1 << ((mem_info_page_size + 10) & 0xff);
-
-    _ramSize = [_serialWireDebug readMemoryUInt16:EFM32_MEM_INFO_RAM] * 1024;
-}
-
 - (void)initialize:(FDSerialWireDebug *)serialWireDebug
 {
     _serialWireDebug = serialWireDebug;
     _logger = _serialWireDebug.logger;
-    [self setupEFM32];
+    [self setupProcessor];
     [self loadFireflyFlashFirmwareIntoRAM];
     [self setupCortexM];
-}
-
-- (void)massErase
-{
-    switch (_family) {
-        case 0: {
-            UInt32 pages = _flashSize / _pageSize;
-            for (UInt32 page = 0; page < pages; ++page) {
-                UInt32 address = page * _pageSize;
-                [_serialWireDebug erase:address];
-            }
-        } break;
-        case EFM32_PART_FAMILY_Gecko: {
-            UInt32 pages = _flashSize / _pageSize;
-            for (UInt32 page = 0; page < pages; ++page) {
-                UInt32 address = page * _pageSize;
-                [_serialWireDebug writeMemory:EFM32_WDOG_CMD value:EFM32_WDOG_CMD_CLEAR];
-                [_serialWireDebug erase:address];
-            }
-        } break;
-        case EFM32_PART_FAMILY_Leopard_Gecko: {
-            [_serialWireDebug massErase];
-        } break;
-        default:
-            @throw [NSException exceptionWithName:@"UnknownFamily" reason:@"unknown family" userInfo:nil];
-    }
 }
 
 - (void)writePages:(uint32_t)address data:(NSData *)data
@@ -187,9 +154,7 @@
         }
         NSData *subdata = [data subdataWithRange:NSMakeRange(offset, length)];
         [_serialWireDebug writeMemory:_cortexM.heapRange.location data:subdata];
-        if (_family != 0) {
-            [_serialWireDebug writeMemory:EFM32_WDOG_CMD value:EFM32_WDOG_CMD_CLEAR];
-        }
+        [self feedWatchdog];
         [_cortexM run:writePagesFunction.address r0:address r1:_cortexM.heapRange.location r2:pages r3:erase ? 1 : 0 timeout:5];
         offset += length;
         address += length;
@@ -200,13 +165,13 @@
 {
     [_serialWireDebug halt];
 
-    NSArray *sections = [executable combineSectionsType:FDExecutableSectionTypeProgram address:0 length:EFM32_RAM_ADDRESS pageSize:_pageSize];
+    NSArray *sections = [executable combineSectionsType:FDExecutableSectionTypeProgram address:0 length:_ramAddress pageSize:_pageSize];
     for (FDExecutableSection *section in sections) {
         switch (section.type) {
             case FDExecutableSectionTypeData:
                 break;
             case FDExecutableSectionTypeProgram: {
-                if (section.address >= EFM32_RAM_ADDRESS) {
+                if (section.address >= _ramAddress) {
                     FDLog(@"ignoring RAM data for address 0x%08x length %lu", section.address, (unsigned long)section.data.length);
                     continue;
                 }
@@ -222,18 +187,6 @@
             } break;
         }
     }
-}
-
-- (void)setDebugLock
-{
-    uint8_t bytes[] = {0, 0, 0, 0};
-    [_serialWireDebug flash:EFM32_LB_DLW data:[NSData dataWithBytes:bytes length:4]];
-}
-
-- (BOOL)debugLock
-{
-    uint32_t value = [_serialWireDebug readMemory:EFM32_LB_DLW];
-    return (value & 0x0000000f) != 0x0000000f;
 }
 
 @end

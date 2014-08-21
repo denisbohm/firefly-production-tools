@@ -45,28 +45,36 @@
     [self.serialWireDebug step];
 }
 
-- (NSString *)getExecutablePath:(NSString *)name type:(NSString *)type
+- (NSString *)getExecutablePath:(NSString *)name type:(NSString *)type searchPath:(NSString *)searchPath
 {
+    NSString *path = [NSString stringWithFormat:@"%@/%@/%@/%@.elf", searchPath, type, name, name];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if ([fileManager fileExistsAtPath:path isDirectory:NO]) {
+        return path;
+    }
+    path = [NSString stringWithFormat:@"%@/%@ THUMB Release/%@.elf", searchPath, name, name];
+    if ([fileManager fileExistsAtPath:path isDirectory:NO]) {
+        return path;
+    }
     return [[NSBundle bundleForClass: [self class]] pathForResource:name ofType:@"elf"];
-//    return [NSString stringWithFormat:@"/Users/denis/sandbox/denisbohm/firefly-ice-firmware/%@/%@/%@.elf", type, name, name];
 }
 
-- (FDExecutable *)readExecutable:(NSString *)name type:(NSString *)type
+- (FDExecutable *)readExecutable:(NSString *)name type:(NSString *)type searchPath:(NSString *)searchPath address:(uint32_t)address
 {
-    NSString *path = [self getExecutablePath:name type:type];
+    NSString *path = [self getExecutablePath:name type:type searchPath:searchPath];
     if (path == nil) {
         @throw [NSException exceptionWithName:@"ExecutableNotFound" reason:[NSString stringWithFormat:@"executable not found: %@", name] userInfo:nil];
     }
     FDExecutable *executable = [[FDExecutable alloc] init];
     [executable load:path];
-    NSArray *sections = [executable combineSectionsType:FDExecutableSectionTypeProgram address:0 length:0x40000 pageSize:2048];
+    NSArray *sections = [executable combineSectionsType:FDExecutableSectionTypeProgram address:address length:0x40000 pageSize:2048];
     executable.sections = sections;
     return executable;
 }
 
-- (FDExecutable *)readExecutable:(NSString *)name
+- (FDExecutable *)readExecutable:(NSString *)name searchPath:(NSString *)searchPath
 {
-    NSString *path = [self getExecutablePath:name type:@"THUMB RAM Debug"];
+    NSString *path = [self getExecutablePath:name type:@"THUMB RAM Debug" searchPath:searchPath];
     FDExecutable *executable = [[FDExecutable alloc] init];
     [executable load:path];
     executable.sections = [executable combineAllSectionsType:FDExecutableSectionTypeProgram address:0x20000000 length:0x8000 pageSize:4];
@@ -94,10 +102,29 @@
     }
 }
 
+- (uint32_t)numberForKey:(NSString *)key
+{
+    NSNumber *number = self.resources[key];
+    return (uint32_t)[number unsignedLongLongValue];
+}
+
+- (BOOL)boolForKey:(NSString *)key
+{
+    NSNumber *number = self.resources[key];
+    return [number boolValue];
+}
+
 - (FDCortexM *)setupCortexRanges:(FDExecutable *)executable stackLength:(NSUInteger)stackLength heapLength:(NSUInteger)heapLength
 {
     uint32_t ramStart = EFM32_RAM_ADDRESS;
-    uint32_t ramLength = [_serialWireDebug readMemoryUInt16:EFM32_MEM_INFO_RAM] * 1024;
+    uint32_t ramLength;
+    NSString *processor = self.resources[@"processor"];
+    BOOL useEFM32RamSizeRegister = [@"EFM32" isEqualToString:processor];
+    if (useEFM32RamSizeRegister) {
+        ramLength = [_serialWireDebug readMemoryUInt16:EFM32_MEM_INFO_RAM] * 1024;
+    } else {
+        ramLength = [self numberForKey:@"ramSize"];
+    }
     
     uint32_t programAddressEnd = ramStart;
     for (FDExecutableSection *section in executable.sections) {

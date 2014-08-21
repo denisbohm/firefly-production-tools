@@ -24,6 +24,15 @@
 @property (assign) IBOutlet NSTextView *logView;
 @property (assign) IBOutlet NSButton *testBatteryCheckBox;
 
+@property (assign) IBOutlet NSTextField *bootAddressTextField;
+@property (assign) IBOutlet NSTextField *bootNameTextField;
+@property (assign) IBOutlet NSTextField *firmwareAddressTextField;
+@property (assign) IBOutlet NSTextField *firmwareNameTextField;
+@property (assign) IBOutlet NSTextField *metadataAddressTextField;
+@property (assign) IBOutlet NSPathControl *searchPathControl;
+@property (assign) IBOutlet NSTextField *ramSizeTextField;
+@property (assign) IBOutlet NSComboBox *processorComboBox;
+
 @property FDLogger *logger;
 @property NSMutableDictionary *resources;
 @property FDUSBMonitor *swdMonitor;
@@ -35,6 +44,22 @@
 @end
 
 @implementation FDAppDelegate
+
+- (NSNumber *)parseNumber:(NSString *)text
+{
+    if ([text hasPrefix:@"0x"]) {
+        NSScanner *scanner = [NSScanner scannerWithString:text];
+        unsigned long long temp;
+        [scanner scanHexLongLong:&temp];
+        return [NSNumber numberWithLongLong:temp];
+    }
+    return [NSNumber numberWithLongLong:[text longLongValue]];
+}
+
+- (NSString *)formatNumber:(NSNumber *)number
+{
+    return [NSString stringWithFormat:@"0x%llx", [number unsignedLongLongValue]];
+}
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
@@ -49,8 +74,31 @@
     _swdMonitor.product = 0x002a;
     _swdMonitor.delegate = self;
     
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    if ([userDefaults objectForKey:@"testBattery"]) {
+        _testBatteryCheckBox.state = [userDefaults boolForKey:@"testBattery"];
+        _bootAddressTextField.stringValue = [self formatNumber:[userDefaults objectForKey:@"bootAddress"]];
+        _bootNameTextField.stringValue = [userDefaults stringForKey:@"bootName"];
+        _firmwareAddressTextField.stringValue = [self formatNumber:[userDefaults objectForKey:@"firmwareAddress"]];
+        _firmwareNameTextField.stringValue = [userDefaults stringForKey:@"firmwareName"];
+        _metadataAddressTextField.stringValue = [self formatNumber:[userDefaults objectForKey:@"metadataAddress"]];
+        @try {
+            NSString *searchPath = [userDefaults objectForKey:@"searchPath"];
+            if (searchPath != nil) {
+                NSURL *URL = [NSURL fileURLWithPath:searchPath];
+                if ([URL isFileURL]) {
+                    _searchPathControl.URL = URL;
+                }
+            }
+        } @catch (NSException *e) {
+            NSLog(@"cannot set search path: %@", e);
+        }
+        _ramSizeTextField.stringValue = [self formatNumber:[userDefaults objectForKey:@"ramSize"]];
+        [_processorComboBox selectItemWithObjectValue:[userDefaults objectForKey:@"processor"]];
+    }
+    
     _resources = [NSMutableDictionary dictionary];
-    _resources[@"testBattery"] = @YES;
+    [self resourceChange:self];
     
 #if 0
     _radioTest = [[FDRadioTest alloc] init];
@@ -67,6 +115,28 @@
 - (IBAction)resourceChange:(id)sender
 {
     _resources[@"testBattery"] = [NSNumber numberWithBool:_testBatteryCheckBox.state == NSOnState];
+    _resources[@"bootAddress"] = [self parseNumber:_bootAddressTextField.stringValue];
+    _resources[@"bootName"] = _bootNameTextField.stringValue;
+    _resources[@"firmwareAddress"] = [self parseNumber:_firmwareAddressTextField.stringValue];
+    _resources[@"firmwareName"] = _firmwareNameTextField.stringValue;
+    _resources[@"metadataAddress"] = [self parseNumber:_metadataAddressTextField.stringValue];
+    if ([_searchPathControl.URL isFileURL]) {
+        _resources[@"searchPath"] = [_searchPathControl.URL path];
+    } else {
+        [_resources removeObjectForKey:@"searchPath"];
+    }
+    _resources[@"ramSize"] = [self parseNumber:_ramSizeTextField.stringValue];
+    _resources[@"processor"] = _processorComboBox.stringValue;
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [_resources enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL* stop) {
+        [userDefaults setObject:value forKey:key];
+    }];
+}
+
+- (IBAction)showPreferences:(id)sender
+{
+    [_preferencesPanel setIsVisible:YES];
 }
 
 - (IBAction)clearLog:(id)sender

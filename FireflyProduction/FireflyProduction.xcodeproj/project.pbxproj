@@ -12,7 +12,7 @@
 		9214AEDD17309E5700F7707E /* features.xml in Resources */ = {isa = PBXBuildFile; fileRef = 9214AEDB17309E5700F7707E /* features.xml */; };
 		9214AEDE17309E5700F7707E /* memory-map.xml in Resources */ = {isa = PBXBuildFile; fileRef = 9214AEDC17309E5700F7707E /* memory-map.xml */; };
 		9229C48817E4FFAF00B87C60 /* ARMSerialWireDebug.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9229C48117E4FF3C00B87C60 /* ARMSerialWireDebug.framework */; };
-		927E8574179F3AF90038CEFC /* FireflyFlash.elf in Resources */ = {isa = PBXBuildFile; fileRef = 927E8573179F3AF90038CEFC /* FireflyFlash.elf */; };
+		927E8574179F3AF90038CEFC /* FireflyFlashEFM32.elf in Resources */ = {isa = PBXBuildFile; fileRef = 927E8573179F3AF90038CEFC /* FireflyFlashEFM32.elf */; };
 		92898BDE179E35D0007B84B7 /* FDFireflyFlash.h in Headers */ = {isa = PBXBuildFile; fileRef = 92898BDC179E35D0007B84B7 /* FDFireflyFlash.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92898BDF179E35D0007B84B7 /* FDFireflyFlash.m in Sources */ = {isa = PBXBuildFile; fileRef = 92898BDD179E35D0007B84B7 /* FDFireflyFlash.m */; };
 		929EB9D718D92C0400E8841E /* FireflyDevice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 929EB9D218D92BEA00E8841E /* FireflyDevice.framework */; };
@@ -37,6 +37,11 @@
 		92E77561173098FB00A111DF /* libelf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E7755F173098FB00A111DF /* libelf.a */; };
 		92E775631730991F00A111DF /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E775621730991F00A111DF /* IOKit.framework */; };
 		92E775651730993F00A111DF /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E775641730993F00A111DF /* IOBluetooth.framework */; };
+		92F5DD7019A533A7004ADB5D /* FDFireflyFlashEFM32.h in Headers */ = {isa = PBXBuildFile; fileRef = 92F5DD6E19A533A7004ADB5D /* FDFireflyFlashEFM32.h */; };
+		92F5DD7119A533A7004ADB5D /* FDFireflyFlashEFM32.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F5DD6F19A533A7004ADB5D /* FDFireflyFlashEFM32.m */; };
+		92F5DD7819A53D01004ADB5D /* FDFireflyFlashSTM32F4.h in Headers */ = {isa = PBXBuildFile; fileRef = 92F5DD7619A53D01004ADB5D /* FDFireflyFlashSTM32F4.h */; };
+		92F5DD7919A53D01004ADB5D /* FDFireflyFlashSTM32F4.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F5DD7719A53D01004ADB5D /* FDFireflyFlashSTM32F4.m */; };
+		92F5DD7B19A552CB004ADB5D /* FireflyFlashSTM32F4.elf in Resources */ = {isa = PBXBuildFile; fileRef = 92F5DD7A19A552CB004ADB5D /* FireflyFlashSTM32F4.elf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -125,7 +130,7 @@
 		9214AEDB17309E5700F7707E /* features.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = features.xml; sourceTree = "<group>"; };
 		9214AEDC17309E5700F7707E /* memory-map.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "memory-map.xml"; sourceTree = "<group>"; };
 		9229C47B17E4FF3C00B87C60 /* ARMSerialWireDebug.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ARMSerialWireDebug.xcodeproj; path = "../../firefly-arm-swd/ARMSerialWireDebug.xcodeproj"; sourceTree = "<group>"; };
-		927E8573179F3AF90038CEFC /* FireflyFlash.elf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FireflyFlash.elf; sourceTree = "<group>"; };
+		927E8573179F3AF90038CEFC /* FireflyFlashEFM32.elf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FireflyFlashEFM32.elf; sourceTree = "<group>"; };
 		92898BDC179E35D0007B84B7 /* FDFireflyFlash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFireflyFlash.h; sourceTree = "<group>"; };
 		92898BDD179E35D0007B84B7 /* FDFireflyFlash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFireflyFlash.m; sourceTree = "<group>"; };
 		928CD62918118F5F00C75B73 /* FireflyDevice.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FireflyDevice.xcodeproj; path = "../../firefly-ice-api/FireflyDevice/FireflyDevice.xcodeproj"; sourceTree = "<group>"; };
@@ -157,6 +162,11 @@
 		92E7755F173098FB00A111DF /* libelf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libelf.a; path = /usr/local/lib/libelf.a; sourceTree = "<absolute>"; };
 		92E775621730991F00A111DF /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		92E775641730993F00A111DF /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
+		92F5DD6E19A533A7004ADB5D /* FDFireflyFlashEFM32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFireflyFlashEFM32.h; sourceTree = "<group>"; };
+		92F5DD6F19A533A7004ADB5D /* FDFireflyFlashEFM32.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFireflyFlashEFM32.m; sourceTree = "<group>"; };
+		92F5DD7619A53D01004ADB5D /* FDFireflyFlashSTM32F4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFireflyFlashSTM32F4.h; sourceTree = "<group>"; };
+		92F5DD7719A53D01004ADB5D /* FDFireflyFlashSTM32F4.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFireflyFlashSTM32F4.m; sourceTree = "<group>"; };
+		92F5DD7A19A552CB004ADB5D /* FireflyFlashSTM32F4.elf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FireflyFlashSTM32F4.elf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -269,6 +279,10 @@
 				9214495917BED43200FC6BAF /* FDRadioTest.m */,
 				92BF96221829F38700C37412 /* FDUsbTest.h */,
 				92BF96231829F38700C37412 /* FDUsbTest.m */,
+				92F5DD6E19A533A7004ADB5D /* FDFireflyFlashEFM32.h */,
+				92F5DD6F19A533A7004ADB5D /* FDFireflyFlashEFM32.m */,
+				92F5DD7619A53D01004ADB5D /* FDFireflyFlashSTM32F4.h */,
+				92F5DD7719A53D01004ADB5D /* FDFireflyFlashSTM32F4.m */,
 			);
 			path = FireflyProduction;
 			sourceTree = "<group>";
@@ -276,7 +290,8 @@
 		92E774DA1730925800A111DF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				927E8573179F3AF90038CEFC /* FireflyFlash.elf */,
+				92F5DD7A19A552CB004ADB5D /* FireflyFlashSTM32F4.elf */,
+				927E8573179F3AF90038CEFC /* FireflyFlashEFM32.elf */,
 				9214AEDB17309E5700F7707E /* features.xml */,
 				9214AEDC17309E5700F7707E /* memory-map.xml */,
 				92E774DB1730925800A111DF /* FireflyProduction-Info.plist */,
@@ -312,6 +327,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92F5DD7019A533A7004ADB5D /* FDFireflyFlashEFM32.h in Headers */,
+				92F5DD7819A53D01004ADB5D /* FDFireflyFlashSTM32F4.h in Headers */,
 				92E775521730979E00A111DF /* FDExecutable.h in Headers */,
 				92898BDE179E35D0007B84B7 /* FDFireflyFlash.h in Headers */,
 				92E775561730979E00A111DF /* FDGdbServer.h in Headers */,
@@ -454,8 +471,9 @@
 			files = (
 				92E774DE1730925800A111DF /* InfoPlist.strings in Resources */,
 				9214AEDD17309E5700F7707E /* features.xml in Resources */,
+				92F5DD7B19A552CB004ADB5D /* FireflyFlashSTM32F4.elf in Resources */,
 				9214AEDE17309E5700F7707E /* memory-map.xml in Resources */,
-				927E8574179F3AF90038CEFC /* FireflyFlash.elf in Resources */,
+				927E8574179F3AF90038CEFC /* FireflyFlashEFM32.elf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -496,6 +514,8 @@
 				92E775571730979E00A111DF /* FDGdbServer.m in Sources */,
 				92E775591730979E00A111DF /* FDGdbServerSwd.m in Sources */,
 				92898BDF179E35D0007B84B7 /* FDFireflyFlash.m in Sources */,
+				92F5DD7119A533A7004ADB5D /* FDFireflyFlashEFM32.m in Sources */,
+				92F5DD7919A53D01004ADB5D /* FDFireflyFlashSTM32F4.m in Sources */,
 				9214495B17BED43200FC6BAF /* FDRadioTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

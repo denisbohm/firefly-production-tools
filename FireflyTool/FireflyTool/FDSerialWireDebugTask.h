@@ -21,8 +21,9 @@
 @property FDSerialWireDebug *serialWireDebug;
 @property FDCortexM *cortexM;
 
-- (FDExecutable *)readExecutable:(NSString *)name;
-- (FDExecutable *)readExecutable:(NSString *)name type:(NSString *)type;
+- (uint32_t)numberForKey:(NSString *)key;
+- (FDExecutable *)readExecutable:(NSString *)name searchPath:(NSString *)searchPath;
+- (FDExecutable *)readExecutable:(NSString *)name type:(NSString *)type searchPath:(NSString *)searchPath address:(uint32_t)address;
 - (void)writeExecutableIntoRam:(FDExecutable *)executable;
 - (FDCortexM *)setupCortexRanges:(FDExecutable *)executable stackLength:(NSUInteger)stackLength heapLength:(NSUInteger)heapLength;
 - (void)clearInterrupts;
