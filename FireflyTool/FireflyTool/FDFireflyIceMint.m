@@ -10,6 +10,7 @@
 
 #import <FireflyDevice/FDBinary.h>
 #import <FireflyDevice/FDCrypto.h>
+#import <FireflyDevice/FDIEEE754.h>
 
 #import <FireflyProduction/FDExecutable.h>
 #import <FireflyProduction/FDFireflyFlash.h>
@@ -50,6 +51,24 @@
         }
         @throw [NSException exceptionWithName:@"verify issue"reason:[NSString stringWithFormat:@"verify issue at %lu %02x != %02x", (unsigned long)i, dataBytes[i], verifyBytes[i]] userInfo:nil];
     }
+}
+
++ (NSData *)loadConstants:(NSString *)name searchPath:(NSString *)searchPath
+{
+    NSString *path = [NSString stringWithFormat:@"%@/%@.txt", searchPath, name];
+    NSString *content = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+    NSMutableData *data = [NSMutableData data];
+    NSArray *lines = [content componentsSeparatedByString:@"\n"];
+    for (NSString *line in lines) {
+        if ((line.length == 0) || [line hasPrefix:@"#"]) {
+            continue;
+        }
+        float f = [line floatValue];
+        uint16_t h = [FDIEEE754 floatToUint16:f];
+        uint8_t bytes[] = {h, h >> 8};
+        [data appendBytes:bytes length:sizeof(bytes)];
+    }
+    return data;
 }
 
 - (void)run
@@ -97,6 +116,16 @@
     FDLog(@"loading %@ into flash...", firmwareName);
     [flash writePages:firmwareAddress data:fireflyIceSection.data erase:YES];
     [self verify:firmwareAddress data:fireflyIceSection.data];
+    
+    NSString *constantsName = self.resources[@"constants"];
+    if (constantsName.length > 0) {
+        uint32_t constantsAddress = [self numberForKey:@"constantsAddress"];
+        FDLog(@"loading 16-bit float %@ into flash...", constantsName);
+        NSMutableData *constants = [NSMutableData dataWithData:[FDFireflyIceMint loadConstants:constantsName searchPath:searchPath]];
+        constants.length = ((constants.length + flash.pageSize - 1) / flash.pageSize) * flash.pageSize;
+        [flash writePages:constantsAddress data:constants erase:YES];
+        [self verify:constantsAddress data:constants];
+    }
     
     FDLog(@"Reset & Run...");
     [self.serialWireDebug reset];

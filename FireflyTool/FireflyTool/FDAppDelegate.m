@@ -29,6 +29,8 @@
 @property (assign) IBOutlet NSTextField *firmwareAddressTextField;
 @property (assign) IBOutlet NSTextField *firmwareNameTextField;
 @property (assign) IBOutlet NSTextField *metadataAddressTextField;
+@property (assign) IBOutlet NSTextField *constantsAddressTextField;
+@property (assign) IBOutlet NSTextField *constantsNameTextField;
 @property (assign) IBOutlet NSPathControl *searchPathControl;
 @property (assign) IBOutlet NSTextField *ramSizeTextField;
 @property (assign) IBOutlet NSComboBox *processorComboBox;
@@ -61,6 +63,11 @@
     return [NSString stringWithFormat:@"0x%llx", [number unsignedLongLongValue]];
 }
 
+- (NSString *)formatString:(NSString *)string
+{
+    return string == nil ? @"" : string;
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
     _logger = [[FDLogger alloc] init];
@@ -82,6 +89,8 @@
         _firmwareAddressTextField.stringValue = [self formatNumber:[userDefaults objectForKey:@"firmwareAddress"]];
         _firmwareNameTextField.stringValue = [userDefaults stringForKey:@"firmwareName"];
         _metadataAddressTextField.stringValue = [self formatNumber:[userDefaults objectForKey:@"metadataAddress"]];
+        _constantsAddressTextField.stringValue = [self formatNumber:[userDefaults objectForKey:@"constantsAddress"]];
+        _constantsNameTextField.stringValue = [self formatString:[userDefaults stringForKey:@"constantsName"]];
         @try {
             NSString *searchPath = [userDefaults objectForKey:@"searchPath"];
             if (searchPath != nil) {
@@ -120,6 +129,8 @@
     _resources[@"firmwareAddress"] = [self parseNumber:_firmwareAddressTextField.stringValue];
     _resources[@"firmwareName"] = _firmwareNameTextField.stringValue;
     _resources[@"metadataAddress"] = [self parseNumber:_metadataAddressTextField.stringValue];
+    _resources[@"constantsAddress"] = [self parseNumber:_constantsAddressTextField.stringValue];
+    _resources[@"constantsName"] = _constantsNameTextField.stringValue;
     if ([_searchPathControl.URL isFileURL]) {
         _resources[@"searchPath"] = [_searchPathControl.URL path];
     } else {
