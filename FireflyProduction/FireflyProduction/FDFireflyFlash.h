@@ -6,25 +6,28 @@
 //  Copyright (c) 2013 Firefly Design. All rights reserved.
 //
 
+#import "FDExecutable.h"
+
 #import <ARMSerialWireDebug/FDCortexM.h>
 #import <ARMSerialWireDebug/FDLogger.h>
 #import <ARMSerialWireDebug/FDSerialWireDebug.h>
 
 @interface FDFireflyFlash : NSObject
 
++ (FDFireflyFlash *)fireflyFlash:(NSString *)processor;
+
 @property FDCortexM *cortexM;
 @property FDSerialWireDebug *serialWireDebug;
 @property FDLogger *logger;
 
-@property NSString *flashResource;
+@property NSString *processor;
+@property NSString *searchPath;
 
-@property uint8_t family;
-@property uint32_t flashSize;
 @property uint32_t pageSize;
+@property uint32_t ramAddress;
 @property uint32_t ramSize;
 
 - (void)initialize:(FDSerialWireDebug *)serialWireDebug;
-- (void)configure:(FDSerialWireDebug *)serialWireDebug;
 
 - (BOOL)disableWatchdogByErasingIfNeeded;
 
@@ -37,5 +40,8 @@
 
 - (void)setDebugLock;
 - (BOOL)debugLock;
+
+// for use by subclasses
+- (void)loadFireflyFlashFirmwareIntoRAM;
 
 @end
