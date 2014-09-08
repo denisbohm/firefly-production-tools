@@ -5,6 +5,9 @@ Firefly Production Tools for Mac OS X
 
 See http://fireflydesign.com for information on the open source Firefly Activity Monitor.
 
+Note that the FireflyProduction framework requires libdwarf and libelf.  You can build and install these into /usr/local yourself.
+Prebuilt libdwarf and libelf files for /usr/include are also available in the local.zip file in this repository.
+
 Copyright and License
 ---------------------
 Copyright 2013-2014 Firefly Design LLC / Denis Bohm
