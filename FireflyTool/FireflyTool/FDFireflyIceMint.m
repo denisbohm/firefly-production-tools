@@ -117,7 +117,7 @@
     [flash writePages:firmwareAddress data:fireflyIceSection.data erase:YES];
     [self verify:firmwareAddress data:fireflyIceSection.data];
     
-    NSString *constantsName = self.resources[@"constants"];
+    NSString *constantsName = self.resources[@"constantsName"];
     if (constantsName.length > 0) {
         uint32_t constantsAddress = [self numberForKey:@"constantsAddress"];
         FDLog(@"loading 16-bit float %@ into flash...", constantsName);
