@@ -12,4 +12,6 @@
 
 @interface FDFireflyIceMint : FDSerialWireDebugTask
 
++ (NSData *)loadConstants:(NSString *)name searchPath:(NSString *)searchPath;
+
 @end

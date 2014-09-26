@@ -53,8 +53,22 @@
     }
 }
 
+#define INPUT_DIM 240 // = 40 (WINDOW_SIZE) * 6 (SENSOR_DIM)
+#define HIDDEN_DIM 250 // dimension of hidden units
+#define OUTPUT_DIM 16 // number of exercises
+
 + (NSData *)loadConstants:(NSString *)name searchPath:(NSString *)searchPath
 {
+    NSMutableString *cContent = [NSMutableString string];
+    bool wHid = true;
+    int wHidHiddenDimensionCount = 0;
+    int wHidInputDimensionCount = 0;
+    int wOutOutputDimensionCount = 0;
+    int wOutHiddenDimensionCount = 0;
+    [cContent appendString:@"#include \"gdef.h\"\n"];
+    [cContent appendString:@"#include <stdint.h>\n"];
+    [cContent appendString:@"const uint16_t Whid[HIDDEN_DIM][INPUT_DIM] = {\n{ "];
+    
     NSString *path = [NSString stringWithFormat:@"%@/%@.txt", searchPath, name];
     NSString *content = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     NSMutableData *data = [NSMutableData data];
@@ -65,9 +79,36 @@
         }
         float f = [line floatValue];
         uint16_t h = [FDIEEE754 floatToUint16:f];
+        [cContent appendFormat:@"0x%04x, ", h];
+        if (wHid) {
+            if (++wHidInputDimensionCount >= INPUT_DIM) {
+                wHidInputDimensionCount = 0;
+                [cContent appendString:@"},\n"];
+                if (++wHidHiddenDimensionCount >= HIDDEN_DIM) {
+                    [cContent appendString:@"};\n"];
+                    [cContent appendString:@"const uint16_t Wout[OUTPUT_DIM][HIDDEN_DIM] = {\n\{ "];
+                    wHid = false;
+                } else {
+                    [cContent appendString:@"{ "];
+                }
+            }
+        } else {
+            if (++wOutOutputDimensionCount >= HIDDEN_DIM) {
+                wOutOutputDimensionCount = 0;
+                [cContent appendString:@"},\n"];
+                if (++wOutHiddenDimensionCount >= OUTPUT_DIM) {
+                    [cContent appendString:@"};\n"];
+                    wHid = false;
+                } else {
+                    [cContent appendString:@"{ "];
+                }
+            }
+        }
         uint8_t bytes[] = {h, h >> 8};
         [data appendBytes:bytes length:sizeof(bytes)];
     }
+    NSString *cPath = [NSString stringWithFormat:@"%@/ml/neuralnet/src/firmwareparams.c", searchPath];
+    [cContent writeToFile:cPath atomically:NO encoding:NSASCIIStringEncoding error:NULL];
     return data;
 }
 
