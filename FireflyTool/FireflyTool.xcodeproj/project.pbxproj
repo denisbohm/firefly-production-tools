@@ -258,6 +258,7 @@
 			isa = PBXGroup;
 			children = (
 				920597E317FCAAC20027FAAD /* Supporting Files */,
+				9251FE8B19D1C718005E717E /* firmware */,
 				920597F117FCAAC20027FAAD /* MainMenu.xib */,
 				920597F417FCAAC20027FAAD /* Images.xcassets */,
 				920597EE17FCAAC20027FAAD /* FDAppDelegate.h */,
@@ -283,16 +284,11 @@
 		920597E317FCAAC20027FAAD /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				92C66E23182ABB3C000F5FD5 /* FireflyUsbTest.elf */,
-				92C0D8301825BB12001884EC /* FireflyRadioTest.elf */,
-				92E66A4618146C370054A9C2 /* FireflyIceTest.elf */,
 				920597E417FCAAC20027FAAD /* FireflyTool-Info.plist */,
 				920597E517FCAAC20027FAAD /* InfoPlist.strings */,
 				920597E817FCAAC20027FAAD /* main.m */,
 				920597EA17FCAAC20027FAAD /* FireflyTool-Prefix.pch */,
 				920597EB17FCAAC20027FAAD /* Credits.rtf */,
-				9205981A17FCAB230027FAAD /* FireflyBoot.elf */,
-				9205981B17FCAB230027FAAD /* FireflyIce.elf */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -331,6 +327,18 @@
 				9205984217FCAE380027FAAD /* FireflyProductionTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		9251FE8B19D1C718005E717E /* firmware */ = {
+			isa = PBXGroup;
+			children = (
+				92C66E23182ABB3C000F5FD5 /* FireflyUsbTest.elf */,
+				92C0D8301825BB12001884EC /* FireflyRadioTest.elf */,
+				92E66A4618146C370054A9C2 /* FireflyIceTest.elf */,
+				9205981A17FCAB230027FAAD /* FireflyBoot.elf */,
+				9205981B17FCAB230027FAAD /* FireflyIce.elf */,
+			);
+			name = firmware;
 			sourceTree = "<group>";
 		};
 		92F5243F1919B4B600491532 /* Products */ = {

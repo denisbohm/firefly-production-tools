@@ -87,9 +87,9 @@
     NSString *searchPath = self.resources[@"searchPath"];
 
     NSString *bootName = self.resources[@"bootName"];
-    FDLog(@"loading %@ info flash...", bootName);
     uint32_t bootAddress = [self numberForKey:@"bootAddress"];
     FDExecutable *fireflyBoot = [self readExecutable:bootName type:@"THUMB Flash Release" searchPath:searchPath address:bootAddress];
+    FDLog(@"loading %@ info flash at 0x%08x...", bootName, bootAddress);
     FDExecutableSection *fireflyBootSection = fireflyBoot.sections[0];
     [flash writePages:bootAddress data:fireflyBootSection.data erase:YES];
     [self verify:bootAddress data:fireflyBootSection.data];
@@ -103,24 +103,24 @@
      */
     
     NSString *firmwareName = self.resources[@"firmwareName"];
-    FDLog(@"loading %@ metadata into flash", firmwareName);
     uint32_t firmwareAddress = [self numberForKey:@"firmwareAddress"];
     FDExecutable *fireflyIce = [self readExecutable:firmwareName type:@"THUMB Flash Release" searchPath:searchPath address:firmwareAddress];
     FDExecutableSection *fireflyIceSection = fireflyIce.sections[0];
     NSMutableData *metadata = [self getMetadata:fireflyIceSection.data];
     metadata.length = flash.pageSize;
     uint32_t metadataAddress = [self numberForKey:@"metadataAddress"];
+    FDLog(@"loading %@ metadata into flash at 0x%08x", firmwareName, metadataAddress);
     [flash writePages:metadataAddress data:metadata erase:YES];
     [self verify:metadataAddress data:metadata];
     
-    FDLog(@"loading %@ into flash...", firmwareName);
+    FDLog(@"loading %@ into flash at 0x%08x...", firmwareName, firmwareAddress);
     [flash writePages:firmwareAddress data:fireflyIceSection.data erase:YES];
     [self verify:firmwareAddress data:fireflyIceSection.data];
     
     NSString *constantsName = self.resources[@"constantsName"];
     if (constantsName.length > 0) {
         uint32_t constantsAddress = [self numberForKey:@"constantsAddress"];
-        FDLog(@"loading 16-bit float %@ into flash...", constantsName);
+        FDLog(@"loading 16-bit float %@ into flash at 0x%08x...", constantsName, constantsAddress);
         NSMutableData *constants = [NSMutableData dataWithData:[FDFireflyIceMint loadConstants:constantsName searchPath:searchPath]];
         constants.length = ((constants.length + flash.pageSize - 1) / flash.pageSize) * flash.pageSize;
         [flash writePages:constantsAddress data:constants erase:YES];
