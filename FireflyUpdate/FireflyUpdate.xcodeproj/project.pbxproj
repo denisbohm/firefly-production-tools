@@ -13,6 +13,7 @@
 		9205932619E5C8F70036FF51 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9205932419E5C8F70036FF51 /* MainMenu.xib */; };
 		9205933219E5C8F70036FF51 /* FireflyUpdateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9205933119E5C8F70036FF51 /* FireflyUpdateTests.m */; };
 		923ADCE619E60B7500D17620 /* FDUSBPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 923ADCE519E60B7500D17620 /* FDUSBPort.m */; };
+		92474BBB1A03E4C400F5B5FA /* FireflyDevice.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92DA069319E7485D00E53FA8 /* FireflyDevice.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		92DA069619E7486600E53FA8 /* FireflyDevice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DA069319E7485D00E53FA8 /* FireflyDevice.framework */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +24,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 9205931719E5C8F60036FF51;
 			remoteInfo = FireflyUpdate;
+		};
+		92474BB41A03E46D00F5B5FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92DA068719E7485D00E53FA8 /* FireflyDevice.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 92DF1392180B01AE00A1B849;
+			remoteInfo = FireflyDevice.framework;
 		};
 		92DA068E19E7485D00E53FA8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -53,6 +61,19 @@
 			remoteInfo = FireflyDeviceTests.framework;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		92474BBA1A03E4B200F5B5FA /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				92474BBB1A03E4C400F5B5FA /* FireflyDevice.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		9205931819E5C8F70036FF51 /* FireflyUpdate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FireflyUpdate.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -152,7 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				92DA068F19E7485D00E53FA8 /* libFireflyDevice.a */,
-				92DA069119E7485D00E53FA8 /* FireflyDeviceTests.library.octest */,
+				92DA069119E7485D00E53FA8 /* FireflyDeviceTests.library.xctest */,
 				92DA069319E7485D00E53FA8 /* FireflyDevice.framework */,
 				92DA069519E7485D00E53FA8 /* FireflyDeviceTests.framework.xctest */,
 			);
@@ -169,10 +190,12 @@
 				9205931419E5C8F60036FF51 /* Sources */,
 				9205931519E5C8F60036FF51 /* Frameworks */,
 				9205931619E5C8F60036FF51 /* Resources */,
+				92474BBA1A03E4B200F5B5FA /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				92474BB51A03E46D00F5B5FA /* PBXTargetDependency */,
 			);
 			name = FireflyUpdate;
 			productName = FireflyUpdate;
@@ -249,10 +272,10 @@
 			remoteRef = 92DA068E19E7485D00E53FA8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		92DA069119E7485D00E53FA8 /* FireflyDeviceTests.library.octest */ = {
+		92DA069119E7485D00E53FA8 /* FireflyDeviceTests.library.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = FireflyDeviceTests.library.octest;
+			path = FireflyDeviceTests.library.xctest;
 			remoteRef = 92DA069019E7485D00E53FA8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -317,6 +340,11 @@
 			isa = PBXTargetDependency;
 			target = 9205931719E5C8F60036FF51 /* FireflyUpdate */;
 			targetProxy = 9205932C19E5C8F70036FF51 /* PBXContainerItemProxy */;
+		};
+		92474BB51A03E46D00F5B5FA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FireflyDevice.framework;
+			targetProxy = 92474BB41A03E46D00F5B5FA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
