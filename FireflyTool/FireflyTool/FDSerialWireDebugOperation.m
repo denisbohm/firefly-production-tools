@@ -84,12 +84,20 @@
 
 - (void)execute
 {
-    NSArray *tasks = @[
-//                       [[FDFireflyIceTest alloc] init],
-//                       [[FDFireflyIceRadioTest alloc] init],
-//                       [[FDFireflyIceUsbTest alloc] init],
-                       [[FDFireflyIceMint alloc] init],
-                       ];
+    NSMutableArray *tasks = [NSMutableArray array];
+    if ([_resources[@"test"] boolValue]) {
+        [tasks addObject:[[FDFireflyIceTest alloc] init]];
+        if ([_resources[@"testBLE"] boolValue]) {
+            [tasks addObject:[[FDFireflyIceRadioTest alloc] init]];
+        }
+        if ([_resources[@"testUSB"] boolValue]) {
+            [tasks addObject:[[FDFireflyIceUsbTest alloc] init]];
+        }
+    }
+    if ([_resources[@"program"] boolValue]) {
+        [tasks addObject:[[FDFireflyIceMint alloc] init]];
+    }
+    
     for (FDSerialWireDebugTask *task in tasks) {
         task.logger = _logger;
         task.serialWireDebug = _serialWireDebug;
@@ -113,11 +121,14 @@
                 if ([self run]) {
                     [NSThread sleepForTimeInterval:0.5];
                     @try {
+                        [_delegate serialWireDebugOperationStarting];
                         [self attach];
                         [self execute];
                         self.run = NO;
+                        [_delegate serialWireDebugOperationComplete:YES];
                     } @catch (NSException *e) {
                         FDLog(@"unexpected exception: %@\n%@", e, [e callStackSymbols]);
+                        [_delegate serialWireDebugOperationComplete:NO];
                     }
                 }
             } else {

@@ -58,8 +58,11 @@
 
 - (BOOL)testRadio:(NSMutableString *)notes
 {
+    uint8_t bytes[] = {1};
+    NSData *writeData = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+
     [self loadExecutable:@"FireflyRadioTest"];
-    [self run:@"fd_processor_initialize"];
+    [self run:@"fd_hal_processor_initialize"];
     [self run:@"spi_initialize"];
     [self run:@"fd_bluetooth_reset"];
 
@@ -76,8 +79,6 @@
     FDLog(@"starting radio test for %@", name);
     _radioTestResult = nil;
     [_radioTest start];
-    uint8_t bytes[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    NSData *writeData = [NSData dataWithBytes:bytes length:sizeof(bytes)];
     [_radioTest startTest:name delegate:self data:writeData];
     FDExecutableFunction *radio_test = self.executable.functions[@"fd_nrf8001_test_broadcast"];
     uint32_t address = self.cortexM.heapRange.location;
@@ -125,7 +126,9 @@
     
     NSMutableString *notes = [NSMutableString string];
     
-    [self testRadio:notes];
+    if (![self testRadio:notes]) {
+        @throw [NSException exceptionWithName:@"nRF8001NotDiscovered" reason:@"nRF8001 not discovered" userInfo:nil];
+    }
 }
 
 @end

@@ -32,11 +32,11 @@
 
 @property FDLogger *logger;
 @property id<FDUsbTestDelegate> delegate;
+@property uint16_t vid;
+@property uint16_t pid;
+@property NSData *writeData;
 
 - (void)start;
 - (void)stop;
-
-- (void)startTest:(uint16_t)pid delegate:(id<FDUsbTestDelegate>)delegate data:(NSData *)data;
-- (void)cancelTest:(uint16_t)pid;
 
 @end

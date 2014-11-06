@@ -15,6 +15,8 @@
 @protocol FDSerialWireDebugOperationDelegate <NSObject>
 
 - (void)serialWireDebugOperationDetected:(BOOL)detected;
+- (void)serialWireDebugOperationStarting;
+- (void)serialWireDebugOperationComplete:(BOOL)success;
 
 @end
 

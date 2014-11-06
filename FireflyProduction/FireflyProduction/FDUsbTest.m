@@ -18,10 +18,8 @@
 @property FDUSBHIDMonitor *monitor;
 @property NSTimer *timer;
 @property NSTimeInterval timeout;
-@property NSData *writeData;
 @property NSUInteger writeIndex;
 @property NSMutableData *readData;
-@property uint16_t pid;
 @property FDUSBHIDDevice *device;
 @property NSDate *startDate;
 
@@ -36,14 +34,6 @@
     return self;
 }
 
-- (void)start
-{
-}
-
-- (void)stop
-{
-}
-
 - (void)check:(NSTimer *)timer
 {
     NSLog(@"check");
@@ -55,15 +45,11 @@
     }
 }
 
-- (void)startTest:(uint16_t)pid delegate:(id<FDUsbTestDelegate>)delegate data:(NSData *)data
+- (void)start
 {
-    NSLog(@"starting test");
-    _pid = pid;
-    _delegate = delegate;
-    _writeData = data;
-
+    NSLog(@"USB test starting");
     _monitor = [[FDUSBHIDMonitor alloc] init];
-    _monitor.vendor = 0x2333;
+    _monitor.vendor = _vid;
     _monitor.product = _pid;
     _monitor.delegate = self;
     [_monitor start];
@@ -72,24 +58,34 @@
     [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
 }
 
-- (void)cancelTest:(uint16_t)pid
+- (void)stop
 {
-    NSLog(@"canceling test");
+    NSLog(@"USB test stopping");
     [_timer invalidate];
     _timer = nil;
-
+    
     [_device close];
     
     [_monitor stop];
     _monitor = nil;
 }
 
+- (void)complete
+{
+    NSLog(@"USB test complete");
+    [self stop];
+}
+
 - (void)send
 {
     if (_writeIndex < _writeData.length) {
-        NSLog(@"USB device send");
+        NSLog(@"USB device send data");
         uint8_t byte = ((uint8_t *)_writeData.bytes)[_writeIndex];
         uint8_t bytes[64] = {0x01, _writeIndex++, byte};
+        [_device setReport:[NSData dataWithBytes:bytes length:sizeof(bytes)]];
+    } else {
+        NSLog(@"USB device send done");
+        uint8_t bytes[64] = {0x02};
         [_device setReport:[NSData dataWithBytes:bytes length:sizeof(bytes)]];
     }
 }
@@ -99,7 +95,7 @@
     NSLog(@"USB device data");
     [_readData appendBytes:data.bytes length:1];
     if (_readData.length >= _writeData.length) {
-        [self cancelTest:_pid];
+        [self complete];
         
         FDUsbTestResult *result = [[FDUsbTestResult alloc] init];
         result.pass = YES;

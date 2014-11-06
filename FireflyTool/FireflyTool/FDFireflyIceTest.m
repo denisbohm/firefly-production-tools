@@ -89,7 +89,7 @@ enum GPIO_Port_TypeDef {
     [self loadExecutable:@"FireflyIceTest"];
     
     FDLog(@"initializing processor");
-    [self run:@"fd_processor_initialize"];
+    [self run:@"fd_hal_processor_initialize"];
     
     FDLog(@"initializing USB crystal");
     [self run:@"fd_test_hfxo_initialize"];
@@ -159,7 +159,7 @@ enum GPIO_Port_TypeDef {
         [NSThread sleepForTimeInterval:0.1];
         float v = [self toFloat:[self invoke:@"fd_lp55231_test_led" r0:led.n]];
         [self invoke:@"fd_lp55231_set_led_pwm" r0:led.n r1:0];
-        NSLog(@"led %@ %0.3fV", led.name, v);
+        FDLog(@"led %@ %0.3fV", led.name, v);
         float tolerance = 0.2;
         float min = led.expect - tolerance;
         float max = led.expect + tolerance;
@@ -180,6 +180,8 @@ enum GPIO_Port_TypeDef {
     }
     
     FDLog(@"testing accelerometer...");
+    [self invoke:@"fd_event_initialize"];
+    [self invoke:@"fd_timer_initialize"];
     [self invoke:@"fd_spi_initialize"];
     //
     // initialize devices on spi1 bus
@@ -248,7 +250,7 @@ enum GPIO_Port_TypeDef {
     [self GPIO_PinOutClear:gpioPortA pin:15]; // green
     [self GPIO_PinOutSet:gpioPortC pin:1]; // red
     [self GPIO_PinOutSet:gpioPortC pin:0]; // red
-    FDLog(@"all tests passed");
+    FDLog(@"all component tests passed");
 }
 
 @end

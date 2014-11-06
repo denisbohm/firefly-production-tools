@@ -84,8 +84,8 @@
 {
     if (self = [super init]) {
         _tests = [NSMutableDictionary dictionary];
-        _dataServiceUUID = [CBUUID UUIDWithString:@"310a0001-1b95-5091-b0bd-b7a681846399"];
-        _dataCharacteristicUUID = [CBUUID UUIDWithString:@"310a0002-1b95-5091-b0bd-b7a681846399"];
+        _dataServiceUUID        = [CBUUID UUIDWithString:@"310a0001-0000-1b95-5091-b0bdb7a68184"];
+        _dataCharacteristicUUID = [CBUUID UUIDWithString:@"310a0002-0000-1b95-5091-b0bdb7a68184"];
         _timeout = 10.0;
         _sendTimeout = 0.5;
         _sendRetries = 3;
@@ -249,7 +249,7 @@
 {
     NSLog(@"didDiscoverServices %@ : %@", peripheral.name, error);
     for (CBService *service in peripheral.services) {
-        NSLog(@"service UUID %@", service.UUID);
+        NSLog(@"service UUID %@ %@", service.UUID, _dataServiceUUID);
         if ([service.UUID isEqualTo:_dataServiceUUID]) {
             [peripheral discoverCharacteristics:nil forService:service];
         }

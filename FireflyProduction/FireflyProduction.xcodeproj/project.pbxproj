@@ -7,16 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9212248D1A084B7F002006AA /* FDBuilderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9212248B1A084B7F002006AA /* FDBuilderView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9212248E1A084B7F002006AA /* FDBuilderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9212248C1A084B7F002006AA /* FDBuilderView.m */; };
+		921224911A084CB8002006AA /* FDTargetOptionsView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9212248F1A084CB8002006AA /* FDTargetOptionsView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		921224921A084CB8002006AA /* FDTargetOptionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 921224901A084CB8002006AA /* FDTargetOptionsView.m */; };
+		921224941A084CD7002006AA /* FDTargetOptionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 921224931A084CD7002006AA /* FDTargetOptionsView.xib */; };
 		9214495A17BED43200FC6BAF /* FDRadioTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9214495817BED43200FC6BAF /* FDRadioTest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9214495B17BED43200FC6BAF /* FDRadioTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9214495917BED43200FC6BAF /* FDRadioTest.m */; };
 		9214AEDD17309E5700F7707E /* features.xml in Resources */ = {isa = PBXBuildFile; fileRef = 9214AEDB17309E5700F7707E /* features.xml */; };
 		9214AEDE17309E5700F7707E /* memory-map.xml in Resources */ = {isa = PBXBuildFile; fileRef = 9214AEDC17309E5700F7707E /* memory-map.xml */; };
-		9229C48817E4FFAF00B87C60 /* ARMSerialWireDebug.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9229C48117E4FF3C00B87C60 /* ARMSerialWireDebug.framework */; };
+		9229C48817E4FFAF00B87C60 /* ARMSerialWireDebug.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9229C48117E4FF3C00B87C60 /* ARMSerialWireDebug.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		927E8574179F3AF90038CEFC /* FireflyFlashEFM32.elf in Resources */ = {isa = PBXBuildFile; fileRef = 927E8573179F3AF90038CEFC /* FireflyFlashEFM32.elf */; };
 		92898BDE179E35D0007B84B7 /* FDFireflyFlash.h in Headers */ = {isa = PBXBuildFile; fileRef = 92898BDC179E35D0007B84B7 /* FDFireflyFlash.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92898BDF179E35D0007B84B7 /* FDFireflyFlash.m in Sources */ = {isa = PBXBuildFile; fileRef = 92898BDD179E35D0007B84B7 /* FDFireflyFlash.m */; };
 		929EB9D718D92C0400E8841E /* FireflyDevice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 929EB9D218D92BEA00E8841E /* FireflyDevice.framework */; };
-		929EB9D818D92C1B00E8841E /* FireflyDevice.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 929EB9D218D92BEA00E8841E /* FireflyDevice.framework */; };
+		929EB9D818D92C1B00E8841E /* FireflyDevice.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 929EB9D218D92BEA00E8841E /* FireflyDevice.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		92BF96241829F38700C37412 /* FDUsbTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 92BF96221829F38700C37412 /* FDUsbTest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92BF96251829F38700C37412 /* FDUsbTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BF96231829F38700C37412 /* FDUsbTest.m */; };
 		92E774D41730925800A111DF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E774D31730925800A111DF /* Cocoa.framework */; };
@@ -125,6 +130,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9212248B1A084B7F002006AA /* FDBuilderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDBuilderView.h; sourceTree = "<group>"; };
+		9212248C1A084B7F002006AA /* FDBuilderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDBuilderView.m; sourceTree = "<group>"; };
+		9212248F1A084CB8002006AA /* FDTargetOptionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDTargetOptionsView.h; sourceTree = "<group>"; };
+		921224901A084CB8002006AA /* FDTargetOptionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDTargetOptionsView.m; sourceTree = "<group>"; };
+		921224931A084CD7002006AA /* FDTargetOptionsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FDTargetOptionsView.xib; sourceTree = "<group>"; };
 		9214495817BED43200FC6BAF /* FDRadioTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDRadioTest.h; sourceTree = "<group>"; };
 		9214495917BED43200FC6BAF /* FDRadioTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDRadioTest.m; sourceTree = "<group>"; };
 		9214AEDB17309E5700F7707E /* features.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = features.xml; sourceTree = "<group>"; };
@@ -209,7 +219,7 @@
 			isa = PBXGroup;
 			children = (
 				929EB9CE18D92BEA00E8841E /* libFireflyDevice.a */,
-				929EB9D018D92BEA00E8841E /* FireflyDeviceTests.library.octest */,
+				929EB9D018D92BEA00E8841E /* FireflyDeviceTests.library.xctest */,
 				929EB9D218D92BEA00E8841E /* FireflyDevice.framework */,
 				929EB9D418D92BEA00E8841E /* FireflyDeviceTests.framework.xctest */,
 			);
@@ -283,6 +293,11 @@
 				92F5DD6F19A533A7004ADB5D /* FDFireflyFlashEFM32.m */,
 				92F5DD7619A53D01004ADB5D /* FDFireflyFlashSTM32F4.h */,
 				92F5DD7719A53D01004ADB5D /* FDFireflyFlashSTM32F4.m */,
+				9212248B1A084B7F002006AA /* FDBuilderView.h */,
+				9212248C1A084B7F002006AA /* FDBuilderView.m */,
+				9212248F1A084CB8002006AA /* FDTargetOptionsView.h */,
+				921224901A084CB8002006AA /* FDTargetOptionsView.m */,
+				921224931A084CD7002006AA /* FDTargetOptionsView.xib */,
 			);
 			path = FireflyProduction;
 			sourceTree = "<group>";
@@ -327,11 +342,13 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9212248D1A084B7F002006AA /* FDBuilderView.h in Headers */,
 				92F5DD7019A533A7004ADB5D /* FDFireflyFlashEFM32.h in Headers */,
 				92F5DD7819A53D01004ADB5D /* FDFireflyFlashSTM32F4.h in Headers */,
 				92E775521730979E00A111DF /* FDExecutable.h in Headers */,
 				92898BDE179E35D0007B84B7 /* FDFireflyFlash.h in Headers */,
 				92E775561730979E00A111DF /* FDGdbServer.h in Headers */,
+				921224911A084CB8002006AA /* FDTargetOptionsView.h in Headers */,
 				92E775581730979E00A111DF /* FDGdbServerSwd.h in Headers */,
 				92BF96241829F38700C37412 /* FDUsbTest.h in Headers */,
 				9214495A17BED43200FC6BAF /* FDRadioTest.h in Headers */,
@@ -388,7 +405,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastTestingUpgradeCheck = 0510;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Firefly Design";
 			};
 			buildConfigurationList = 92E774CA1730925800A111DF /* Build configuration list for PBXProject "FireflyProduction" */;
@@ -441,10 +458,10 @@
 			remoteRef = 929EB9CD18D92BEA00E8841E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		929EB9D018D92BEA00E8841E /* FireflyDeviceTests.library.octest */ = {
+		929EB9D018D92BEA00E8841E /* FireflyDeviceTests.library.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = FireflyDeviceTests.library.octest;
+			path = FireflyDeviceTests.library.xctest;
 			remoteRef = 929EB9CF18D92BEA00E8841E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -469,6 +486,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				921224941A084CD7002006AA /* FDTargetOptionsView.xib in Resources */,
 				92E774DE1730925800A111DF /* InfoPlist.strings in Resources */,
 				9214AEDD17309E5700F7707E /* features.xml in Resources */,
 				92F5DD7B19A552CB004ADB5D /* FireflyFlashSTM32F4.elf in Resources */,
@@ -516,7 +534,9 @@
 				92898BDF179E35D0007B84B7 /* FDFireflyFlash.m in Sources */,
 				92F5DD7119A533A7004ADB5D /* FDFireflyFlashEFM32.m in Sources */,
 				92F5DD7919A53D01004ADB5D /* FDFireflyFlashSTM32F4.m in Sources */,
+				9212248E1A084B7F002006AA /* FDBuilderView.m in Sources */,
 				9214495B17BED43200FC6BAF /* FDRadioTest.m in Sources */,
+				921224921A084CB8002006AA /* FDTargetOptionsView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -16,24 +16,22 @@
 #import <ARMSerialWireDebug/FDUSBMonitor.h>
 
 #import <FireflyProduction/FDRadioTest.h>
+#import <FireflyProduction/FDTargetOptionsView.h>
 
-@interface FDAppDelegate () <FDUSBMonitorDelegate, FDLoggerConsumer, FDSerialWireDebugOperationDelegate>
+@interface FDAppDelegate () <FDUSBMonitorDelegate, FDLoggerConsumer, FDSerialWireDebugOperationDelegate, FDTargetOptionsViewDelegate>
 
 @property (assign) IBOutlet NSTextField *jtagLabel;
 @property (assign) IBOutlet NSTextField *pcbaLabel;
+@property (assign) IBOutlet NSTextField *operationLabel;
 @property (assign) IBOutlet NSTextView *logView;
-@property (assign) IBOutlet NSButton *testBatteryCheckBox;
 
-@property (assign) IBOutlet NSTextField *bootAddressTextField;
-@property (assign) IBOutlet NSTextField *bootNameTextField;
-@property (assign) IBOutlet NSTextField *firmwareAddressTextField;
-@property (assign) IBOutlet NSTextField *firmwareNameTextField;
-@property (assign) IBOutlet NSTextField *metadataAddressTextField;
-@property (assign) IBOutlet NSTextField *constantsAddressTextField;
-@property (assign) IBOutlet NSTextField *constantsNameTextField;
-@property (assign) IBOutlet NSPathControl *searchPathControl;
-@property (assign) IBOutlet NSTextField *ramSizeTextField;
-@property (assign) IBOutlet NSComboBox *processorComboBox;
+@property (assign) IBOutlet NSButton *programCheckBox;
+@property (assign) IBOutlet NSButton *testCheckBox;
+@property (assign) IBOutlet NSButton *testBatteryCheckBox;
+@property (assign) IBOutlet NSButton *testBLECheckBox;
+@property (assign) IBOutlet NSButton *testUSBCheckBox;
+
+@property (assign) IBOutlet FDTargetOptionsView *targetOptionsView;
 
 @property FDLogger *logger;
 @property NSMutableDictionary *resources;
@@ -47,25 +45,26 @@
 
 @implementation FDAppDelegate
 
-- (NSNumber *)parseNumber:(NSString *)text
+- (IBAction)resourceChange:(id)sender
 {
-    if ([text hasPrefix:@"0x"]) {
-        NSScanner *scanner = [NSScanner scannerWithString:text];
-        unsigned long long temp;
-        [scanner scanHexLongLong:&temp];
-        return [NSNumber numberWithLongLong:temp];
-    }
-    return [NSNumber numberWithLongLong:[text longLongValue]];
+    [_resources setValuesForKeysWithDictionary:self.targetOptionsView.resources];
+    
+    _resources[@"program"] = [NSNumber numberWithBool:_programCheckBox.state == NSOnState];
+    
+    _resources[@"test"] = [NSNumber numberWithBool:_testCheckBox.state == NSOnState];
+    _resources[@"testBattery"] = [NSNumber numberWithBool:_testBatteryCheckBox.state == NSOnState];
+    _resources[@"testBLE"] = [NSNumber numberWithBool:_testBLECheckBox.state == NSOnState];
+    _resources[@"testUSB"] = [NSNumber numberWithBool:_testUSBCheckBox.state == NSOnState];
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [_resources enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL* stop) {
+        [userDefaults setObject:value forKey:key];
+    }];
 }
 
-- (NSString *)formatNumber:(NSNumber *)number
+- (void)targetOptionsViewChange:(FDTargetOptionsView *)view
 {
-    return [NSString stringWithFormat:@"0x%llx", [number unsignedLongLongValue]];
-}
-
-- (NSString *)formatString:(NSString *)string
-{
-    return string == nil ? @"" : string;
+    [self resourceChange:self];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
@@ -80,33 +79,16 @@
     _swdMonitor.vendor = 0x15ba;
     _swdMonitor.product = 0x002a;
     _swdMonitor.delegate = self;
-    
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if ([userDefaults objectForKey:@"testBattery"]) {
-        _testBatteryCheckBox.state = [userDefaults boolForKey:@"testBattery"];
-        _bootAddressTextField.stringValue = [self formatNumber:[userDefaults objectForKey:@"bootAddress"]];
-        _bootNameTextField.stringValue = [userDefaults stringForKey:@"bootName"];
-        _firmwareAddressTextField.stringValue = [self formatNumber:[userDefaults objectForKey:@"firmwareAddress"]];
-        _firmwareNameTextField.stringValue = [userDefaults stringForKey:@"firmwareName"];
-        _metadataAddressTextField.stringValue = [self formatNumber:[userDefaults objectForKey:@"metadataAddress"]];
-        _constantsAddressTextField.stringValue = [self formatNumber:[userDefaults objectForKey:@"constantsAddress"]];
-        _constantsNameTextField.stringValue = [self formatString:[userDefaults stringForKey:@"constantsName"]];
-        @try {
-            NSString *searchPath = [userDefaults objectForKey:@"searchPath"];
-            if (searchPath != nil) {
-                NSURL *URL = [NSURL fileURLWithPath:searchPath];
-                if ([URL isFileURL]) {
-                    _searchPathControl.URL = URL;
-                }
-            }
-        } @catch (NSException *e) {
-            NSLog(@"cannot set search path: %@", e);
-        }
-        _ramSizeTextField.stringValue = [self formatNumber:[userDefaults objectForKey:@"ramSize"]];
-        [_processorComboBox selectItemWithObjectValue:[userDefaults objectForKey:@"processor"]];
-    }
-    
+
     _resources = [NSMutableDictionary dictionary];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    if ([userDefaults objectForKey:@"program"]) {
+        _programCheckBox.state = [userDefaults boolForKey:@"program"];
+        _testCheckBox.state = [userDefaults boolForKey:@"test"];
+        _testBatteryCheckBox.state = [userDefaults boolForKey:@"testBattery"];
+        _testBLECheckBox.state = [userDefaults boolForKey:@"testBLE"];
+        _testUSBCheckBox.state = [userDefaults boolForKey:@"testUSB"];
+    }
     [self resourceChange:self];
     
 #if 0
@@ -121,28 +103,9 @@
 #endif
 }
 
-- (IBAction)resourceChange:(id)sender
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed: (NSApplication *) theApplication
 {
-    _resources[@"testBattery"] = [NSNumber numberWithBool:_testBatteryCheckBox.state == NSOnState];
-    _resources[@"bootAddress"] = [self parseNumber:_bootAddressTextField.stringValue];
-    _resources[@"bootName"] = _bootNameTextField.stringValue;
-    _resources[@"firmwareAddress"] = [self parseNumber:_firmwareAddressTextField.stringValue];
-    _resources[@"firmwareName"] = _firmwareNameTextField.stringValue;
-    _resources[@"metadataAddress"] = [self parseNumber:_metadataAddressTextField.stringValue];
-    _resources[@"constantsAddress"] = [self parseNumber:_constantsAddressTextField.stringValue];
-    _resources[@"constantsName"] = _constantsNameTextField.stringValue;
-    if ([_searchPathControl.URL isFileURL]) {
-        _resources[@"searchPath"] = [_searchPathControl.URL path];
-    } else {
-        [_resources removeObjectForKey:@"searchPath"];
-    }
-    _resources[@"ramSize"] = [self parseNumber:_ramSizeTextField.stringValue];
-    _resources[@"processor"] = _processorComboBox.stringValue;
-    
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [_resources enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL* stop) {
-        [userDefaults setObject:value forKey:key];
-    }];
+    return YES;
 }
 
 - (IBAction)showPreferences:(id)sender
@@ -188,14 +151,26 @@
     });
 }
 
-- (void)operationComplete
+- (void)serialWireDebugOperationStarting
 {
-    _operation = nil;
-    [_jtagLabel setDrawsBackground:NO];
-    [_pcbaLabel setDrawsBackground:NO];
+    _operationLabel.hidden = YES;
 }
 
-- (void)usbMonitor:(FDUSBMonitor *)usbMonitor usbDeviceAdded:(FDUSBDevice *)usbDevice
+- (void)operationComplete:(BOOL)success
+{
+    _operationLabel.stringValue = success ? @"pass" : @"FAIL";
+    _operationLabel.backgroundColor = success ? [NSColor blueColor] : [NSColor redColor];
+    _operationLabel.hidden = NO;
+}
+
+- (void)serialWireDebugOperationComplete:(BOOL)success
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self operationComplete:success];
+    });
+}
+
+- (void)startTest:(FDUSBDevice *)usbDevice
 {
     if (_operation != nil) {
         return;
@@ -204,7 +179,7 @@
     [self clearLog:self];
     [_jtagLabel setDrawsBackground:YES];
     [_pcbaLabel setDrawsBackground:NO];
-
+    
     _operation = [[FDSerialWireDebugOperation alloc] init];
     _operation.logger = _logger;
     _operation.resources = _resources;
@@ -217,6 +192,23 @@
         });
     }];
     [_operationQueue addOperation:_operation];
+}
+
+- (void)operationComplete
+{
+    _operation = nil;
+    [_jtagLabel setDrawsBackground:NO];
+    [_pcbaLabel setDrawsBackground:NO];
+}
+
+- (void)usbMonitor:(FDUSBMonitor *)usbMonitor usbDeviceAdded:(FDUSBDevice *)usbDevice
+{
+    [self startTest:usbDevice];
+}
+
+- (IBAction)runTest:(id)sender
+{
+    _operation.run = YES;
 }
 
 - (void)usbMonitor:(FDUSBMonitor *)usbMonitor usbDeviceRemoved:(FDUSBDevice *)usbDevice

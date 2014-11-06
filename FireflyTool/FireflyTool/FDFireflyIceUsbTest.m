@@ -14,12 +14,23 @@
 
 @interface FDFireflyIceUsbTest () <FDUsbTestDelegate>
 
-@property FDUsbTest *usbTest;
+@property uint16_t vid;
 @property uint16_t pid;
+
+@property FDUsbTest *usbTest;
 
 @end
 
 @implementation FDFireflyIceUsbTest
+
+- (id)init
+{
+    if (self = [super init]) {
+        _vid = 0x2333;
+        _pid = 0x0003;
+    }
+    return self;
+}
 
 - (void)addNote:(NSMutableString *)notes message:(NSString *)message
 {
@@ -42,57 +53,40 @@
 
 - (BOOL)testUsb:(NSMutableString *)notes
 {
-    _pid = 0x0003;
+    uint8_t bytes[] = {1};
+    NSData *writeData = [NSData dataWithBytes:bytes length:sizeof(bytes)];
     
     [self loadExecutable:@"FireflyUsbTest"];
     
     FDLog(@"initializing processor");
     
-    [self run:@"fd_processor_initialize"];
+    [self run:@"fd_hal_processor_initialize"];
 
-    [self run:@"fd_processor_wake"];
+    [self run:@"fd_hal_processor_wake"];
     
-    FDLog(@"starting USB test for pid 0x%04x", _pid);
-    uint8_t bytes[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    NSData *writeData = [NSData dataWithBytes:bytes length:sizeof(bytes)];
-    /*
+    FDLog(@"starting USB test with vid 0x%04x / pid 0x%04x", _vid, _pid);
     _usbTest = [[FDUsbTest alloc] init];
+    _usbTest.delegate = self;
+    _usbTest.vid = _vid;
+    _usbTest.pid = _pid;
+    _usbTest.writeData = writeData;
     [_usbTest start];
-    [_usbTest startTest:_pid delegate:self data:writeData];
-     */
     FDExecutableFunction *usb_test = self.executable.functions[@"fd_usb_test"];
+    usb_test.address = 0x200000d8; // !!! run init code and main from there (not sure why we need init) -denis
     uint32_t address = self.cortexM.heapRange.location;
     NSException *exception = nil;
     uint32_t result = 0;
     @try {
-        result = [self.cortexM run:usb_test.address r0:_pid r1:address r2:sizeof(bytes) timeout:10.0];
+        result = [self.cortexM run:usb_test.address r0:_pid r1:address r2:sizeof(bytes) timeout:5.0];
     } @catch (NSException *e) {
         exception = e;
     }
-    [_usbTest cancelTest:_pid];
     [_usbTest stop];
     if (exception != nil) {
         [self addNote:notes message:@"check USB (test timed out)"];
         return NO;
     }
     FDLog(@"USB test return 0x%08x result", result);
-    
-    /*
-    FDRadioTestResult *radioTestResult = self.radioTestResult;
-    if (!radioTestResult.pass) {
-        [self addNote:notes message:[NSString stringWithFormat:@"check radio (incorrect response count v=%lu expected=%lu timeout=%@)", (unsigned long)radioTestResult.count, sizeof(bytes), radioTestResult.timeout ? @"YES" : @"NO"]];
-        return NO;
-    }
-    if (radioTestResult.rssi < _radioTestStrength) {
-        [self addNote:notes message:[NSString stringWithFormat:@"check radio strength (v=%0.1f min=%0.1f)", radioTestResult.rssi, _radioTestStrength]];
-        return NO;
-    }
-    double speed = (sizeof(bytes) * 20) / radioTestResult.duration;
-    if (speed < _radioTestSpeed) {
-        [self addNote:notes message:[NSString stringWithFormat:@"check radio speed (v=%0.1f min=%0.1f)", speed, _radioTestSpeed]];
-        return NO;
-    }
-     */
     
     NSData *verifyData = [self.serialWireDebug readMemory:address length:sizeof(bytes)];
     if (![writeData isEqualToData:verifyData]) {
@@ -107,7 +101,10 @@
 {
     NSMutableString *notes = [NSMutableString string];
     
-    [self testUsb:notes];
+    if (![self testUsb:notes]) {
+        @throw [NSException exceptionWithName:@"UsbNotDiscovered" reason:@"USB not discovered" userInfo:nil];
+    }
+
 }
 
 @end

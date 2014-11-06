@@ -28,15 +28,15 @@
 		9205984317FCAEAF0027FAAD /* ARMSerialWireDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9205982C17FCAD290027FAAD /* ARMSerialWireDebug.framework */; };
 		9205984517FCAEAF0027FAAD /* FireflyProduction.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9205984017FCAE380027FAAD /* FireflyProduction.framework */; };
 		9205984717FCAEBA0027FAAD /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9205984617FCAEBA0027FAAD /* IOBluetooth.framework */; };
-		926CCCF817FCAFE000449599 /* ARMSerialWireDebug.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9205982C17FCAD290027FAAD /* ARMSerialWireDebug.framework */; };
-		926CCCFA17FCAFE000449599 /* FireflyProduction.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9205984017FCAE380027FAAD /* FireflyProduction.framework */; };
+		926CCCF817FCAFE000449599 /* ARMSerialWireDebug.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9205982C17FCAD290027FAAD /* ARMSerialWireDebug.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		926CCCFA17FCAFE000449599 /* FireflyProduction.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9205984017FCAE380027FAAD /* FireflyProduction.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		92BF961C1829F01500C37412 /* FDFireflyIceUsbTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BF961B1829F01500C37412 /* FDFireflyIceUsbTest.m */; };
 		92C0D8311825BB12001884EC /* FireflyRadioTest.elf in Resources */ = {isa = PBXBuildFile; fileRef = 92C0D8301825BB12001884EC /* FireflyRadioTest.elf */; };
 		92C66E24182ABB3C000F5FD5 /* FireflyUsbTest.elf in Resources */ = {isa = PBXBuildFile; fileRef = 92C66E23182ABB3C000F5FD5 /* FireflyUsbTest.elf */; };
 		92DF4B7217FCC54E004C68C7 /* FDSerialWireDebugOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92DF4B7117FCC54E004C68C7 /* FDSerialWireDebugOperation.m */; };
 		92E66A4718146C370054A9C2 /* FireflyIceTest.elf in Resources */ = {isa = PBXBuildFile; fileRef = 92E66A4618146C370054A9C2 /* FireflyIceTest.elf */; };
 		92F5244F1919B4CD00491532 /* FireflyDevice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F5244A1919B4B600491532 /* FireflyDevice.framework */; };
-		92F524511919DA6900491532 /* FireflyDevice.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92F5244A1919B4B600491532 /* FireflyDevice.framework */; };
+		92F524511919DA6900491532 /* FireflyDevice.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92F5244A1919B4B600491532 /* FireflyDevice.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -345,7 +345,7 @@
 			isa = PBXGroup;
 			children = (
 				92F524461919B4B600491532 /* libFireflyDevice.a */,
-				92F524481919B4B600491532 /* FireflyDeviceTests.library.octest */,
+				92F524481919B4B600491532 /* FireflyDeviceTests.library.xctest */,
 				92F5244A1919B4B600491532 /* FireflyDevice.framework */,
 				92F5244C1919B4B600491532 /* FireflyDeviceTests.framework.xctest */,
 			);
@@ -401,7 +401,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = FD;
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Firefly Design";
 				TargetAttributes = {
 					920597D817FCAAC20027FAAD = {
@@ -481,10 +481,10 @@
 			remoteRef = 92F524451919B4B600491532 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		92F524481919B4B600491532 /* FireflyDeviceTests.library.octest */ = {
+		92F524481919B4B600491532 /* FireflyDeviceTests.library.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = FireflyDeviceTests.library.octest;
+			path = FireflyDeviceTests.library.xctest;
 			remoteRef = 92F524471919B4B600491532 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
