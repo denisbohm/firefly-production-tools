@@ -77,7 +77,7 @@
     NSException *exception = nil;
     uint32_t result = 0;
     @try {
-        result = [self.cortexM run:usb_test.address r0:_pid r1:address r2:sizeof(bytes) timeout:5.0];
+        result = [self.cortexM run:usb_test.address r0:_pid r1:address r2:sizeof(bytes) timeout:10.0];
     } @catch (NSException *e) {
         exception = e;
     }
