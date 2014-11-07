@@ -96,6 +96,8 @@
         _ramSizeTextField.stringValue = [self formatNumber:[userDefaults objectForKey:@"ramSize"]];
         [_processorComboBox selectItemWithObjectValue:[userDefaults objectForKey:@"processor"]];
     }
+    
+    [self resourceChange:self];
 }
 
 - (IBAction)setDefaults:(id)sender
