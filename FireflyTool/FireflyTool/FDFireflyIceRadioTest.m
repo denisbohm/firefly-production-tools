@@ -86,6 +86,7 @@
     uint32_t result = 0;
     @try {
         result = [self.cortexM run:radio_test.address r0:address r1:sizeof(bytes) timeout:15.0];
+        [NSThread sleepForTimeInterval:1.0];
     } @catch (NSException *e) {
         exception = e;
     }
