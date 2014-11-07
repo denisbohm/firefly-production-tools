@@ -90,13 +90,14 @@
         _sendTimeout = 0.5;
         _sendRetries = 3;
         _retries = 3;
-        _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     }
     return self;
 }
 
 - (void)start
 {
+    _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
+
     _timer = [NSTimer timerWithTimeInterval:0.25 target:self selector:@selector(check:) userInfo:nil repeats:YES];
     [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
 }
@@ -105,6 +106,9 @@
 {
     [_timer invalidate];
     _timer = nil;
+
+    [_centralManager stopScan];
+    _centralManager.delegate = nil;
 }
 
 - (void)timeout:(FDRadioTestContext *)context
@@ -174,7 +178,6 @@
     NSLog(@"centralManagerPoweredOn");
     NSDictionary *options = @{CBCentralManagerScanOptionAllowDuplicatesKey:[NSNumber  numberWithBool:YES]};
     [_centralManager scanForPeripheralsWithServices:nil options:options];
-//    [_centralManager scanForPeripheralsWithServices:@[[CBUUID UUIDWithString:@"180A"]] options:options]; // Device Information
 }
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central

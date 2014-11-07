@@ -22,6 +22,7 @@
 @property NSMutableData *readData;
 @property FDUSBHIDDevice *device;
 @property NSDate *startDate;
+@property BOOL done;
 
 @end
 
@@ -83,8 +84,10 @@
         uint8_t byte = ((uint8_t *)_writeData.bytes)[_writeIndex];
         uint8_t bytes[64] = {0x01, _writeIndex++, byte};
         [_device setReport:[NSData dataWithBytes:bytes length:sizeof(bytes)]];
-    } else {
+    } else
+    if (!_done) {
         NSLog(@"USB device send done");
+        _done = YES;
         uint8_t bytes[64] = {0x02};
         [_device setReport:[NSData dataWithBytes:bytes length:sizeof(bytes)]];
     }
