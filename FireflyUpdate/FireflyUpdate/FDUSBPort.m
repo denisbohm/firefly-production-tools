@@ -63,6 +63,9 @@
         [self setTextField:_hardwareId faded:YES];
         _progressIndicator.hidden = YES;
         [self setTextField:_status faded:YES];
+        if ([_status.stringValue hasPrefix:@"Putting"]) {
+            _status.stringValue = @"Firmware is up to date.  Device has been put into storage mode.";
+        }
     });
 }
 
@@ -109,8 +112,7 @@
 
     FDFireflyIce *fireflyIce = helloTask.fireflyIce;
     id<FDFireflyIceChannel> channel = helloTask.channel;
-    NSArray *versions = [FDFirmwareUpdateTask loadAllFirmwareVersions:@"FireflyIce"];
-    FDFirmwareUpdateTask *task = [FDFirmwareUpdateTask firmwareUpdateTask:fireflyIce channel:channel intelHex:versions.lastObject];
+    FDFirmwareUpdateTask *task = [FDFirmwareUpdateTask firmwareUpdateTask:fireflyIce channel:channel intelHex:_firmware];
     task.downgrade = YES;
     task.commit = YES;
     task.reset = YES;

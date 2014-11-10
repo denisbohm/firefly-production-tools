@@ -24,13 +24,18 @@
 @interface FDAppDelegate () <FDUSBHIDMonitorDelegate>
 
 @property (weak) IBOutlet NSWindow *window;
+@property IBOutlet NSPanel *preferencesPanel;
 
-@property (assign) IBOutlet NSTextField *usbVendorIdTextField;
-@property (assign) IBOutlet NSTextField *usbProductIdTextField;
+@property IBOutlet NSTextField *usbVendorIdTextField;
+@property IBOutlet NSTextField *usbProductIdTextField;
+@property IBOutlet NSTextField *firmwareNameTextField;
+@property IBOutlet NSPathControl *searchPathControl;
 
 @property NSArray *usbPorts;
 
 @property FDUSBHIDMonitor *usbMonitor;
+
+@property BOOL userDefaultsLoaded;
 
 @end
 
@@ -58,7 +63,6 @@
 }
 
 - (NSMutableArray *)allSubviewsInView:(NSView *)parentView {
-    
     NSMutableArray *allSubviews     = [[NSMutableArray alloc] initWithObjects: nil];
     NSMutableArray *currentSubviews = [[NSMutableArray alloc] initWithObjects: parentView, nil];
     NSMutableArray *newSubviews     = [[NSMutableArray alloc] initWithObjects: parentView, nil];
@@ -100,7 +104,27 @@
     }
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+- (void)saveUserDefaults
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:_usbVendorIdTextField.stringValue forKey:@"usbVendorID"];
+    [userDefaults setObject:_usbProductIdTextField.stringValue forKey:@"usbProductID"];
+    [userDefaults setObject:_firmwareNameTextField.stringValue forKey:@"firmwareName"];
+    if ([_searchPathControl.URL isFileURL]) {
+        [userDefaults setObject:[_searchPathControl.URL path] forKey:@"searchPath"];
+    } else {
+        [userDefaults removeObjectForKey:@"searchPath"];
+    }
+}
+
+- (IBAction)resourceChanged:(id)sender
+{
+    if (_userDefaultsLoaded) {
+        [self saveUserDefaults];
+    }
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)notification {
     NSMutableArray *usbPorts = [NSMutableArray array];
     NSArray *windowViews = [self allSubviewsInView:_window.contentView];
     for (int i = 1; i <= 16; ++i) {
@@ -121,24 +145,100 @@
     [self loadLocations];
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    _usbMonitor = [[FDUSBHIDMonitor alloc] init];
+    if ([userDefaults objectForKey:@"searchPath"]) {
+        @try {
+            NSString *searchPath = [userDefaults objectForKey:@"searchPath"];
+            if (searchPath != nil) {
+                NSURL *URL = [NSURL fileURLWithPath:searchPath];
+                if ([URL isFileURL]) {
+                    _searchPathControl.URL = URL;
+                }
+            }
+        } @catch (NSException *e) {
+            NSLog(@"cannot set search path: %@", e);
+        }
+    }
+    if ([userDefaults objectForKey:@"firmwareName"]) {
+        _firmwareNameTextField.stringValue = [userDefaults stringForKey:@"firmwareName"];
+    }
     if ([userDefaults objectForKey:@"usbVendorID"]) {
         _usbVendorIdTextField.stringValue = [userDefaults stringForKey:@"usbVendorID"];
-        _usbMonitor.vendor = [FDAppDelegate scanHexUInt16:_usbVendorIdTextField.stringValue];
-    } else {
-        _usbMonitor.vendor = 0x2333;
     }
     if ([userDefaults objectForKey:@"usbProductID"]) {
         _usbProductIdTextField.stringValue = [userDefaults stringForKey:@"usbProductID"];
-        _usbMonitor.product = [FDAppDelegate scanHexUInt16:_usbProductIdTextField.stringValue];
-    } else {
-        _usbMonitor.product = 0x0002;
     }
+    _userDefaultsLoaded = YES;
+    
+    _usbMonitor = [[FDUSBHIDMonitor alloc] init];
+    _usbMonitor.vendor = [FDAppDelegate scanHexUInt16:_usbVendorIdTextField.stringValue];
+    _usbMonitor.product = [FDAppDelegate scanHexUInt16:_usbProductIdTextField.stringValue];
     _usbMonitor.delegate = self;
     [_usbMonitor start];
 }
 
-- (void)applicationWillTerminate:(NSNotification *)aNotification {
+- (void)applicationWillTerminate:(NSNotification *)notification {
+}
+
+- (IBAction)showPreferences:(id)sender
+{
+    [_preferencesPanel setIsVisible:YES];
+}
+
+- (IBAction)resetToDefaults:(id)sender
+{
+    NSString *searchPath = [NSString stringWithFormat:@"%@/sandbox/denisbohm/firefly-ice-firmware", NSHomeDirectory()];
+    NSURL *URL = [NSURL fileURLWithPath:searchPath isDirectory:YES];
+    _searchPathControl.URL = URL;
+    _firmwareNameTextField.stringValue = @"FireflyIce";
+    _usbVendorIdTextField.stringValue = @"0x2333";
+    _usbProductIdTextField.stringValue = @"0x0002";
+    
+    [self saveUserDefaults];
+}
+
+- (NSString *)getHexPath:(NSString *)name type:(NSString *)type searchPath:(NSString *)searchPath
+{
+// don't use these locations since they won't have the firmware metadata in the hex files
+#if 0
+    NSString *path = [NSString stringWithFormat:@"%@/%@/%@/%@.hex", searchPath, type, name, name];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if ([fileManager fileExistsAtPath:path isDirectory:NO]) {
+        return path;
+    }
+    
+    path = [NSString stringWithFormat:@"%@/%@ THUMB Release/%@.hex", searchPath, name, name];
+    if ([fileManager fileExistsAtPath:path isDirectory:NO]) {
+        return path;
+    }
+#endif
+    
+    NSArray *allFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:searchPath error:nil];
+    NSArray *files = [allFiles filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self BEGINSWITH %@) AND (self ENDSWITH '.hex')", name]];
+    files = [files sortedArrayUsingComparator: ^(id oa, id ob) {
+        NSString *a = (NSString *)oa;
+        NSString *b = (NSString *)ob;
+        return [a compare:b options:NSNumericSearch];
+    }];
+    if (files.count > 0) {
+        return [searchPath stringByAppendingPathComponent:files.lastObject];
+    }
+    
+    return [[NSBundle bundleForClass:[self class]] pathForResource:name ofType:@"hex"];
+}
+
+- (FDIntelHex *)getFirmware
+{
+    NSString *searchPath = _searchPathControl.URL.path;
+    NSString *path = [self getHexPath:_firmwareNameTextField.stringValue type:@"THUMB Flash Release" searchPath:searchPath];
+    if (path != nil) {
+        NSString *content = [NSString stringWithContentsOfFile:path encoding:NSASCIIStringEncoding error:nil];
+        return [FDIntelHex intelHex:content address:0 length:0];
+    }
+    NSArray *versions = [FDFirmwareUpdateTask loadAllFirmwareVersions:_firmwareNameTextField.stringValue];
+    if (versions.count <= 0) {
+        @throw [NSException exceptionWithName:@"CanNotFindFirmware" reason:@"Can not find firmware" userInfo:nil];
+    }
+    return versions.lastObject;
 }
 
 - (IBAction)clearLocations:(id)sender
@@ -209,6 +309,7 @@
             return;
         }
     }
+    usbPort.firmware = [self getFirmware];
     [usbPort start:usbHidDevice];
 }
 

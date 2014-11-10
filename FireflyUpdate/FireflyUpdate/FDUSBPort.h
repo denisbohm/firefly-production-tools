@@ -25,6 +25,7 @@
 @property NSString *identifier;
 @property NSObject *location;
 @property FDUSBHIDDevice *usbHidDevice;
+@property FDIntelHex *firmware;
 @property FDFireflyIce *fireflyIce;
 @property NSTextField *hardwareId;
 @property NSTextField *status;
