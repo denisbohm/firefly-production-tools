@@ -6,8 +6,9 @@
 //  Copyright (c) 2014 Firefly Design LLC. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <IOBluetooth/IOBluetooth.h>
 
+@class FDIntelHex;
 @class FDPoolTableViewDataSource;
 
 @interface FDPoolManager : NSObject
@@ -20,9 +21,11 @@
 
 - (void)indicatePool;
 - (void)refreshPool;
-- (void)updatePool;
+- (void)updatePool:(FDIntelHex *)firmware;
 - (void)resetPool;
 - (void)setTimePool;
 - (void)storagePool;
+
+@property CBUUID *serviceUUID;
 
 @end

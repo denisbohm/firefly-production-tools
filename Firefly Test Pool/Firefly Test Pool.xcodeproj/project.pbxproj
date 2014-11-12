@@ -23,7 +23,7 @@
 		92DBC1CA1901754D0071F52B /* FireflyDevice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DAF961190171A700F1A86B /* FireflyDevice.framework */; };
 		92DBC1CF190176060071F52B /* FDPoolManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 92DBC1CE190176060071F52B /* FDPoolManager.m */; };
 		92DBC1D21901798D0071F52B /* FDPoolMember.m in Sources */ = {isa = PBXBuildFile; fileRef = 92DBC1D11901798D0071F52B /* FDPoolMember.m */; };
-		92EB262719081CD60010AFC3 /* FireflyDevice.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92DAF961190171A700F1A86B /* FireflyDevice.framework */; };
+		92EB262719081CD60010AFC3 /* FireflyDevice.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92DAF961190171A700F1A86B /* FireflyDevice.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -230,7 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				92DAF95D190171A700F1A86B /* libFireflyDevice.a */,
-				92DAF95F190171A700F1A86B /* FireflyDeviceTests.library.octest */,
+				92DAF95F190171A700F1A86B /* FireflyDeviceTests.library.xctest */,
 				92DAF961190171A700F1A86B /* FireflyDevice.framework */,
 				92DAF963190171A700F1A86B /* FireflyDeviceTests.framework.xctest */,
 			);
@@ -284,7 +284,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = FD;
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Firefly Design LLC";
 				TargetAttributes = {
 					92DAF91C1901713300F1A86B = {
@@ -328,10 +328,10 @@
 			remoteRef = 92DAF95C190171A700F1A86B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		92DAF95F190171A700F1A86B /* FireflyDeviceTests.library.octest */ = {
+		92DAF95F190171A700F1A86B /* FireflyDeviceTests.library.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = FireflyDeviceTests.library.octest;
+			path = FireflyDeviceTests.library.xctest;
 			remoteRef = 92DAF95E190171A700F1A86B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};

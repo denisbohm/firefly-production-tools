@@ -19,8 +19,6 @@
 #import <FireflyDevice/FDFirmwareUpdateTask.h>
 #import <FireflyDevice/FDHelloTask.h>
 
-#import <IOBluetooth/IOBluetooth.h>
-
 @interface FDPoolManager () <CBCentralManagerDelegate, FDFireflyIceObserver, FDHelloTaskDelegate, FDExecutorObserver>
 
 @property NSTableView *tableView;
@@ -28,7 +26,7 @@
 
 @property CBCentralManager *centralManager;
 
-@property CBUUID *serviceUUID;
+@property CBUUID *service;
 
 @end
 
@@ -41,10 +39,27 @@
         _dataSource = [[FDPoolTableViewDataSource alloc] init];
         _tableView.dataSource = _dataSource;
         
-        _serviceUUID = [CBUUID UUIDWithString:@"310a0001-1b95-5091-b0bd-b7a681846399"];
+        _service = [CBUUID UUIDWithString:@"310a0001-1b95-5091-b0bd-b7a681846399"];
         _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     }
     return self;
+}
+
+- (CBUUID *)serviceUUID
+{
+    return _service;
+}
+
+- (void)setServiceUUID:(CBUUID *)serviceUUID
+{
+    if ([_service isEqualTo:serviceUUID]) {
+        return;
+    }
+    
+    _service = serviceUUID;
+    [_dataSource removeAllMembers];
+    [_tableView reloadData];
+    [self centralManagerDidUpdateState:_centralManager];
 }
 
 - (NSInteger)columnIndexForIdentifier:(NSString *)identifier
@@ -70,7 +85,6 @@
     NSRect rect = NSIntersectionRect(rowRect, columnRect);
     [_tableView setNeedsDisplayInRect:rect];
 }
-
 
 - (void)fireflyIce:(FDFireflyIce *)fireflyIce channel:(id<FDFireflyIceChannel>)channel power:(FDFireflyIcePower *)power
 {
@@ -114,7 +128,7 @@
 
 - (void)helloTask:(FDHelloTask *)helloTask error:(NSError *)error
 {
-    
+    NSLog(@"hello task error");
 }
 
 - (void)fireflyIce:(FDFireflyIce *)fireflyIce channel:(id<FDFireflyIceChannel>)channel status:(FDFireflyIceChannelStatus)status
@@ -227,10 +241,10 @@
     }];
 }
 
-- (void)updatePool
+- (void)updatePool:(FDIntelHex *)firmware
 {
     [self executeTaskOnSelectedOpen:^id<FDExecutorTask>(FDFireflyIce *fireflyIce, FDFireflyIceChannelBLE *channel) {
-        return [FDFirmwareUpdateTask firmwareUpdateTask:fireflyIce channel:channel];
+        return [FDFirmwareUpdateTask firmwareUpdateTask:fireflyIce channel:channel intelHex:firmware];
     }];
 }
 
@@ -243,11 +257,12 @@
 
 - (void)centralManagerPoweredOn
 {
-    NSArray *peripherals = [_centralManager retrieveConnectedPeripheralsWithServices:@[_serviceUUID]];
+    NSArray *peripherals = [_centralManager retrieveConnectedPeripheralsWithServices:@[_service]];
     for (CBPeripheral *peripheral in peripherals) {
-        [self onMainCentralManager:_centralManager didDiscoverPeripheral:peripheral advertisementData:@{CBAdvertisementDataServiceUUIDsKey:@[_serviceUUID]} RSSI:peripheral.RSSI];
+        [self onMainCentralManager:_centralManager didDiscoverPeripheral:peripheral advertisementData:@{CBAdvertisementDataServiceUUIDsKey:@[_service]} RSSI:peripheral.RSSI];
     }
-    [_centralManager scanForPeripheralsWithServices:@[_serviceUUID] options:@{CBCentralManagerScanOptionAllowDuplicatesKey: @YES}];
+//    [_centralManager scanForPeripheralsWithServices:@[_service] options:@{CBCentralManagerScanOptionAllowDuplicatesKey: @YES}];
+    [_centralManager scanForPeripheralsWithServices:nil options:@{CBCentralManagerScanOptionAllowDuplicatesKey: @YES}];
 }
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central
@@ -301,11 +316,15 @@
     FDPoolMember *member = [_dataSource memberForPeripheral:peripheral];
     if (member != nil) {
         if (advertisementData != nil) {
+            NSMutableDictionary *newAdvertisementData = [NSMutableDictionary dictionaryWithDictionary:member.advertisementData];
+            [advertisementData enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL* stop) {
+                [newAdvertisementData setObject:value forKey:key];
+            }];
             NSDictionary *previousAdvertisementData = member.advertisementData;
-            if (![advertisementData isEqualToDictionary:previousAdvertisementData]) {
-                member.advertisementData = advertisementData;
+            if (![newAdvertisementData isEqualToDictionary:previousAdvertisementData]) {
+                member.advertisementData = newAdvertisementData;
                 FDFireflyIce *fireflyIce = member.fireflyIce;
-                fireflyIce.name = [self nameForPeripheral:peripheral advertisementData:advertisementData];
+                fireflyIce.name = [self nameForPeripheral:peripheral advertisementData:newAdvertisementData];
                 [self memberDataHasChanged:member];
             }
         }
@@ -316,7 +335,7 @@
     fireflyIce.name = [self nameForPeripheral:peripheral advertisementData:advertisementData];
     [fireflyIce.observable addObserver:self];
     [fireflyIce.executor.observable addObserver:self];
-    FDFireflyIceChannelBLE *channel = [[FDFireflyIceChannelBLE alloc] initWithCentralManager:central withPeripheral:peripheral];
+    FDFireflyIceChannelBLE *channel = [[FDFireflyIceChannelBLE alloc] initWithCentralManager:central withPeripheral:peripheral withServiceUUID:_service];
     channel.RSSI = [FDFireflyIceChannelBLERSSI RSSI:[RSSI floatValue]];
     [fireflyIce addChannel:channel type:@"BLE"];
     member = [[FDPoolMember alloc] init];
