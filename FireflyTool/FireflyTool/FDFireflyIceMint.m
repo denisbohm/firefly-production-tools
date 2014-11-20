@@ -71,6 +71,63 @@
     return data;
 }
 
+/*
+- (void)mintCrypto
+{
+    FDLog(@"loading firmware update crypto key into flash...");
+    NSMutableData *cryptoKey = [NSMutableData dataWithBytes:secretKey length:sizeof(secretKey)];
+    cryptoKey.length = flash.pageSize;
+    [flash writePages:FD_UPDATE_CRYPTO_ADDRESS data:cryptoKey erase:YES];
+    [self verify:FD_UPDATE_CRYPTO_ADDRESS data:cryptoKey];
+}
+ */
+
+/*
+- (void)mintConstants
+{
+    NSString *constantsName = self.resources[@"constantsName"];
+    if (constantsName.length > 0) {
+        uint32_t constantsAddress = [self numberForKey:@"constantsAddress"];
+        FDLog(@"loading 16-bit float %@ into flash at 0x%08x...", constantsName, constantsAddress);
+        NSMutableData *constants = [NSMutableData dataWithData:[FDFireflyIceMint loadConstants:constantsName searchPath:searchPath]];
+        constants.length = ((constants.length + flash.pageSize - 1) / flash.pageSize) * flash.pageSize;
+        [flash writePages:constantsAddress data:constants erase:YES];
+        [self verify:constantsAddress data:constants];
+    }
+}
+ */
+
+- (void)mint:(FDFireflyFlash *)flash firmware:(NSString *)firmwareKey
+{
+    NSDictionary *type = self.resources[firmwareKey];
+    
+    NSString *firmwareName = type[@"firmwareName"];
+    if (firmwareName == nil) {
+        return;
+    }
+    
+    NSString *searchPath = self.resources[@"searchPath"];
+    
+    uint32_t firmwareAddress = [type[@"firmwareAddress"] unsignedIntValue];
+    FDExecutable *firmware = [self readExecutable:firmwareName type:@"THUMB Flash Release" searchPath:searchPath address:firmwareAddress];
+    FDExecutableSection *firmwareSection = firmware.sections[0];
+    NSInteger kb = (firmwareSection.data.length + 1023) / 1024;
+    FDLog(@"loading %@ (%dKB) into flash at 0x%08x...", firmwareName, kb, firmwareAddress);
+    [flash writePages:firmwareAddress data:firmwareSection.data erase:YES];
+    [self verify:firmwareAddress data:firmwareSection.data];
+
+    if (type[@"metadataAddress"] == nil) {
+        return;
+    }
+    
+    NSMutableData *metadata = [self getMetadata:firmwareSection.data];
+    metadata.length = flash.pageSize;
+    uint32_t metadataAddress = [type[@"metadataAddress"] unsignedIntValue];
+    FDLog(@"loading %@ metadata into flash at 0x%08x", firmwareName, metadataAddress);
+    [flash writePages:metadataAddress data:metadata erase:YES];
+    [self verify:metadataAddress data:metadata];
+}
+
 - (void)run
 {
     FDLog(@"Mint Starting");
@@ -84,48 +141,9 @@
     FDLog(@"starting mass erase");
     [flash massErase];
     
-    NSString *searchPath = self.resources[@"searchPath"];
-
-    NSString *bootName = self.resources[@"bootName"];
-    uint32_t bootAddress = [self numberForKey:@"bootAddress"];
-    FDExecutable *fireflyBoot = [self readExecutable:bootName type:@"THUMB Flash Release" searchPath:searchPath address:bootAddress];
-    FDLog(@"loading %@ info flash at 0x%08x...", bootName, bootAddress);
-    FDExecutableSection *fireflyBootSection = fireflyBoot.sections[0];
-    [flash writePages:bootAddress data:fireflyBootSection.data erase:YES];
-    [self verify:bootAddress data:fireflyBootSection.data];
-    
-    /*
-    FDLog(@"loading firmware update crypto key into flash...");
-    NSMutableData *cryptoKey = [NSMutableData dataWithBytes:secretKey length:sizeof(secretKey)];
-    cryptoKey.length = flash.pageSize;
-    [flash writePages:FD_UPDATE_CRYPTO_ADDRESS data:cryptoKey erase:YES];
-    [self verify:FD_UPDATE_CRYPTO_ADDRESS data:cryptoKey];
-     */
-    
-    NSString *firmwareName = self.resources[@"firmwareName"];
-    uint32_t firmwareAddress = [self numberForKey:@"firmwareAddress"];
-    FDExecutable *fireflyIce = [self readExecutable:firmwareName type:@"THUMB Flash Release" searchPath:searchPath address:firmwareAddress];
-    FDExecutableSection *fireflyIceSection = fireflyIce.sections[0];
-    NSMutableData *metadata = [self getMetadata:fireflyIceSection.data];
-    metadata.length = flash.pageSize;
-    uint32_t metadataAddress = [self numberForKey:@"metadataAddress"];
-    FDLog(@"loading %@ metadata into flash at 0x%08x", firmwareName, metadataAddress);
-    [flash writePages:metadataAddress data:metadata erase:YES];
-    [self verify:metadataAddress data:metadata];
-    
-    FDLog(@"loading %@ into flash at 0x%08x...", firmwareName, firmwareAddress);
-    [flash writePages:firmwareAddress data:fireflyIceSection.data erase:YES];
-    [self verify:firmwareAddress data:fireflyIceSection.data];
-    
-    NSString *constantsName = self.resources[@"constantsName"];
-    if (constantsName.length > 0) {
-        uint32_t constantsAddress = [self numberForKey:@"constantsAddress"];
-        FDLog(@"loading 16-bit float %@ into flash at 0x%08x...", constantsName, constantsAddress);
-        NSMutableData *constants = [NSMutableData dataWithData:[FDFireflyIceMint loadConstants:constantsName searchPath:searchPath]];
-        constants.length = ((constants.length + flash.pageSize - 1) / flash.pageSize) * flash.pageSize;
-        [flash writePages:constantsAddress data:constants erase:YES];
-        [self verify:constantsAddress data:constants];
-    }
+    [self mint:flash firmware:@"bootloader"];
+    [self mint:flash firmware:@"application"];
+    [self mint:flash firmware:@"operatingSystem"];
     
     FDLog(@"Reset & Run...");
     [self.serialWireDebug reset];

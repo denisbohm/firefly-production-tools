@@ -22,6 +22,8 @@
 
 @property (assign) IBOutlet NSTextField *jtagLabel;
 @property (assign) IBOutlet NSTextField *pcbaLabel;
+@property (assign) IBOutlet NSButton *runButton;
+@property (assign) IBOutlet NSButton *autoCheckBox;
 @property (assign) IBOutlet NSTextField *operationLabel;
 @property (assign) IBOutlet NSTextView *logView;
 
@@ -142,6 +144,7 @@
 - (void)pcbaDetected:(BOOL)detected
 {
     [_pcbaLabel setDrawsBackground:detected];
+    _runButton.enabled = detected;
 }
 
 - (void)serialWireDebugOperationDetected:(BOOL)detected
@@ -154,6 +157,7 @@
 - (void)serialWireDebugOperationStarting
 {
     _operationLabel.hidden = YES;
+    _runButton.enabled = NO;
 }
 
 - (void)operationComplete:(BOOL)success
@@ -161,6 +165,7 @@
     _operationLabel.stringValue = success ? @"pass" : @"FAIL";
     _operationLabel.backgroundColor = success ? [NSColor blueColor] : [NSColor redColor];
     _operationLabel.hidden = NO;
+    _runButton.enabled = YES;
 }
 
 - (void)serialWireDebugOperationComplete:(BOOL)success
@@ -185,6 +190,7 @@
     _operation.resources = _resources;
     _operation.usbDevice = usbDevice;
     _operation.delegate = self;
+    _operation.run = _autoCheckBox.state == NSOnState;
     __weak FDAppDelegate *appDelegate = self;
     [_operation setCompletionBlock:^{
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -192,6 +198,14 @@
         });
     }];
     [_operationQueue addOperation:_operation];
+}
+
+- (IBAction)autoChanged:(id)sender
+{
+    _operation.autoRun = _autoCheckBox.state == NSOnState;
+    if (_operation.autoRun && _operation.detected) {
+        _operation.run = YES;
+    }
 }
 
 - (void)operationComplete

@@ -22,12 +22,14 @@
 
 @interface FDSerialWireDebugOperation : NSOperation
 
+@property BOOL autoRun;
 @property BOOL run;
 @property FDLogger *logger;
 @property NSDictionary *resources;
 @property FDUSBDevice *usbDevice;
 @property FDSerialWireDebug *serialWireDebug;
 @property id<FDSerialWireDebugOperationDelegate> delegate;
+@property (readonly) BOOL detected;
 
 - (void)execute;
 

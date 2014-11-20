@@ -29,7 +29,6 @@
 - (id)init
 {
     if (self = [super init]) {
-        _run = YES;
         _logger = [[FDLogger alloc] init];
     }
     return self;
@@ -116,9 +115,12 @@
                 if (!_detected) {
                     _detected = YES;
                     [_delegate serialWireDebugOperationDetected:_detected];
+                    if (_autoRun) {
+                        self.run = YES;
+                    }
                 }
                 
-                if ([self run]) {
+                if (self.run) {
                     [NSThread sleepForTimeInterval:0.5];
                     @try {
                         [_delegate serialWireDebugOperationStarting];
@@ -133,7 +135,7 @@
                 }
             } else {
                 if (_detected) {
-                    self.run = YES;
+                    self.run = NO;
                     _detected = NO;
                     [_delegate serialWireDebugOperationDetected:_detected];
                 }

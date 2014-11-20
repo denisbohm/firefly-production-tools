@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
@@ -689,9 +689,9 @@
                         </scroller>
                     </scrollView>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0l0-k8-FRp">
-                        <rect key="frame" x="18" y="357" width="42" height="17"/>
+                        <rect key="frame" x="18" y="357" width="41" height="17"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="38" id="k4g-4h-IbF"/>
+                            <constraint firstAttribute="width" constant="37" id="7zb-xL-WLm"/>
                         </constraints>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="JTAG" id="dnE-QE-Pcl">
                             <font key="font" metaFont="system"/>
@@ -700,9 +700,9 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="25T-mT-YLy">
-                        <rect key="frame" x="64" y="357" width="42" height="17"/>
+                        <rect key="frame" x="63" y="357" width="45" height="17"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="38" id="C1K-j4-dOu"/>
+                            <constraint firstAttribute="width" constant="41" id="ykd-n8-a5H"/>
                         </constraints>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="PCBA" id="CRz-Lg-AAc">
                             <font key="font" metaFont="system"/>
@@ -711,8 +711,11 @@
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JCl-mU-eJ5">
-                        <rect key="frame" x="398" y="347" width="100" height="32"/>
-                        <buttonCell key="cell" type="push" title="Clear Log" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="B7U-QY-Ma8">
+                        <rect key="frame" x="471" y="354" width="21" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="21" id="OCi-NS-8xb"/>
+                        </constraints>
+                        <buttonCell key="cell" type="bevel" alternateTitle="Clear the Log" bezelStyle="rounded" image="NSTrashEmpty" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="B7U-QY-Ma8">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -720,9 +723,30 @@
                             <action selector="clearLog:" target="494" id="4fZ-ga-TZY"/>
                         </connections>
                     </button>
+                    <textField hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HbL-VB-RqG">
+                        <rect key="frame" x="224" y="357" width="64" height="17"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="FAIL" drawsBackground="YES" id="t4R-GR-emS">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        </textFieldCell>
+                    </textField>
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="OXm-KF-64N">
+                        <rect key="frame" x="112" y="356" width="51" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="47" id="giA-cF-t5O"/>
+                        </constraints>
+                        <buttonCell key="cell" type="check" title="Auto" bezelStyle="regularSquare" imagePosition="left" inset="2" id="dFV-Ds-bNr">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="autoChanged:" target="494" id="fa5-P0-glz"/>
+                        </connections>
+                    </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3bu-ao-H8c">
-                        <rect key="frame" x="310" y="347" width="88" height="32"/>
-                        <buttonCell key="cell" type="push" title="Re-Test" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="N0B-px-y9S">
+                        <rect key="frame" x="387" y="347" width="82" height="32"/>
+                        <buttonCell key="cell" type="push" title="Run" bezelStyle="rounded" image="NSRefreshTemplate" imagePosition="left" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="N0B-px-y9S">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -730,45 +754,41 @@
                             <action selector="runTest:" target="494" id="83U-vh-7nn"/>
                         </connections>
                     </button>
-                    <textField hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HbL-VB-RqG">
-                        <rect key="frame" x="224" y="357" width="64" height="17"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="64" id="Tu4-Uv-s78"/>
-                        </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="FAIL" drawsBackground="YES" id="t4R-GR-emS">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                        </textFieldCell>
-                    </textField>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="HbL-VB-RqG" firstAttribute="centerX" secondItem="jJe-Sx-nHf" secondAttribute="centerX" id="2pE-hT-vGd"/>
-                    <constraint firstItem="25T-mT-YLy" firstAttribute="leading" secondItem="0l0-k8-FRp" secondAttribute="trailing" constant="8" symbolic="YES" id="5hw-rV-VUP"/>
-                    <constraint firstItem="JCl-mU-eJ5" firstAttribute="leading" secondItem="3bu-ao-H8c" secondAttribute="trailing" constant="12" symbolic="YES" id="65u-To-y0e"/>
-                    <constraint firstItem="jJe-Sx-nHf" firstAttribute="leading" secondItem="0l0-k8-FRp" secondAttribute="leading" id="AwB-7M-Zum"/>
-                    <constraint firstItem="3bu-ao-H8c" firstAttribute="baseline" secondItem="HbL-VB-RqG" secondAttribute="baseline" id="CJi-9I-X1g"/>
-                    <constraint firstItem="3bu-ao-H8c" firstAttribute="top" secondItem="372" secondAttribute="top" constant="20" symbolic="YES" id="NhD-AL-6KF"/>
-                    <constraint firstItem="0l0-k8-FRp" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="20" symbolic="YES" id="Tbg-fg-OTT"/>
-                    <constraint firstItem="jJe-Sx-nHf" firstAttribute="top" secondItem="0l0-k8-FRp" secondAttribute="bottom" constant="8" symbolic="YES" id="d6W-Pd-zvK"/>
-                    <constraint firstAttribute="trailing" secondItem="JCl-mU-eJ5" secondAttribute="trailing" constant="20" symbolic="YES" id="fr6-tr-wKk"/>
-                    <constraint firstItem="3bu-ao-H8c" firstAttribute="baseline" secondItem="JCl-mU-eJ5" secondAttribute="baseline" id="hVt-Md-wcs"/>
-                    <constraint firstItem="0l0-k8-FRp" firstAttribute="baseline" secondItem="25T-mT-YLy" secondAttribute="baseline" id="lAX-e0-MdN"/>
-                    <constraint firstItem="25T-mT-YLy" firstAttribute="baseline" secondItem="HbL-VB-RqG" secondAttribute="baseline" id="moR-n2-yyw"/>
-                    <constraint firstAttribute="bottom" secondItem="jJe-Sx-nHf" secondAttribute="bottom" constant="20" symbolic="YES" id="v3i-qh-DJq"/>
-                    <constraint firstItem="jJe-Sx-nHf" firstAttribute="trailing" secondItem="JCl-mU-eJ5" secondAttribute="trailing" id="wYg-bn-F1x"/>
+                    <constraint firstItem="0l0-k8-FRp" firstAttribute="top" secondItem="372" secondAttribute="top" constant="21" id="0FY-97-Ma4"/>
+                    <constraint firstItem="jJe-Sx-nHf" firstAttribute="top" secondItem="0l0-k8-FRp" secondAttribute="bottom" constant="8" symbolic="YES" id="0Od-BU-7sg"/>
+                    <constraint firstItem="jJe-Sx-nHf" firstAttribute="leading" secondItem="0l0-k8-FRp" secondAttribute="leading" id="7AL-cb-x7Q"/>
+                    <constraint firstAttribute="trailing" secondItem="JCl-mU-eJ5" secondAttribute="trailing" constant="20" symbolic="YES" id="DYy-xO-Nwh"/>
+                    <constraint firstItem="JCl-mU-eJ5" firstAttribute="leading" secondItem="3bu-ao-H8c" secondAttribute="trailing" constant="8" symbolic="YES" id="F0W-oh-VWV"/>
+                    <constraint firstItem="3bu-ao-H8c" firstAttribute="bottom" secondItem="JCl-mU-eJ5" secondAttribute="bottom" id="OtD-r8-24g"/>
+                    <constraint firstItem="JCl-mU-eJ5" firstAttribute="trailing" secondItem="jJe-Sx-nHf" secondAttribute="trailing" id="RKk-36-UWM"/>
+                    <constraint firstItem="HbL-VB-RqG" firstAttribute="leading" secondItem="OXm-KF-64N" secondAttribute="trailing" constant="63" id="TGi-f7-cfh"/>
+                    <constraint firstItem="OXm-KF-64N" firstAttribute="leading" secondItem="25T-mT-YLy" secondAttribute="trailing" constant="8" symbolic="YES" id="VYw-cm-fHJ"/>
+                    <constraint firstItem="HbL-VB-RqG" firstAttribute="centerX" secondItem="jJe-Sx-nHf" secondAttribute="centerX" id="WCe-dZ-9Hq"/>
+                    <constraint firstItem="0l0-k8-FRp" firstAttribute="baseline" secondItem="25T-mT-YLy" secondAttribute="baseline" id="WgT-lN-FLC"/>
+                    <constraint firstItem="3bu-ao-H8c" firstAttribute="top" secondItem="372" secondAttribute="top" constant="20" symbolic="YES" id="YTp-69-zFQ"/>
+                    <constraint firstItem="0l0-k8-FRp" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="20" symbolic="YES" id="fnh-4n-gsn"/>
+                    <constraint firstItem="OXm-KF-64N" firstAttribute="baseline" secondItem="HbL-VB-RqG" secondAttribute="baseline" id="gfd-TM-iSu"/>
+                    <constraint firstItem="JCl-mU-eJ5" firstAttribute="top" secondItem="3bu-ao-H8c" secondAttribute="top" id="hg2-UH-MeP"/>
+                    <constraint firstAttribute="bottom" secondItem="jJe-Sx-nHf" secondAttribute="bottom" constant="20" symbolic="YES" id="hqF-Y1-Y0j"/>
+                    <constraint firstItem="25T-mT-YLy" firstAttribute="baseline" secondItem="OXm-KF-64N" secondAttribute="baseline" id="iMV-4e-rN3"/>
+                    <constraint firstItem="25T-mT-YLy" firstAttribute="leading" secondItem="0l0-k8-FRp" secondAttribute="trailing" constant="8" symbolic="YES" id="rS1-H9-91q"/>
+                    <constraint firstItem="3bu-ao-H8c" firstAttribute="baseline" secondItem="HbL-VB-RqG" secondAttribute="baseline" id="xTT-ar-Orp"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="319" y="64.5"/>
         </window>
         <customObject id="494" customClass="FDAppDelegate">
             <connections>
+                <outlet property="autoCheckBox" destination="OXm-KF-64N" id="f3q-Hn-BOc"/>
                 <outlet property="jtagLabel" destination="0l0-k8-FRp" id="thj-aE-mfZ"/>
                 <outlet property="logView" destination="omE-lX-8Ed" id="SXa-qU-LIq"/>
                 <outlet property="operationLabel" destination="HbL-VB-RqG" id="hNb-2o-nRU"/>
                 <outlet property="pcbaLabel" destination="25T-mT-YLy" id="zvb-Gb-k8b"/>
                 <outlet property="preferencesPanel" destination="Zjd-fX-TpC" id="Kr0-a8-SEh"/>
                 <outlet property="programCheckBox" destination="nfH-SU-jM3" id="0B7-nJ-Sot"/>
+                <outlet property="runButton" destination="3bu-ao-H8c" id="xfk-mW-9UM"/>
                 <outlet property="targetOptionsView" destination="DLF-31-M3d" id="rgH-ac-KTV"/>
                 <outlet property="testBLECheckBox" destination="UGB-LX-UTP" id="xcO-uL-nlv"/>
                 <outlet property="testBatteryCheckBox" destination="CWn-ok-P9W" id="GP7-oM-XTB"/>
@@ -888,4 +908,8 @@
             </buttonCell>
         </button>
     </objects>
+    <resources>
+        <image name="NSRefreshTemplate" width="11" height="15"/>
+        <image name="NSTrashEmpty" width="32" height="32"/>
+    </resources>
 </document>
