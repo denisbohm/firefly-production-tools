@@ -11,6 +11,7 @@
 #import <FireflyDevice/FDBinary.h>
 #import <FireflyDevice/FDCrypto.h>
 #import <FireflyDevice/FDIEEE754.h>
+#import <FireflyDevice/FDIntelHex.h>
 
 #import <FireflyProduction/FDExecutable.h>
 #import <FireflyProduction/FDFireflyFlash.h>
@@ -49,7 +50,8 @@
                 break;
             }
         }
-        @throw [NSException exceptionWithName:@"verify issue"reason:[NSString stringWithFormat:@"verify issue at %lu %02x != %02x", (unsigned long)i, dataBytes[i], verifyBytes[i]] userInfo:nil];
+        @throw [NSException exceptionWithName:@"verify issue"reason:
+                [NSString stringWithFormat:@"verify issue at (%lu) 0x%08lx %02x != %02x", (unsigned long)i, address + i, dataBytes[i], verifyBytes[i]] userInfo:nil];
     }
 }
 
@@ -97,6 +99,39 @@
 }
  */
 
+- (FDIntelHex *)loadIntelHex:(NSString *)path address:(uint32_t)address
+{
+    NSString *content = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+    return [FDIntelHex intelHex:content address:address length:0x40000 - address];
+}
+
+- (NSString *)getIntelHexPath:(NSString *)searchpath name:(NSString *)name
+{
+    NSString *path = [NSString stringWithFormat:@"%@/%@.hex", searchpath, name];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return path;
+    }
+    path = [NSString stringWithFormat:@"%@/release/%@.hex", searchpath, name];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return path;
+    }
+    path = [NSString stringWithFormat:@"%@/%@/%@_softdevice.hex", searchpath, name, name];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return path;
+    }
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    path = [mainBundle pathForResource:name ofType:@"hex"];
+    if (path != nil) {
+        return path;
+    }
+    NSBundle *classBundle = [NSBundle bundleForClass:[self class]];
+    path = [classBundle pathForResource:name ofType:@"hex"];
+    if (path != nil) {
+        return path;
+    }
+    @throw [NSException exceptionWithName:@"FirmwareUpdateFileNotFound" reason:@"firmware update file not found" userInfo:nil];
+}
+
 - (void)mint:(FDFireflyFlash *)flash firmware:(NSString *)firmwareKey
 {
     NSDictionary *type = self.resources[firmwareKey];
@@ -109,18 +144,25 @@
     NSString *searchPath = self.resources[@"searchPath"];
     
     uint32_t firmwareAddress = [type[@"firmwareAddress"] unsignedIntValue];
+    /*
     FDExecutable *firmware = [self readExecutable:firmwareName type:@"THUMB Flash Release" searchPath:searchPath address:firmwareAddress];
     FDExecutableSection *firmwareSection = firmware.sections[0];
-    NSInteger kb = (firmwareSection.data.length + 1023) / 1024;
+     */
+    NSString *path = [self getIntelHexPath:searchPath name:firmwareName];
+    FDIntelHex *firmware = [self loadIntelHex:path address:firmwareAddress];
+    NSInteger kb = (firmware.data.length + 1023) / 1024;
+    NSMutableData *firmwareData = [NSMutableData dataWithData:firmware.data];
+    NSInteger pages = (firmwareData.length + flash.pageSize - 1) / flash.pageSize;
+    firmwareData.length = pages * flash.pageSize;
     FDLog(@"loading %@ (%dKB) into flash at 0x%08x...", firmwareName, kb, firmwareAddress);
-    [flash writePages:firmwareAddress data:firmwareSection.data erase:YES];
-    [self verify:firmwareAddress data:firmwareSection.data];
+    [flash writePages:firmwareAddress data:firmwareData erase:YES];
+    [self verify:firmwareAddress data:firmware.data];
 
     if (type[@"metadataAddress"] == nil) {
         return;
     }
     
-    NSMutableData *metadata = [self getMetadata:firmwareSection.data];
+    NSMutableData *metadata = [self getMetadata:firmware.data];
     metadata.length = flash.pageSize;
     uint32_t metadataAddress = [type[@"metadataAddress"] unsignedIntValue];
     FDLog(@"loading %@ metadata into flash at 0x%08x", firmwareName, metadataAddress);

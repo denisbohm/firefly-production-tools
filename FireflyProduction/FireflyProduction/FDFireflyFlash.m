@@ -18,7 +18,6 @@
 
 @property FDExecutable *fireflyFlashExecutable;
 @property uint32_t fireflyFlashProgramEnd;
-@property uint32_t pagesPerWrite;
 
 @end
 
@@ -82,7 +81,7 @@
     }
     _fireflyFlashExecutable = [[FDExecutable alloc] init];
     [_fireflyFlashExecutable load:path];
-    _fireflyFlashExecutable.sections = [_fireflyFlashExecutable combineAllSectionsType:FDExecutableSectionTypeProgram address:0x20000000 length:0x8000 pageSize:4];
+    _fireflyFlashExecutable.sections = [_fireflyFlashExecutable combineAllSectionsType:FDExecutableSectionTypeProgram address:_ramAddress length:_ramSize pageSize:4];
 
     for (FDExecutableSection *section in _fireflyFlashExecutable.sections) {
         switch (section.type) {

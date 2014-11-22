@@ -34,6 +34,12 @@
     self.ramSize = 32768;
 }
 
+- (void)setupCortexM
+{
+    [super setupCortexM];
+    self.pagesPerWrite = 1;
+}
+
 - (void)massErase
 {
     [self.serialWireDebug writeMemory:NRF_NVMC_CONFIG value:NRF_NVMC_CONFIG_WEN_Een];

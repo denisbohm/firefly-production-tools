@@ -27,6 +27,8 @@
 @property uint32_t ramAddress;
 @property uint32_t ramSize;
 
+@property uint32_t pagesPerWrite;
+
 - (void)initialize:(FDSerialWireDebug *)serialWireDebug;
 
 - (BOOL)disableWatchdogByErasingIfNeeded;
@@ -42,6 +44,7 @@
 - (BOOL)debugLock;
 
 // for use by subclasses
+- (void)setupCortexM;
 - (void)loadFireflyFlashFirmwareIntoRAM;
 
 @end
