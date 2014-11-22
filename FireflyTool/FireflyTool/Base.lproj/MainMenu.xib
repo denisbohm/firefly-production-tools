@@ -777,7 +777,7 @@
                     <constraint firstItem="3bu-ao-H8c" firstAttribute="baseline" secondItem="HbL-VB-RqG" secondAttribute="baseline" id="xTT-ar-Orp"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="319" y="64.5"/>
+            <point key="canvasLocation" x="340" y="-294.5"/>
         </window>
         <customObject id="494" customClass="FDAppDelegate">
             <connections>
@@ -897,7 +897,7 @@
                     <constraint firstItem="Mxb-r2-cqP" firstAttribute="leading" secondItem="1ag-Eh-yGd" secondAttribute="leading" constant="20" symbolic="YES" id="scP-6v-zf8"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="318.5" y="345"/>
+            <point key="canvasLocation" x="280.5" y="200"/>
         </window>
         <button id="r7V-mY-wEc">
             <rect key="frame" x="0.0" y="0.0" width="109" height="18"/>

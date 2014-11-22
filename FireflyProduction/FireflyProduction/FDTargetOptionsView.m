@@ -193,7 +193,7 @@
     @try {
         NSString *searchPath = target[@"searchPath"];
         if (searchPath != nil) {
-            NSURL *URL = [NSURL fileURLWithPath:searchPath];
+            NSURL *URL = [NSURL fileURLWithPath:[searchPath stringByStandardizingPath]];
             if ([URL isFileURL]) {
                 _searchPathControl.URL = URL;
             }

@@ -93,6 +93,8 @@
     }
     [self resourceChange:self];
     
+    _targetOptionsView.delegate = self;
+    
 #if 0
     _radioTest = [[FDRadioTest alloc] init];
     _radioTest.logger = self.logger;

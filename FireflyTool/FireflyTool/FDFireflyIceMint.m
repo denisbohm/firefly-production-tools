@@ -145,6 +145,22 @@
     [self mint:flash firmware:@"application"];
     [self mint:flash firmware:@"operatingSystem"];
     
+    // nRF51 series softdevice requires the bootloader address to be written to UICR->BOOTLOADERADDR -denis
+    if ([processor isEqualToString:@"NRF51"]) {
+        NSDictionary *bootloader = self.resources[@"bootloader"];
+        NSString *bootloaderName = bootloader[@"firmwareName"];
+        NSDictionary *operatingSystem = self.resources[@"operatingSystem"];
+        NSString *operatingSystemName = operatingSystem[@"firmwareName"];
+        if ((bootloaderName != nil) && (operatingSystemName != nil)) {
+            uint32_t bootloaderAddress = [bootloader[@"firmwareAddress"] unsignedIntValue];
+#define UICR 0x10001000
+#define BOOTLOADERADDR 0x014
+#define UICR_BOOTLOADERADDR (UICR + BOOTLOADERADDR)
+            FDLog(@"writing bootloader address 0x%08x to UICR->BOOTLOADERADDR", bootloaderAddress);
+            [self.serialWireDebug writeMemory:UICR_BOOTLOADERADDR value:bootloaderAddress];
+        }
+    }
+    
     FDLog(@"Reset & Run...");
     [self.serialWireDebug reset];
     [self.serialWireDebug run];
