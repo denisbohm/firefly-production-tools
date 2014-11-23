@@ -213,7 +213,7 @@
 #endif
     
     NSArray *allFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:searchPath error:nil];
-    NSArray *files = [allFiles filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(self BEGINSWITH %@) AND (self ENDSWITH '.hex')", name]];
+    NSArray *files = [allFiles filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"((self BEGINSWITH %@) AND (self ENDSWITH '.hex')) OR (self == %@)", [NSString stringWithFormat:@"%@-", name], [NSString stringWithFormat:@"%@.hex", name]]];
     files = [files sortedArrayUsingComparator: ^(id oa, id ob) {
         NSString *a = (NSString *)oa;
         NSString *b = (NSString *)ob;
