@@ -16,25 +16,75 @@
 #import <FireflyProduction/FDExecutable.h>
 #import <FireflyProduction/FDFireflyFlash.h>
 
-@interface FDFireflyIceMint ()
+@interface FDVersion : NSObject
+@property uint16_t major;
+@property uint16_t minor;
+@property uint16_t patch;
+@property uint32_t capabilities;
+@property NSData *commit;
+@end
 
+@implementation FDVersion
 @end
 
 @implementation FDFireflyIceMint
 
 //static uint8_t secretKey[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
 
-- (NSMutableData *)getMetadata:(NSData *)data
+- (FDVersion *)getVersion:(NSDictionary *)properties
 {
-    NSData *hash = [FDCrypto sha1:data];
+    FDVersion *version = [[FDVersion alloc] init];
+    version.major = [properties[@"major"] unsignedShortValue];
+    version.major = [properties[@"minor"] unsignedShortValue];
+    version.major = [properties[@"patch"] unsignedShortValue];
+    version.capabilities = [properties[@"capabilities"] unsignedIntValue];
+    NSString *s = properties[@"commit"];
+    NSMutableData *commit = [NSMutableData data];
+    if (s.length == 40) {
+        for (int i = 0; i < 20; ++i) {
+            unsigned value;
+            NSScanner* scanner = [NSScanner scannerWithString:[s substringWithRange:NSMakeRange(i * 2, 2)]];
+            [scanner scanHexInt:&value];
+            uint8_t byte = value;
+            [commit appendBytes:&byte length:1];
+        }
+    } else {
+        commit.length = 20;
+    }
+    version.commit = commit;
+    return version;
+}
+
+#define FD_VERSION_MAGIC 0xb001da1a
+
+- (NSMutableData *)getMetadata:(FDIntelHex *)firmware
+{
     FDBinary *binary = [[FDBinary alloc] init];
+    
+#if 1
+    [binary putUInt32:FD_VERSION_MAGIC];
+#endif
+    
+    // fd_version_binary_t
     [binary putUInt32:0]; // flags
-    [binary putUInt32:(uint32_t)data.length];
+    [binary putUInt32:(uint32_t)firmware.data.length];
+    NSData *hash = [FDCrypto sha1:firmware.data];
     [binary putData:hash];
     [binary putData:hash];
     NSMutableData *iv = [NSMutableData data];
     iv.length = 16;
     [binary putData:iv];
+    
+#if 1
+    // fd_version_revision_t
+    FDVersion *version = [self getVersion:firmware.properties];
+    [binary putUInt16:version.major]; // major
+    [binary putUInt16:version.minor]; // minor
+    [binary putUInt16:version.patch]; // patch
+    [binary putUInt32:version.capabilities]; // capabilities
+    [binary putData:version.commit]; // commit
+#endif
+    
     return [NSMutableData dataWithData:[binary dataValue]];
 }
 
@@ -157,12 +207,12 @@
     FDLog(@"loading %@ (%dKB) into flash at 0x%08x...", firmwareName, kb, firmwareAddress);
     [flash writePages:firmwareAddress data:firmwareData erase:YES];
     [self verify:firmwareAddress data:firmware.data];
-
+    
     if (type[@"metadataAddress"] == nil) {
         return;
     }
     
-    NSMutableData *metadata = [self getMetadata:firmware.data];
+    NSMutableData *metadata = [self getMetadata:firmware];
     metadata.length = flash.pageSize;
     uint32_t metadataAddress = [type[@"metadataAddress"] unsignedIntValue];
     FDLog(@"loading %@ metadata into flash at 0x%08x", firmwareName, metadataAddress);

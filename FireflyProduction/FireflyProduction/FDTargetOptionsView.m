@@ -237,8 +237,8 @@
                              @"name": @"Atlas STM",
                              @"application": @{
                                      @"firmwareName": @"aw_stm",
-                                     @"firmwareAddress": @"0x0800C000",
-                                     @"metadataAddress": @"0x08004000",
+                                     @"firmwareAddress": @"0x08004000",
+                                     @"metadataAddress": @"",
                                      },
                              @"bootloader": @{
                                      @"firmwareName": @"aw_stm_boot",
