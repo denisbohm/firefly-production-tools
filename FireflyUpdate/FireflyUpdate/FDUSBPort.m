@@ -114,7 +114,7 @@
     id<FDFireflyIceChannel> channel = helloTask.channel;
     FDFirmwareUpdateTask *task = [FDFirmwareUpdateTask firmwareUpdateTask:fireflyIce channel:channel intelHex:_firmware];
     task.useArea = YES;
-    task.area = FD_HAL_SYSTEM_AREA_APPLICATION;
+    task.area = _area;
     task.downgrade = YES;
     task.commit = YES;
     task.reset = YES;

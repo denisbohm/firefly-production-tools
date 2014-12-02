@@ -29,6 +29,7 @@
 @property IBOutlet NSTextField *usbVendorIdTextField;
 @property IBOutlet NSTextField *usbProductIdTextField;
 @property IBOutlet NSTextField *firmwareNameTextField;
+@property IBOutlet NSComboBox *firmwareTypeComboBox;
 @property IBOutlet NSPathControl *searchPathControl;
 
 @property NSArray *usbPorts;
@@ -110,6 +111,7 @@
     [userDefaults setObject:_usbVendorIdTextField.stringValue forKey:@"usbVendorID"];
     [userDefaults setObject:_usbProductIdTextField.stringValue forKey:@"usbProductID"];
     [userDefaults setObject:_firmwareNameTextField.stringValue forKey:@"firmwareName"];
+    [userDefaults setObject:_firmwareTypeComboBox.stringValue forKey:@"firmwareType"];
     if ([_searchPathControl.URL isFileURL]) {
         [userDefaults setObject:[_searchPathControl.URL path] forKey:@"searchPath"];
     } else {
@@ -161,6 +163,9 @@
     if ([userDefaults objectForKey:@"firmwareName"]) {
         _firmwareNameTextField.stringValue = [userDefaults stringForKey:@"firmwareName"];
     }
+    if ([userDefaults objectForKey:@"firmwareType"]) {
+        [_firmwareTypeComboBox selectItemWithObjectValue:[userDefaults stringForKey:@"firmwareType"]];
+    }
     if ([userDefaults objectForKey:@"usbVendorID"]) {
         _usbVendorIdTextField.stringValue = [userDefaults stringForKey:@"usbVendorID"];
     }
@@ -190,6 +195,7 @@
     NSURL *URL = [NSURL fileURLWithPath:searchPath isDirectory:YES];
     _searchPathControl.URL = URL;
     _firmwareNameTextField.stringValue = @"FireflyIce";
+    _firmwareTypeComboBox.stringValue = @"Application";
     _usbVendorIdTextField.stringValue = @"0x2333";
     _usbProductIdTextField.stringValue = @"0x0002";
     
@@ -310,6 +316,10 @@
         }
     }
     usbPort.firmware = [self getFirmware];
+    usbPort.area = _firmwareTypeComboBox.indexOfSelectedItem;
+    if (usbPort.area >= 6) {
+        usbPort.area = 1;
+    }
     [usbPort start:usbHidDevice];
 }
 

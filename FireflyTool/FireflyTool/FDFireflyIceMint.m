@@ -31,13 +31,25 @@
 
 //static uint8_t secretKey[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
 
++ (uint32_t)getHexUInt32:(NSString *)hex
+{
+    if (hex) {
+        NSScanner *scanner = [NSScanner scannerWithString:hex];
+        unsigned int value = 0;
+        if ([scanner scanHexInt:&value]) {
+            return value;
+        }
+    }
+    return 0;
+}
+
 - (FDVersion *)getVersion:(NSDictionary *)properties
 {
     FDVersion *version = [[FDVersion alloc] init];
     version.major = [properties[@"major"] unsignedShortValue];
     version.major = [properties[@"minor"] unsignedShortValue];
     version.major = [properties[@"patch"] unsignedShortValue];
-    version.capabilities = [properties[@"capabilities"] unsignedIntValue];
+    version.capabilities = [FDFireflyIceMint getHexUInt32:properties[@"capabilities"]];
     NSString *s = properties[@"commit"];
     NSMutableData *commit = [NSMutableData data];
     if (s.length == 40) {
@@ -250,6 +262,10 @@
 #define UICR_BOOTLOADERADDR (UICR + BOOTLOADERADDR)
             FDLog(@"writing bootloader address 0x%08x to UICR->BOOTLOADERADDR", bootloaderAddress);
             [self.serialWireDebug writeMemory:UICR_BOOTLOADERADDR value:bootloaderAddress];
+            uint32_t verify = [self.serialWireDebug readMemory:UICR_BOOTLOADERADDR];
+            if (verify != bootloaderAddress) {
+//                @throw [NSException exceptionWithName:@"verify issue" reason:[NSString stringWithFormat:@"verify issue at 0x%08x %08x != %08x", UICR_BOOTLOADERADDR, bootloaderAddress, verify] userInfo:nil];
+            }
         }
     }
     
