@@ -15,6 +15,7 @@
 
 #import <FireflyProduction/FDExecutable.h>
 #import <FireflyProduction/FDFireflyFlash.h>
+#import <FireflyProduction/FDFireflyFlashNRF51.h>
 
 @interface FDVersion : NSObject
 @property uint16_t major;
@@ -232,6 +233,10 @@
     [self verify:metadataAddress data:metadata];
 }
 
+#define UICR 0x10001000
+#define BOOTLOADERADDR 0x014
+#define UICR_BOOTLOADERADDR (UICR + BOOTLOADERADDR)
+
 - (void)run
 {
     FDLog(@"Mint Starting");
@@ -242,6 +247,7 @@
     flash.searchPath = self.resources[@"searchPath"];
     flash.logger = self.logger;
     [flash initialize:self.serialWireDebug];
+    
     FDLog(@"starting mass erase");
     [flash massErase];
     
@@ -249,6 +255,7 @@
     [self mint:flash firmware:@"application"];
     [self mint:flash firmware:@"operatingSystem"];
     
+#if 0
     // nRF51 series softdevice requires the bootloader address to be written to UICR->BOOTLOADERADDR -denis
     if ([processor isEqualToString:@"NRF51"]) {
         NSDictionary *bootloader = self.resources[@"bootloader"];
@@ -257,17 +264,22 @@
         NSString *operatingSystemName = operatingSystem[@"firmwareName"];
         if ((bootloaderName != nil) && (operatingSystemName != nil)) {
             uint32_t bootloaderAddress = [bootloader[@"firmwareAddress"] unsignedIntValue];
-#define UICR 0x10001000
-#define BOOTLOADERADDR 0x014
-#define UICR_BOOTLOADERADDR (UICR + BOOTLOADERADDR)
             FDLog(@"writing bootloader address 0x%08x to UICR->BOOTLOADERADDR", bootloaderAddress);
-            [self.serialWireDebug writeMemory:UICR_BOOTLOADERADDR value:bootloaderAddress];
+            NSMutableData *data = [NSMutableData dataWithData:[self.serialWireDebug readMemory:UICR length:flash.pageSize]];
+            uint8_t *bytes = (uint8_t *)data.bytes;
+            uint32_t index = BOOTLOADERADDR;
+            bytes[index++] = bootloaderAddress;
+            bytes[index++] = bootloaderAddress >> 8;
+            bytes[index++] = bootloaderAddress >> 16;
+            bytes[index++] = bootloaderAddress >> 24;
+            [flash writePages:UICR data:data erase:NO];
             uint32_t verify = [self.serialWireDebug readMemory:UICR_BOOTLOADERADDR];
             if (verify != bootloaderAddress) {
-//                @throw [NSException exceptionWithName:@"verify issue" reason:[NSString stringWithFormat:@"verify issue at 0x%08x %08x != %08x", UICR_BOOTLOADERADDR, bootloaderAddress, verify] userInfo:nil];
+                @throw [NSException exceptionWithName:@"verify issue" reason:[NSString stringWithFormat:@"verify issue at 0x%08x %08x != %08x", UICR_BOOTLOADERADDR, bootloaderAddress, verify] userInfo:nil];
             }
         }
     }
+#endif
     
     FDLog(@"Reset & Run...");
     [self.serialWireDebug reset];

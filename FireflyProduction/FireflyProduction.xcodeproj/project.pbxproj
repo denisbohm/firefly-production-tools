@@ -17,9 +17,9 @@
 		9214AEDD17309E5700F7707E /* features.xml in Resources */ = {isa = PBXBuildFile; fileRef = 9214AEDB17309E5700F7707E /* features.xml */; };
 		9214AEDE17309E5700F7707E /* memory-map.xml in Resources */ = {isa = PBXBuildFile; fileRef = 9214AEDC17309E5700F7707E /* memory-map.xml */; };
 		9229C48817E4FFAF00B87C60 /* ARMSerialWireDebug.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9229C48117E4FF3C00B87C60 /* ARMSerialWireDebug.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		924988DC1A1AD98400397E54 /* FDFireflyFlashNRF51.h in Headers */ = {isa = PBXBuildFile; fileRef = 924988DA1A1AD98400397E54 /* FDFireflyFlashNRF51.h */; };
+		924988DC1A1AD98400397E54 /* FDFireflyFlashNRF51.h in Headers */ = {isa = PBXBuildFile; fileRef = 924988DA1A1AD98400397E54 /* FDFireflyFlashNRF51.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		924988DD1A1AD98400397E54 /* FDFireflyFlashNRF51.m in Sources */ = {isa = PBXBuildFile; fileRef = 924988DB1A1AD98400397E54 /* FDFireflyFlashNRF51.m */; };
-		924988E41A1AF84F00397E54 /* FDFireflyFlashNANO1XX.h in Headers */ = {isa = PBXBuildFile; fileRef = 924988E21A1AF84F00397E54 /* FDFireflyFlashNANO1XX.h */; };
+		924988E41A1AF84F00397E54 /* FDFireflyFlashNANO1XX.h in Headers */ = {isa = PBXBuildFile; fileRef = 924988E21A1AF84F00397E54 /* FDFireflyFlashNANO1XX.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		924988E51A1AF84F00397E54 /* FDFireflyFlashNANO1XX.m in Sources */ = {isa = PBXBuildFile; fileRef = 924988E31A1AF84F00397E54 /* FDFireflyFlashNANO1XX.m */; };
 		927E8574179F3AF90038CEFC /* FireflyFlashEFM32.elf in Resources */ = {isa = PBXBuildFile; fileRef = 927E8573179F3AF90038CEFC /* FireflyFlashEFM32.elf */; };
 		92898BDE179E35D0007B84B7 /* FDFireflyFlash.h in Headers */ = {isa = PBXBuildFile; fileRef = 92898BDC179E35D0007B84B7 /* FDFireflyFlash.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -47,9 +47,9 @@
 		92E77561173098FB00A111DF /* libelf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E7755F173098FB00A111DF /* libelf.a */; };
 		92E775631730991F00A111DF /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E775621730991F00A111DF /* IOKit.framework */; };
 		92E775651730993F00A111DF /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E775641730993F00A111DF /* IOBluetooth.framework */; };
-		92F5DD7019A533A7004ADB5D /* FDFireflyFlashEFM32.h in Headers */ = {isa = PBXBuildFile; fileRef = 92F5DD6E19A533A7004ADB5D /* FDFireflyFlashEFM32.h */; };
+		92F5DD7019A533A7004ADB5D /* FDFireflyFlashEFM32.h in Headers */ = {isa = PBXBuildFile; fileRef = 92F5DD6E19A533A7004ADB5D /* FDFireflyFlashEFM32.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92F5DD7119A533A7004ADB5D /* FDFireflyFlashEFM32.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F5DD6F19A533A7004ADB5D /* FDFireflyFlashEFM32.m */; };
-		92F5DD7819A53D01004ADB5D /* FDFireflyFlashSTM32F4.h in Headers */ = {isa = PBXBuildFile; fileRef = 92F5DD7619A53D01004ADB5D /* FDFireflyFlashSTM32F4.h */; };
+		92F5DD7819A53D01004ADB5D /* FDFireflyFlashSTM32F4.h in Headers */ = {isa = PBXBuildFile; fileRef = 92F5DD7619A53D01004ADB5D /* FDFireflyFlashSTM32F4.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92F5DD7919A53D01004ADB5D /* FDFireflyFlashSTM32F4.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F5DD7719A53D01004ADB5D /* FDFireflyFlashSTM32F4.m */; };
 		92F5DD7B19A552CB004ADB5D /* FireflyFlashSTM32F4.elf in Resources */ = {isa = PBXBuildFile; fileRef = 92F5DD7A19A552CB004ADB5D /* FireflyFlashSTM32F4.elf */; };
 /* End PBXBuildFile section */
@@ -358,13 +358,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				9212248D1A084B7F002006AA /* FDBuilderView.h in Headers */,
+				92E775521730979E00A111DF /* FDExecutable.h in Headers */,
+				92898BDE179E35D0007B84B7 /* FDFireflyFlash.h in Headers */,
+				92E775561730979E00A111DF /* FDGdbServer.h in Headers */,
 				92F5DD7019A533A7004ADB5D /* FDFireflyFlashEFM32.h in Headers */,
 				92F5DD7819A53D01004ADB5D /* FDFireflyFlashSTM32F4.h in Headers */,
 				924988E41A1AF84F00397E54 /* FDFireflyFlashNANO1XX.h in Headers */,
-				92E775521730979E00A111DF /* FDExecutable.h in Headers */,
 				924988DC1A1AD98400397E54 /* FDFireflyFlashNRF51.h in Headers */,
-				92898BDE179E35D0007B84B7 /* FDFireflyFlash.h in Headers */,
-				92E775561730979E00A111DF /* FDGdbServer.h in Headers */,
 				921224911A084CB8002006AA /* FDTargetOptionsView.h in Headers */,
 				92E775581730979E00A111DF /* FDGdbServerSwd.h in Headers */,
 				92BF96241829F38700C37412 /* FDUsbTest.h in Headers */,

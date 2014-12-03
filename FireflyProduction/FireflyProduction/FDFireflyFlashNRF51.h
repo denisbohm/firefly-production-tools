@@ -10,4 +10,6 @@
 
 @interface FDFireflyFlashNRF51 : FDFireflyFlash
 
+- (void)eraseUICR;
+
 @end
