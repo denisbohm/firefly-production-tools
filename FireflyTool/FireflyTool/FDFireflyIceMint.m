@@ -255,7 +255,7 @@
     [self mint:flash firmware:@"application"];
     [self mint:flash firmware:@"operatingSystem"];
     
-#if 0
+#if 1
     // nRF51 series softdevice requires the bootloader address to be written to UICR->BOOTLOADERADDR -denis
     if ([processor isEqualToString:@"NRF51"]) {
         NSDictionary *bootloader = self.resources[@"bootloader"];

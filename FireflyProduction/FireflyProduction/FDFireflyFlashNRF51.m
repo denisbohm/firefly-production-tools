@@ -40,7 +40,9 @@
 - (void)setupCortexM
 {
     [super setupCortexM];
-    self.pagesPerWrite = 1;
+    if (self.pagesPerWrite > 4) {
+        self.pagesPerWrite = 4;
+    }
 }
 
 - (void)massErase
