@@ -21,8 +21,6 @@
 		9205981C17FCAB230027FAAD /* FDFireflyIceMint.m in Sources */ = {isa = PBXBuildFile; fileRef = 9205981117FCAB230027FAAD /* FDFireflyIceMint.m */; };
 		9205981D17FCAB230027FAAD /* FDFireflyIceRadioTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9205981317FCAB230027FAAD /* FDFireflyIceRadioTest.m */; };
 		9205981E17FCAB230027FAAD /* FDFireflyIceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9205981517FCAB230027FAAD /* FDFireflyIceTest.m */; };
-		9205981F17FCAB230027FAAD /* FDSerialWireDebugTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 9205981717FCAB230027FAAD /* FDSerialWireDebugTask.m */; };
-		9205982017FCAB230027FAAD /* FDSerialWireDebugTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9205981917FCAB230027FAAD /* FDSerialWireDebugTest.m */; };
 		9205982117FCAB230027FAAD /* FireflyBoot.elf in Resources */ = {isa = PBXBuildFile; fileRef = 9205981A17FCAB230027FAAD /* FireflyBoot.elf */; };
 		9205982217FCAB230027FAAD /* FireflyIce.elf in Resources */ = {isa = PBXBuildFile; fileRef = 9205981B17FCAB230027FAAD /* FireflyIce.elf */; };
 		9205984317FCAEAF0027FAAD /* ARMSerialWireDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9205982C17FCAD290027FAAD /* ARMSerialWireDebug.framework */; };
@@ -33,7 +31,6 @@
 		92BF961C1829F01500C37412 /* FDFireflyIceUsbTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BF961B1829F01500C37412 /* FDFireflyIceUsbTest.m */; };
 		92C0D8311825BB12001884EC /* FireflyRadioTest.elf in Resources */ = {isa = PBXBuildFile; fileRef = 92C0D8301825BB12001884EC /* FireflyRadioTest.elf */; };
 		92C66E24182ABB3C000F5FD5 /* FireflyUsbTest.elf in Resources */ = {isa = PBXBuildFile; fileRef = 92C66E23182ABB3C000F5FD5 /* FireflyUsbTest.elf */; };
-		92DF4B7217FCC54E004C68C7 /* FDSerialWireDebugOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92DF4B7117FCC54E004C68C7 /* FDSerialWireDebugOperation.m */; };
 		92E66A4718146C370054A9C2 /* FireflyIceTest.elf in Resources */ = {isa = PBXBuildFile; fileRef = 92E66A4618146C370054A9C2 /* FireflyIceTest.elf */; };
 		92F5244F1919B4CD00491532 /* FireflyDevice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F5244A1919B4B600491532 /* FireflyDevice.framework */; };
 		92F524511919DA6900491532 /* FireflyDevice.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92F5244A1919B4B600491532 /* FireflyDevice.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -167,10 +164,6 @@
 		9205981317FCAB230027FAAD /* FDFireflyIceRadioTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFireflyIceRadioTest.m; sourceTree = "<group>"; };
 		9205981417FCAB230027FAAD /* FDFireflyIceTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFireflyIceTest.h; sourceTree = "<group>"; };
 		9205981517FCAB230027FAAD /* FDFireflyIceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFireflyIceTest.m; sourceTree = "<group>"; };
-		9205981617FCAB230027FAAD /* FDSerialWireDebugTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDSerialWireDebugTask.h; sourceTree = "<group>"; };
-		9205981717FCAB230027FAAD /* FDSerialWireDebugTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDSerialWireDebugTask.m; sourceTree = "<group>"; };
-		9205981817FCAB230027FAAD /* FDSerialWireDebugTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDSerialWireDebugTest.h; sourceTree = "<group>"; };
-		9205981917FCAB230027FAAD /* FDSerialWireDebugTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDSerialWireDebugTest.m; sourceTree = "<group>"; };
 		9205981A17FCAB230027FAAD /* FireflyBoot.elf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FireflyBoot.elf; sourceTree = "<group>"; };
 		9205981B17FCAB230027FAAD /* FireflyIce.elf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FireflyIce.elf; sourceTree = "<group>"; };
 		9205982617FCAD290027FAAD /* ARMSerialWireDebug.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ARMSerialWireDebug.xcodeproj; path = "../../firefly-arm-swd/ARMSerialWireDebug.xcodeproj"; sourceTree = "<group>"; };
@@ -180,8 +173,6 @@
 		92BF961B1829F01500C37412 /* FDFireflyIceUsbTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFireflyIceUsbTest.m; sourceTree = "<group>"; };
 		92C0D8301825BB12001884EC /* FireflyRadioTest.elf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FireflyRadioTest.elf; sourceTree = "<group>"; };
 		92C66E23182ABB3C000F5FD5 /* FireflyUsbTest.elf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FireflyUsbTest.elf; sourceTree = "<group>"; };
-		92DF4B7017FCC54E004C68C7 /* FDSerialWireDebugOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDSerialWireDebugOperation.h; sourceTree = "<group>"; };
-		92DF4B7117FCC54E004C68C7 /* FDSerialWireDebugOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDSerialWireDebugOperation.m; sourceTree = "<group>"; };
 		92E66A4618146C370054A9C2 /* FireflyIceTest.elf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FireflyIceTest.elf; sourceTree = "<group>"; };
 		92F5243E1919B4B600491532 /* FireflyDevice.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FireflyDevice.xcodeproj; path = "../../firefly-ice-api/FireflyDevice/FireflyDevice.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -271,12 +262,6 @@
 				92BF961B1829F01500C37412 /* FDFireflyIceUsbTest.m */,
 				9205981417FCAB230027FAAD /* FDFireflyIceTest.h */,
 				9205981517FCAB230027FAAD /* FDFireflyIceTest.m */,
-				9205981617FCAB230027FAAD /* FDSerialWireDebugTask.h */,
-				9205981717FCAB230027FAAD /* FDSerialWireDebugTask.m */,
-				9205981817FCAB230027FAAD /* FDSerialWireDebugTest.h */,
-				9205981917FCAB230027FAAD /* FDSerialWireDebugTest.m */,
-				92DF4B7017FCC54E004C68C7 /* FDSerialWireDebugOperation.h */,
-				92DF4B7117FCC54E004C68C7 /* FDSerialWireDebugOperation.m */,
 			);
 			path = FireflyTool;
 			sourceTree = "<group>";
@@ -537,10 +522,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9205981C17FCAB230027FAAD /* FDFireflyIceMint.m in Sources */,
-				9205982017FCAB230027FAAD /* FDSerialWireDebugTest.m in Sources */,
-				9205981F17FCAB230027FAAD /* FDSerialWireDebugTask.m in Sources */,
 				9205981D17FCAB230027FAAD /* FDFireflyIceRadioTest.m in Sources */,
-				92DF4B7217FCC54E004C68C7 /* FDSerialWireDebugOperation.m in Sources */,
 				920597F017FCAAC20027FAAD /* FDAppDelegate.m in Sources */,
 				920597E917FCAAC20027FAAD /* main.m in Sources */,
 				9205981E17FCAB230027FAAD /* FDFireflyIceTest.m in Sources */,

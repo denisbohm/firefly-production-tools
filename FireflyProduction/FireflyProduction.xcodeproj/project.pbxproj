@@ -26,6 +26,12 @@
 		92898BDF179E35D0007B84B7 /* FDFireflyFlash.m in Sources */ = {isa = PBXBuildFile; fileRef = 92898BDD179E35D0007B84B7 /* FDFireflyFlash.m */; };
 		929EB9D718D92C0400E8841E /* FireflyDevice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 929EB9D218D92BEA00E8841E /* FireflyDevice.framework */; };
 		929EB9D818D92C1B00E8841E /* FireflyDevice.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 929EB9D218D92BEA00E8841E /* FireflyDevice.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		92B593181A37942C0090BCEB /* FDSerialWireDebugTask.h in Headers */ = {isa = PBXBuildFile; fileRef = 92B593121A37942C0090BCEB /* FDSerialWireDebugTask.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		92B593191A37942C0090BCEB /* FDSerialWireDebugTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B593131A37942C0090BCEB /* FDSerialWireDebugTask.m */; };
+		92B5931A1A37942C0090BCEB /* FDSerialWireDebugTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 92B593141A37942C0090BCEB /* FDSerialWireDebugTest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		92B5931B1A37942C0090BCEB /* FDSerialWireDebugTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B593151A37942C0090BCEB /* FDSerialWireDebugTest.m */; };
+		92B5931C1A37942C0090BCEB /* FDSerialWireDebugOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 92B593161A37942C0090BCEB /* FDSerialWireDebugOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		92B5931D1A37942C0090BCEB /* FDSerialWireDebugOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B593171A37942C0090BCEB /* FDSerialWireDebugOperation.m */; };
 		92BF96241829F38700C37412 /* FDUsbTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 92BF96221829F38700C37412 /* FDUsbTest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92BF96251829F38700C37412 /* FDUsbTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BF96231829F38700C37412 /* FDUsbTest.m */; };
 		92E15B161A20F15300E33750 /* FireflyFlashNRF51.elf in Resources */ = {isa = PBXBuildFile; fileRef = 92E15B151A20F15300E33750 /* FireflyFlashNRF51.elf */; };
@@ -153,6 +159,12 @@
 		92898BDC179E35D0007B84B7 /* FDFireflyFlash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFireflyFlash.h; sourceTree = "<group>"; };
 		92898BDD179E35D0007B84B7 /* FDFireflyFlash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFireflyFlash.m; sourceTree = "<group>"; };
 		928CD62918118F5F00C75B73 /* FireflyDevice.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FireflyDevice.xcodeproj; path = "../../firefly-ice-api/FireflyDevice/FireflyDevice.xcodeproj"; sourceTree = "<group>"; };
+		92B593121A37942C0090BCEB /* FDSerialWireDebugTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDSerialWireDebugTask.h; sourceTree = "<group>"; };
+		92B593131A37942C0090BCEB /* FDSerialWireDebugTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDSerialWireDebugTask.m; sourceTree = "<group>"; };
+		92B593141A37942C0090BCEB /* FDSerialWireDebugTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDSerialWireDebugTest.h; sourceTree = "<group>"; };
+		92B593151A37942C0090BCEB /* FDSerialWireDebugTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDSerialWireDebugTest.m; sourceTree = "<group>"; };
+		92B593161A37942C0090BCEB /* FDSerialWireDebugOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDSerialWireDebugOperation.h; sourceTree = "<group>"; };
+		92B593171A37942C0090BCEB /* FDSerialWireDebugOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDSerialWireDebugOperation.m; sourceTree = "<group>"; };
 		92BF96221829F38700C37412 /* FDUsbTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDUsbTest.h; sourceTree = "<group>"; };
 		92BF96231829F38700C37412 /* FDUsbTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDUsbTest.m; sourceTree = "<group>"; };
 		92E15B151A20F15300E33750 /* FireflyFlashNRF51.elf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FireflyFlashNRF51.elf; sourceTree = "<group>"; };
@@ -312,6 +324,12 @@
 				9212248F1A084CB8002006AA /* FDTargetOptionsView.h */,
 				921224901A084CB8002006AA /* FDTargetOptionsView.m */,
 				921224931A084CD7002006AA /* FDTargetOptionsView.xib */,
+				92B593121A37942C0090BCEB /* FDSerialWireDebugTask.h */,
+				92B593131A37942C0090BCEB /* FDSerialWireDebugTask.m */,
+				92B593141A37942C0090BCEB /* FDSerialWireDebugTest.h */,
+				92B593151A37942C0090BCEB /* FDSerialWireDebugTest.m */,
+				92B593161A37942C0090BCEB /* FDSerialWireDebugOperation.h */,
+				92B593171A37942C0090BCEB /* FDSerialWireDebugOperation.m */,
 			);
 			path = FireflyProduction;
 			sourceTree = "<group>";
@@ -368,6 +386,9 @@
 				921224911A084CB8002006AA /* FDTargetOptionsView.h in Headers */,
 				92E775581730979E00A111DF /* FDGdbServerSwd.h in Headers */,
 				92BF96241829F38700C37412 /* FDUsbTest.h in Headers */,
+				92B5931C1A37942C0090BCEB /* FDSerialWireDebugOperation.h in Headers */,
+				92B5931A1A37942C0090BCEB /* FDSerialWireDebugTest.h in Headers */,
+				92B593181A37942C0090BCEB /* FDSerialWireDebugTask.h in Headers */,
 				9214495A17BED43200FC6BAF /* FDRadioTest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -544,11 +565,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92B5931D1A37942C0090BCEB /* FDSerialWireDebugOperation.m in Sources */,
 				92E774E21730925800A111DF /* FireflyProduction.m in Sources */,
 				92E775531730979E00A111DF /* FDExecutable.m in Sources */,
 				92BF96251829F38700C37412 /* FDUsbTest.m in Sources */,
 				92E775571730979E00A111DF /* FDGdbServer.m in Sources */,
+				92B5931B1A37942C0090BCEB /* FDSerialWireDebugTest.m in Sources */,
 				92E775591730979E00A111DF /* FDGdbServerSwd.m in Sources */,
+				92B593191A37942C0090BCEB /* FDSerialWireDebugTask.m in Sources */,
 				92898BDF179E35D0007B84B7 /* FDFireflyFlash.m in Sources */,
 				92F5DD7119A533A7004ADB5D /* FDFireflyFlashEFM32.m in Sources */,
 				924988E51A1AF84F00397E54 /* FDFireflyFlashNANO1XX.m in Sources */,

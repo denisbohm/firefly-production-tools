@@ -7,7 +7,6 @@
 //
 
 #import "FDAppDelegate.h"
-#import "FDSerialWireDebugOperation.h"
 
 #import <ARMSerialWireDebug/FDLogger.h>
 #import <ARMSerialWireDebug/FDSerialEngine.h>
@@ -16,7 +15,13 @@
 #import <ARMSerialWireDebug/FDUSBMonitor.h>
 
 #import <FireflyProduction/FDRadioTest.h>
+#import <FireflyProduction/FDSerialWireDebugOperation.h>
 #import <FireflyProduction/FDTargetOptionsView.h>
+
+#import "FDFireflyIceMint.h"
+#import "FDFireflyIceRadioTest.h"
+#import "FDFireflyIceTest.h"
+#import "FDFireflyIceUsbTest.h"
 
 @interface FDAppDelegate () <FDUSBMonitorDelegate, FDLoggerConsumer, FDSerialWireDebugOperationDelegate, FDTargetOptionsViewDelegate>
 
@@ -156,6 +161,24 @@
     });
 }
 
+- (NSArray *)serialWireDebugOperationTasks
+{
+    NSMutableArray *tasks = [NSMutableArray array];
+    if ([_resources[@"test"] boolValue]) {
+        [tasks addObject:[[FDFireflyIceTest alloc] init]];
+        if ([_resources[@"testBLE"] boolValue]) {
+            [tasks addObject:[[FDFireflyIceRadioTest alloc] init]];
+        }
+        if ([_resources[@"testUSB"] boolValue]) {
+            [tasks addObject:[[FDFireflyIceUsbTest alloc] init]];
+        }
+    }
+    if ([_resources[@"program"] boolValue]) {
+        [tasks addObject:[[FDFireflyIceMint alloc] init]];
+    }
+    return tasks;
+}
+
 - (void)serialWireDebugOperationStarting
 {
     _operationLabel.hidden = YES;
@@ -230,6 +253,5 @@
 - (void)usbMonitor:(FDUSBMonitor *)usbMonitor usbDeviceRemoved:(FDUSBDevice *)usbDevice
 {
 }
-
 
 @end

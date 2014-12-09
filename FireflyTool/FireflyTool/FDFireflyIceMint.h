@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Firefly Design. All rights reserved.
 //
 
-#import "FDSerialWireDebugTask.h"
+#import <FireflyProduction/FDSerialWireDebugTask.h>
 
 #import <Foundation/Foundation.h>
 

@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Firefly Design. All rights reserved.
 //
 
-#import "FDSerialWireDebugTest.h"
+#import <FireflyProduction/FDSerialWireDebugTest.h>
 
 @interface FDFireflyIceTest : FDSerialWireDebugTest
 

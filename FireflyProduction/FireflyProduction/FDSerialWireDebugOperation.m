@@ -6,11 +6,8 @@
 //  Copyright (c) 2013 Firefly Design. All rights reserved.
 //
 
-#import "FDFireflyIceMint.h"
-#import "FDFireflyIceRadioTest.h"
-#import "FDFireflyIceTest.h"
-#import "FDFireflyIceUsbTest.h"
-#import "FDSerialWireDebugOperation.h"
+#import <FireflyProduction/FDSerialWireDebugOperation.h>
+#import <FireflyProduction/FDSerialWireDebugTask.h>
 
 #import <ARMSerialWireDebug/FDCortexM.h>
 #import <ARMSerialWireDebug/FDLogger.h>
@@ -83,20 +80,7 @@
 
 - (void)execute
 {
-    NSMutableArray *tasks = [NSMutableArray array];
-    if ([_resources[@"test"] boolValue]) {
-        [tasks addObject:[[FDFireflyIceTest alloc] init]];
-        if ([_resources[@"testBLE"] boolValue]) {
-            [tasks addObject:[[FDFireflyIceRadioTest alloc] init]];
-        }
-        if ([_resources[@"testUSB"] boolValue]) {
-            [tasks addObject:[[FDFireflyIceUsbTest alloc] init]];
-        }
-    }
-    if ([_resources[@"program"] boolValue]) {
-        [tasks addObject:[[FDFireflyIceMint alloc] init]];
-    }
-    
+    NSArray *tasks = [_delegate serialWireDebugOperationTasks];
     for (FDSerialWireDebugTask *task in tasks) {
         task.logger = _logger;
         task.serialWireDebug = _serialWireDebug;
