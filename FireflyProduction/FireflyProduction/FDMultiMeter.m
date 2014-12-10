@@ -8,6 +8,9 @@
 
 #import "FDMultiMeter.h"
 
+@implementation FDMultiMeterMeasurement
+@end
+
 @interface FDMultiMeter () <FDSerialPortDelegate>
 
 @property NSMutableString *text;
