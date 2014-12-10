@@ -10,37 +10,37 @@
 	<string>FireflyProduction</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>1A737C81-14FB-4BC8-9AF7-1DC792A71132</key>
+		<key>15C3BA0301A08E95AE15A9FD52FD2A6C11888548</key>
 		<string>https://github.com/denisbohm/firefly-arm-swd.git</string>
-		<key>21AD9E61-602F-4B2E-ACB5-DC31C1495232</key>
-		<string>https://github.com/denisbohm/firefly-sync.git</string>
-		<key>F03215A5-E6D4-4D28-9120-CEDA2FCE2813</key>
+		<key>5A131E55697F8004CAC31E4EEC549228502767EB</key>
+		<string>https://github.com/denisbohm/firefly-ice-api.git</string>
+		<key>748AFA8E6955F8400637FBF13A3E8767AEFB4A06</key>
 		<string>https://github.com/denisbohm/firefly-production-tools.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>FireflyProduction/FireflyProduction.xcodeproj/project.xcworkspace</string>
+	<string>FireflyProduction/FireflyProduction.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>1A737C81-14FB-4BC8-9AF7-1DC792A71132</key>
+		<key>15C3BA0301A08E95AE15A9FD52FD2A6C11888548</key>
 		<string>../../../../firefly-arm-swd</string>
-		<key>21AD9E61-602F-4B2E-ACB5-DC31C1495232</key>
-		<string>../../../../firefly-sync</string>
-		<key>F03215A5-E6D4-4D28-9120-CEDA2FCE2813</key>
+		<key>5A131E55697F8004CAC31E4EEC549228502767EB</key>
+		<string>../../../../firefly-ice-api</string>
+		<key>748AFA8E6955F8400637FBF13A3E8767AEFB4A06</key>
 		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/denisbohm/firefly-production-tools.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>F03215A5-E6D4-4D28-9120-CEDA2FCE2813</string>
+	<string>748AFA8E6955F8400637FBF13A3E8767AEFB4A06</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>1A737C81-14FB-4BC8-9AF7-1DC792A71132</string>
+			<string>15C3BA0301A08E95AE15A9FD52FD2A6C11888548</string>
 			<key>IDESourceControlWCCName</key>
 			<string>firefly-arm-swd</string>
 		</dict>
@@ -48,17 +48,17 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>F03215A5-E6D4-4D28-9120-CEDA2FCE2813</string>
+			<string>5A131E55697F8004CAC31E4EEC549228502767EB</string>
 			<key>IDESourceControlWCCName</key>
-			<string>firefly-production-tools</string>
+			<string>firefly-ice-api</string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>21AD9E61-602F-4B2E-ACB5-DC31C1495232</string>
+			<string>748AFA8E6955F8400637FBF13A3E8767AEFB4A06</string>
 			<key>IDESourceControlWCCName</key>
-			<string>firefly-sync</string>
+			<string>firefly-production-tools</string>
 		</dict>
 	</array>
 </dict>
