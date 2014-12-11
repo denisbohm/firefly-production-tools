@@ -39,7 +39,7 @@
     
     [_serialPort setDelegate:self];
     
-    NSLog(@"numato listing to serial port %@", _serialPort.path);
+    NSLog(@"numato listening to serial port %@", _serialPort.path);
 }
 
 - (void)serialPort:(FDSerialPort *)serialPort didReceiveData:(NSData *)data
@@ -53,17 +53,17 @@
     // result\r
     // >
     
+    // ex: "ver\n\r00000008\n\r>"
+    
     [_text appendString:[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]];
     
-    NSString *pattern = @".*>";
-    NSError *error = NULL;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&error];
     while (true) {
-        NSRange textRange = NSMakeRange(0, _text.length);
-        NSRange matchRange = [regex rangeOfFirstMatchInString:_text options:NSMatchingReportProgress range:textRange];
+        NSRange matchRange = [_text rangeOfString:@">"];
         if (matchRange.location == NSNotFound) {
             break;
         }
+        matchRange.length += matchRange.location;
+        matchRange.location = 0;
         NSString *match = [_text substringWithRange:matchRange];
         [_text replaceCharactersInRange:matchRange withString:@""];
         NSLog(@"numato response: %@", match);
@@ -78,13 +78,13 @@
 
 - (void)dispatchVer:(NSArray *)tokens
 {
-    NSString *value = tokens[1];
+    NSString *value = tokens[2];
     [_delegate numato:self ver:value];
 }
 
 - (void)dispatchIdGet:(NSArray *)tokens
 {
-    NSString *value = tokens[1];
+    NSString *value = tokens[2];
     [_delegate numato:self id:value];
 }
 
@@ -98,21 +98,21 @@
 - (void)dispatchAdcRead:(NSArray *)tokens
 {
     uint8_t channel = [self parseChannel:tokens[0]];
-    uint16_t value = [tokens[1] unsignedShortValue];
+    uint16_t value = [tokens[2] unsignedShortValue];
     [_delegate numato:self adc:channel value:value];
 }
 
 - (void)dispatchGpioRead:(NSArray *)tokens
 {
     uint8_t channel = [self parseChannel:tokens[0]];
-    BOOL value = [tokens[1] isEqualToString:@"on"];
+    BOOL value = [tokens[2] isEqualToString:@"on"];
     [_delegate numato:self gpio:channel value:value];
 }
 
 - (void)dispatchRelayRead:(NSArray *)tokens
 {
     uint8_t channel = [self parseChannel:tokens[0]];
-    BOOL value = [tokens[1] isEqualToString:@"on"];
+    BOOL value = [tokens[2] isEqualToString:@"on"];
     [_delegate numato:self relay:channel value:value];
 }
 

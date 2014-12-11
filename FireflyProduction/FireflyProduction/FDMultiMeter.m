@@ -42,7 +42,7 @@
     
     [_serialPort setDelegate:self];
     
-    NSLog(@"multi-meter listing to serial port %@", _serialPort.path);
+    NSLog(@"multi-meter listening to serial port %@", _serialPort.path);
 }
 
 - (void)serialPort:(FDSerialPort *)serialPort didReceiveData:(NSData *)data
