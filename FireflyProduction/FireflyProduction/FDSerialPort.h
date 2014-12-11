@@ -31,6 +31,12 @@
 
 @end
 
+typedef enum {
+    FDSerialPortParityNone,
+    FDSerialPortParityEven,
+    FDSerialPortParityOdd,
+} FDSerialPortParity;
+
 @interface FDSerialPort : NSObject
 
 + (NSArray *)findSerialPorts;
@@ -39,6 +45,8 @@
 @property id<FDSerialPortDelegate> delegate;
 @property NSString *path;
 @property NSUInteger baudRate;
+@property NSUInteger dataBits;
+@property FDSerialPortParity parity;
 
 - (void)open;
 - (void)close;

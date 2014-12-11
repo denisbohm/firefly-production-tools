@@ -13,7 +13,7 @@
 
 @interface FDMultiMeter () <FDSerialPortDelegate>
 
-@property NSMutableString *text;
+@property NSMutableData *data;
 
 @end
 
@@ -24,7 +24,7 @@
 - (id)init
 {
     if (self = [super init]) {
-        _text = [NSMutableString string];
+        _data = [NSMutableData data];
     }
     return self;
 }
@@ -49,42 +49,47 @@
 {
     // <9 bytes>\r\n
     
-    [_text appendString:[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]];
+    [_data appendData:data];
     
-    NSString *pattern = @".*\r\n";
-    NSError *error = NULL;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&error];
-    while (true) {
-        NSRange textRange = NSMakeRange(0, _text.length);
-        NSRange matchRange = [regex rangeOfFirstMatchInString:_text options:NSMatchingReportProgress range:textRange];
+    while (_data.length > 0) {
+        NSRange matchRange = NSMakeRange(NSNotFound, 0);
+        uint8_t *bytes = (uint8_t *)_data.bytes;
+        for (int i = 9; i < _data.length - 1; ++i) {
+            if ((bytes[i] = '\r') && (bytes[i + 1] == '\n')) {
+                matchRange.location = i - 9;
+                matchRange.length = 11;
+                break;
+            }
+        }
         if (matchRange.location == NSNotFound) {
             break;
         }
-        NSString *match = [_text substringWithRange:matchRange];
-        [_text replaceCharactersInRange:matchRange withString:@""];
+        NSData *match = [_data subdataWithRange:matchRange];
+        [_data replaceBytesInRange:NSMakeRange(0, matchRange.location + matchRange.length) withBytes:NULL length:0];
         NSLog(@"multi-meter response: %@", match);
         [self dispatch:match];
     }
+    
+    // if we are getting unrecognizable data then clear it out occasionally...
+    if (_data.length > 22) {
+        _data.length = 0;
+    }
 }
 
-- (void)dispatch:(NSString *)match
+- (void)dispatch:(NSData *)data
 {
-    if (match.length != 11) {
-        NSLog(@"unexpected length");
-        return;
-    }
-    
     FDMultiMeterMeasurement *measurement = [[FDMultiMeterMeasurement alloc] init];
     
-    uint8_t rangeCode = [match characterAtIndex:0];
-    char digit3 = '0' + ([match characterAtIndex:1] & 0xf);
-    char digit2 = '0' + ([match characterAtIndex:2] & 0xf);
-    char digit1 = '0' + ([match characterAtIndex:3] & 0xf);
-    char digit0 = '0' + ([match characterAtIndex:4] & 0xf);
-    uint8_t functionCode = [match characterAtIndex:5];
-    uint8_t status = [match characterAtIndex:6];
-    uint8_t option1 = [match characterAtIndex:7];
-    uint8_t option2 = [match characterAtIndex:8];
+    uint8_t *bytes = (uint8_t *)data.bytes;
+    uint8_t rangeCode = bytes[0];
+    char digit3 = '0' + (bytes[1] & 0xf);
+    char digit2 = '0' + (bytes[2] & 0xf);
+    char digit1 = '0' + (bytes[3] & 0xf);
+    char digit0 = '0' + (bytes[4] & 0xf);
+    uint8_t functionCode = bytes[5];
+    uint8_t status = bytes[6];
+    uint8_t option1 = bytes[7];
+    uint8_t option2 = bytes[8];
     
     measurement.judge = status & 0b1000 ? YES : NO;
     measurement.minusSign = status & 0b0100 ? YES : NO;

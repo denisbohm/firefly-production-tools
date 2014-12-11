@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Firefly Design. All rights reserved.
 //
 
+// Supports BK Precision Model 390A DMM
+
 #import <Foundation/Foundation.h>
 
 #import "FDSerialPort.h"

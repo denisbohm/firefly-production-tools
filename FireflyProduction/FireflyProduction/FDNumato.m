@@ -69,6 +69,11 @@
         NSLog(@"numato response: %@", match);
         [self dispatch:match];
     }
+    
+    // if we are getting unrecognizable data then clear it out occasionally...
+    if (_text.length > 50) {
+        [_text deleteCharactersInRange:NSMakeRange(0, _text.length)];
+    }
 }
 
 - (void)dispatchVer:(NSArray *)tokens

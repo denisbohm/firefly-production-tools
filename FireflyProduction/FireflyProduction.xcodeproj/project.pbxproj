@@ -27,7 +27,7 @@
 		9261C5991A379DD8002909AC /* FDSerialPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 9261C5951A379DD8002909AC /* FDSerialPort.m */; };
 		9261C5A01A379E91002909AC /* FDNumato.h in Headers */ = {isa = PBXBuildFile; fileRef = 9261C59E1A379E91002909AC /* FDNumato.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9261C5A11A379E91002909AC /* FDNumato.m in Sources */ = {isa = PBXBuildFile; fileRef = 9261C59F1A379E91002909AC /* FDNumato.m */; };
-		9261C5A41A37AF81002909AC /* FDMultiMeter.h in Headers */ = {isa = PBXBuildFile; fileRef = 9261C5A21A37AF81002909AC /* FDMultiMeter.h */; };
+		9261C5A41A37AF81002909AC /* FDMultiMeter.h in Headers */ = {isa = PBXBuildFile; fileRef = 9261C5A21A37AF81002909AC /* FDMultiMeter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9261C5A51A37AF81002909AC /* FDMultiMeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9261C5A31A37AF81002909AC /* FDMultiMeter.m */; };
 		927E8574179F3AF90038CEFC /* FireflyFlashEFM32.elf in Resources */ = {isa = PBXBuildFile; fileRef = 927E8573179F3AF90038CEFC /* FireflyFlashEFM32.elf */; };
 		92898BDE179E35D0007B84B7 /* FDFireflyFlash.h in Headers */ = {isa = PBXBuildFile; fileRef = 92898BDC179E35D0007B84B7 /* FDFireflyFlash.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -402,7 +402,6 @@
 				9212248D1A084B7F002006AA /* FDBuilderView.h in Headers */,
 				92E775521730979E00A111DF /* FDExecutable.h in Headers */,
 				92898BDE179E35D0007B84B7 /* FDFireflyFlash.h in Headers */,
-				9261C5A41A37AF81002909AC /* FDMultiMeter.h in Headers */,
 				92E775561730979E00A111DF /* FDGdbServer.h in Headers */,
 				92F5DD7019A533A7004ADB5D /* FDFireflyFlashEFM32.h in Headers */,
 				92F5DD7819A53D01004ADB5D /* FDFireflyFlashSTM32F4.h in Headers */,
@@ -413,6 +412,7 @@
 				92BF96241829F38700C37412 /* FDUsbTest.h in Headers */,
 				92B5931C1A37942C0090BCEB /* FDSerialWireDebugOperation.h in Headers */,
 				9261C5961A379DD8002909AC /* FDPowerSupply.h in Headers */,
+				9261C5A41A37AF81002909AC /* FDMultiMeter.h in Headers */,
 				9261C5A01A379E91002909AC /* FDNumato.h in Headers */,
 				9261C5981A379DD8002909AC /* FDSerialPort.h in Headers */,
 				92B5931A1A37942C0090BCEB /* FDSerialWireDebugTest.h in Headers */,

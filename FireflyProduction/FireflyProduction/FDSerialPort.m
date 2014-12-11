@@ -153,6 +153,7 @@ exit:
 {
     if (self = [super init]) {
         _baudRate = 9600;
+        _dataBits = 8;
     }
     return self;
 }
@@ -228,9 +229,32 @@ exit:
     
     // The baud rate, word length, and handshake options can be set as follows:
     
-    cfsetspeed(&options, _baudRate);       // Set baud rate
-    options.c_cflag = (CS8|CREAD|CRTSCTS);//        |    // Use 8 bit words
-    //                        PARENB     |    // Parity enable (even parity if PARODD not also set)
+    cfsetspeed(&options, _baudRate); // Set baud rate
+    options.c_cflag = CREAD | CRTSCTS;
+    switch (_dataBits) {
+        case 8:
+            options.c_cflag |= CS8;
+            break;
+        case 7:
+            options.c_cflag |= CS7;
+            break;
+        case 6:
+            options.c_cflag |= CS6;
+            break;
+        case 5:
+            options.c_cflag |= CS5;
+            break;
+    }
+    switch (_parity) {
+        case FDSerialPortParityEven:
+            options.c_cflag |= PARENB;
+            break;
+        case FDSerialPortParityOdd:
+            options.c_cflag |= PARENB | PARODD;
+            break;
+        default:
+            break;
+    }
     //                        CCTS_OFLOW |    // CTS flow control of output
     //                        CRTS_IFLOW);    // RTS flow control of input
     
@@ -373,7 +397,7 @@ error:
 - (void)readable
 {
     NSData *data = [_fileHandle availableData];
-    //    NSLog(@"fileHandleReadComplete data.length=%lu", data.length);
+//    NSLog(@"fileHandleReadComplete data.length=%lu data=%@", data.length, data);
     
     [_delegate serialPort:self didReceiveData:data];
 }
