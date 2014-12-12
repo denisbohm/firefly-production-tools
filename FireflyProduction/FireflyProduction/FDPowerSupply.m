@@ -11,9 +11,23 @@
 
 @implementation FDPowerSupplyChannel
 
++ (FDPowerSupplyChannel *)channel:(int)number
+{
+    return [[FDPowerSupplyChannel alloc] initWithNumber:number];
+}
+
+- (id)initWithNumber:(int)number
+{
+    if (self = [super init]) {
+        _number = number;
+    }
+    return self;
+}
+
 - (FDPowerSupplyChannel *)clone
 {
     FDPowerSupplyChannel *channel = [[FDPowerSupplyChannel alloc] init];
+    channel.number = _number;
     channel.presetVoltage = _presetVoltage;
     channel.presetCurrent = _presetCurrent;
     channel.voltage = _voltage;
@@ -42,6 +56,25 @@
         [status.channels addObject:[channel clone]];
     }
     return status;
+}
+
+- (NSString *)description
+{
+    NSMutableString *text = [NSMutableString
+                             stringWithFormat:@"%@, output %@, ovp %@, ocp %@, cv %@, cc %@, beep %@, lock %@, memory %u",
+                             _identity,
+                             _output ? @"YES" : @"NO",
+                             _overVoltageProtection ? @"YES" : @"NO",
+                             _overCurrentProtection ? @"YES" : @"NO",
+                             _constantVoltage ? @"YES" : @"NO",
+                             _constantCurrent ? @"YES" : @"NO",
+                             _beep ? @"YES" : @"NO",
+                             _lock ? @"YES" : @"NO",
+                             _memory];
+    for (FDPowerSupplyChannel *channel in _channels) {
+        [text appendFormat:@", [channel %d: pv %0.2f, pc %0.3f, v %0.2f, c %0.3f]", channel.number, channel.presetVoltage, channel.presetCurrent, channel.voltage, channel.current];
+    }
+    return text;
 }
 
 @end
@@ -89,7 +122,7 @@
         _receivedData = [NSMutableData data];
         _transactions = [NSMutableArray array];
         _status = [[FDPowerSupplyStatus alloc] init];
-        _status.channels = [NSMutableArray arrayWithObject:[[FDPowerSupplyChannel alloc] init]];
+        _status.channels = [NSMutableArray arrayWithObject:[FDPowerSupplyChannel channel:1]];
     }
     return self;
 }
@@ -122,7 +155,7 @@
 {
     [_receivedData appendData:data];
     if ([self isReceivedDataComplete]) {
-        NSData *data = [NSData dataWithData:_receivedData];
+        NSData *data = [_receivedData subdataWithRange:NSMakeRange(0, _receivedData.length - 1)];
         [_receivedData setLength:0];
         FDTransaction *transaction = _currentTransaction;
         _currentTransaction = nil;
@@ -199,7 +232,7 @@
 {
     _serialPort.delegate = self;
     _serialPort.baudRate = 9600;
-    // Bit rate of 9,600, no parity, one data bit, stop bit 8, and hardware handshaking
+    // Bit rate of 9,600, 8 data bits, no parity, one stop bit, and hardware handshaking
     [_serialPort open];
     
     _timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkTime:) userInfo:nil repeats:YES];
@@ -307,7 +340,7 @@
     NSString *s = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
     float voltage = [s floatValue];
     NSLog(@"preset voltage is %0.2f", voltage);
-    FDPowerSupplyChannel *channel = _status.channels[transaction.channel];
+    FDPowerSupplyChannel *channel = _status.channels[transaction.channel - 1];
     channel.presetVoltage = voltage;
 }
 
@@ -326,7 +359,7 @@
     NSString *s = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
     float voltage = [s floatValue];
     NSLog(@"voltage is %0.2f", voltage);
-    FDPowerSupplyChannel *channel = _status.channels[transaction.channel];
+    FDPowerSupplyChannel *channel = _status.channels[transaction.channel - 1];
     channel.voltage = voltage;
 }
 
@@ -342,7 +375,7 @@
     NSString *s = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
     float current = [s floatValue];
     NSLog(@"preset current is %0.2f", current);
-    FDPowerSupplyChannel *channel = _status.channels[transaction.channel];
+    FDPowerSupplyChannel *channel = _status.channels[transaction.channel - 1];
     channel.presetCurrent = current;
 }
 
@@ -361,7 +394,7 @@
     NSString *s = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
     float current = [s floatValue];
     NSLog(@"current is %0.3f", current);
-    FDPowerSupplyChannel *channel = _status.channels[transaction.channel];
+    FDPowerSupplyChannel *channel = _status.channels[transaction.channel - 1];
     channel.current = current;
 }
 
@@ -373,11 +406,11 @@
 - (void)getStatus
 {
     [self queryIdentity];
-    for (int channel = 0; channel < _status.channels.count; ++channel) {
-        [self queryPresetVoltage:channel];
-        [self queryPresetCurrent:channel];
-        [self queryVoltage:channel];
-        [self queryCurrent:channel];
+    for (FDPowerSupplyChannel *channel in _status.channels) {
+        [self queryPresetVoltage:channel.number];
+        [self queryPresetCurrent:channel.number];
+        [self queryVoltage:channel.number];
+        [self queryCurrent:channel.number];
     }
     [self queryStatus];
 }

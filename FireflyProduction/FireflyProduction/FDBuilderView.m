@@ -36,7 +36,7 @@
     self.mainSubView = [self firstView:objects];
     [self addSubview:self.mainSubView];
     
-    [self.mainSubView translatesAutoresizingMaskIntoConstraints];
+    self.mainSubView.translatesAutoresizingMaskIntoConstraints = NO;
     NSDictionary *viewsDictionary = @{@"mainSubView":self.mainSubView};
     NSDictionary *metrics = @{@"hMargin": @0, @"vMargin": @0};
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-vMargin-[mainSubView]-vMargin-|"

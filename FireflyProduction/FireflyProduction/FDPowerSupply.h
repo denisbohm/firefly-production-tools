@@ -13,6 +13,7 @@
 
 @interface FDPowerSupplyChannel : NSObject
 
+@property int number;
 @property float presetVoltage;
 @property float presetCurrent;
 @property float voltage;
