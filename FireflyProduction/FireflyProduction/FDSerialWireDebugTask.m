@@ -56,6 +56,10 @@
     if ([fileManager fileExistsAtPath:path isDirectory:NO]) {
         return path;
     }
+    path = [NSString stringWithFormat:@"%@/%@ THUMB Debug/%@.elf", searchPath, name, name];
+    if ([fileManager fileExistsAtPath:path isDirectory:NO]) {
+        return path;
+    }
     return [[NSBundle bundleForClass: [self class]] pathForResource:name ofType:@"elf"];
 }
 

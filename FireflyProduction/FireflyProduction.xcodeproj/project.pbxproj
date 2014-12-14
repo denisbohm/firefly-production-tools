@@ -29,6 +29,7 @@
 		9261C5A11A379E91002909AC /* FDNumato.m in Sources */ = {isa = PBXBuildFile; fileRef = 9261C59F1A379E91002909AC /* FDNumato.m */; };
 		9261C5A41A37AF81002909AC /* FDMultiMeter.h in Headers */ = {isa = PBXBuildFile; fileRef = 9261C5A21A37AF81002909AC /* FDMultiMeter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9261C5A51A37AF81002909AC /* FDMultiMeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9261C5A31A37AF81002909AC /* FDMultiMeter.m */; };
+		927483021A3CED6300291C38 /* FireflyProduction.h in Headers */ = {isa = PBXBuildFile; fileRef = 92E774E01730925800A111DF /* FireflyProduction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		927E8574179F3AF90038CEFC /* FireflyFlashEFM32.elf in Resources */ = {isa = PBXBuildFile; fileRef = 927E8573179F3AF90038CEFC /* FireflyFlashEFM32.elf */; };
 		92898BDE179E35D0007B84B7 /* FDFireflyFlash.h in Headers */ = {isa = PBXBuildFile; fileRef = 92898BDC179E35D0007B84B7 /* FDFireflyFlash.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92898BDF179E35D0007B84B7 /* FDFireflyFlash.m in Sources */ = {isa = PBXBuildFile; fileRef = 92898BDD179E35D0007B84B7 /* FDFireflyFlash.m */; };
@@ -399,6 +400,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				927483021A3CED6300291C38 /* FireflyProduction.h in Headers */,
 				9212248D1A084B7F002006AA /* FDBuilderView.h in Headers */,
 				92E775521730979E00A111DF /* FDExecutable.h in Headers */,
 				92898BDE179E35D0007B84B7 /* FDFireflyFlash.h in Headers */,
