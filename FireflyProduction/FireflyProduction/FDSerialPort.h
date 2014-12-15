@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import <IOKit/hid/IOHIDManager.h>
+
 @class FDSerialPort;
 
 @protocol FDSerialPortDelegate <NSObject>
@@ -41,6 +43,7 @@ typedef enum {
 
 + (NSArray *)findSerialPorts;
 + (NSArray *)findSerialPorts:(NSSet *)matchers;
++ (NSString *)getSerialPortPath:(IOHIDDeviceRef)deviceRef;
 
 @property id<FDSerialPortDelegate> delegate;
 @property NSString *path;

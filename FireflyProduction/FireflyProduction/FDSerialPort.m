@@ -149,6 +149,71 @@ exit:
     return paths;
 }
 
+// ---------------------------------------------------------------------------------
+//
+// AllocateHIDObjectFromIOHIDDeviceRef()
+//
+// returns:
+// NULL, or acceptable io_object_t
+//
+// ---------------------------------------------------------------------------------
+io_service_t AllocateHIDObjectFromIOHIDDeviceRef(IOHIDDeviceRef inIOHIDDeviceRef) {
+    io_service_t result = 0L;
+    if (inIOHIDDeviceRef) {
+        // Set up the matching criteria for the devices we're interested in.
+        // We are interested in instances of class IOHIDDevice.
+        // matchingDict is consumed below(in IOServiceGetMatchingService)
+        // so we have no leak here.
+        CFMutableDictionaryRef matchingDict = IOServiceMatching(kIOHIDDeviceKey);
+        if (matchingDict) {
+            // Add a key for locationID to our matching dictionary.  This works for matching to
+            // IOHIDDevices, so we will only look for a device attached to that particular port
+            // on the machine.
+            CFTypeRef tCFTypeRef = IOHIDDeviceGetProperty(inIOHIDDeviceRef, CFSTR(kIOHIDLocationIDKey));
+            if (tCFTypeRef) {
+                CFDictionaryAddValue(matchingDict, CFSTR(kIOHIDLocationIDKey), tCFTypeRef);
+                
+                // IOServiceGetMatchingService assumes that we already know that there is only one device
+                // that matches.  This way we don't have to do the whole iteration dance to look at each
+                // device that matches.  This is a new API in 10.2
+                result = IOServiceGetMatchingService(kIOMasterPortDefault, matchingDict);
+                // (matchingDict is released by IOServiceGetMatchingServices)
+            } else {
+                CFRelease(matchingDict);
+            }
+        }
+    }
+    
+    return (result);
+}   // AllocateHIDObjectFromIOHIDDeviceRef
+
+// ---------------------------------------------------------------------------------
+//
+// FreeHIDObject()
+//
+// ---------------------------------------------------------------------------------
+bool FreeHIDObject(io_service_t inHIDObject) {
+    kern_return_t kr;
+    
+    kr = IOObjectRelease(inHIDObject);
+    
+    return (kIOReturnSuccess == kr);
+} // FreeHIDObject
+
++ (NSString *)getSerialPortPath:(IOHIDDeviceRef)deviceRef
+{
+    NSString *path = nil;
+    io_service_t service = AllocateHIDObjectFromIOHIDDeviceRef(deviceRef);
+    if (service) {
+        CFTypeRef deviceFilePathAsCFString = IORegistryEntryCreateCFProperty(service, CFSTR(kIOCalloutDeviceKey), kCFAllocatorDefault, 0);
+        if (deviceFilePathAsCFString) {
+            path = (__bridge NSString *)(deviceFilePathAsCFString);
+        }
+        FreeHIDObject(service);
+    }
+    return path;
+}
+
 - (id)init
 {
     if (self = [super init]) {
