@@ -10,6 +10,8 @@
 
 @interface FDBuilderView : NSView
 
+@property NSArray *nibObjects;
+
 - (void)initialize;
 
 @end

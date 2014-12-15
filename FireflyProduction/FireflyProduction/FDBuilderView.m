@@ -33,6 +33,7 @@
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     NSArray *objects;
     [bundle loadNibNamed:class_name owner:self topLevelObjects:&objects];
+    _nibObjects = objects;
     self.mainSubView = [self firstView:objects];
     [self addSubview:self.mainSubView];
     
