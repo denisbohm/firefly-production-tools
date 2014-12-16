@@ -200,15 +200,22 @@ bool FreeHIDObject(io_service_t inHIDObject) {
     return (kIOReturnSuccess == kr);
 } // FreeHIDObject
 
++ (NSString *)getSerialPortPathWithService:(io_service_t)service
+{
+    NSString *path = nil;
+    CFTypeRef deviceFilePathAsCFString = IORegistryEntrySearchCFProperty(service, kIOServicePlane, CFSTR(kIOCalloutDeviceKey), kCFAllocatorDefault, kIORegistryIterateRecursively);
+    if (deviceFilePathAsCFString) {
+        path = (__bridge NSString *)(deviceFilePathAsCFString);
+    }
+    return path;
+}
+
 + (NSString *)getSerialPortPath:(IOHIDDeviceRef)deviceRef
 {
     NSString *path = nil;
     io_service_t service = AllocateHIDObjectFromIOHIDDeviceRef(deviceRef);
     if (service) {
-        CFTypeRef deviceFilePathAsCFString = IORegistryEntryCreateCFProperty(service, CFSTR(kIOCalloutDeviceKey), kCFAllocatorDefault, 0);
-        if (deviceFilePathAsCFString) {
-            path = (__bridge NSString *)(deviceFilePathAsCFString);
-        }
+        path = [FDSerialPort getSerialPortPathWithService:service];
         FreeHIDObject(service);
     }
     return path;

@@ -43,6 +43,7 @@ typedef enum {
 
 + (NSArray *)findSerialPorts;
 + (NSArray *)findSerialPorts:(NSSet *)matchers;
++ (NSString *)getSerialPortPathWithService:(io_service_t)service;
 + (NSString *)getSerialPortPath:(IOHIDDeviceRef)deviceRef;
 
 @property id<FDSerialPortDelegate> delegate;
