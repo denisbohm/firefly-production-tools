@@ -10,7 +10,7 @@
 
 #import "FDNumato.h"
 #import "FDPowerSupply.h"
-#import "FDMultiMeter.h"
+#import "FDMultimeter.h"
 #import "FDSerialPort.h"
 #import "FDExecutable.h"
 #import "FDFireflyFlash.h"

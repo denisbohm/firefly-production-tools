@@ -471,7 +471,7 @@ error:
 {
     int fd = [self openFileDescriptor];
     if (fd == -1) {
-        NSLog(@"error opening serial port file: %@", _path);
+        @throw [NSException exceptionWithName:@"SerialPortOpenError" reason:[NSString stringWithFormat:@"error opening serial port file: %@", _path] userInfo:nil];
     }
     
     _writeBuffer = [NSMutableData data];

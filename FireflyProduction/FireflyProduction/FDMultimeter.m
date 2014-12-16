@@ -1,23 +1,23 @@
 //
-//  FDMultiMeter.m
+//  FDMultimeter.m
 //  FireflyProduction
 //
 //  Created by Denis Bohm on 12/9/14.
 //  Copyright (c) 2014 Firefly Design. All rights reserved.
 //
 
-#import "FDMultiMeter.h"
+#import "FDMultimeter.h"
 
-@implementation FDMultiMeterMeasurement
+@implementation FDMultimeterMeasurement
 @end
 
-@interface FDMultiMeter () <FDSerialPortDelegate>
+@interface FDMultimeter () <FDSerialPortDelegate>
 
 @property NSMutableData *data;
 
 @end
 
-@implementation FDMultiMeter
+@implementation FDMultimeter
 
 @synthesize serialPort = _serialPort;
 
@@ -42,7 +42,7 @@
     
     [_serialPort setDelegate:self];
     
-    NSLog(@"multi-meter listening to serial port %@", _serialPort.path);
+    NSLog(@"multimeter listening to serial port %@", _serialPort.path);
 }
 
 - (void)serialPort:(FDSerialPort *)serialPort didReceiveData:(NSData *)data
@@ -66,7 +66,7 @@
         }
         NSData *match = [_data subdataWithRange:matchRange];
         [_data replaceBytesInRange:NSMakeRange(0, matchRange.location + matchRange.length) withBytes:NULL length:0];
-        NSLog(@"multi-meter response: %@", match);
+        NSLog(@"multimeter response: %@", match);
         [self dispatch:match];
     }
     
@@ -78,7 +78,7 @@
 
 - (void)dispatch:(NSData *)data
 {
-    FDMultiMeterMeasurement *measurement = [[FDMultiMeterMeasurement alloc] init];
+    FDMultimeterMeasurement *measurement = [[FDMultimeterMeasurement alloc] init];
     
     uint8_t *bytes = (uint8_t *)data.bytes;
     uint8_t rangeCode = bytes[0];
@@ -107,85 +107,87 @@
 
     switch (functionCode) {
         case 0b0111011: // voltage
-            measurement.function = FDMultiMeterFunctionVoltage;
+            measurement.function = FDMultimeterFunctionVoltage;
             measurement.rangeScale = 0.0001 * pow(10, rangeCode & 0x7);
             measurement.functionScale = 1.0;
             break;
         case 0b0111101: // uA current
-            measurement.function = FDMultiMeterFunctionMicroAmpCurrent;
+            measurement.function = FDMultimeterFunctionMicroAmpCurrent;
             measurement.rangeScale = 0.1;
             measurement.functionScale = 1e-6;
             break;
         case 0b0111001: // mA current
-            measurement.function = FDMultiMeterFunctionMilliAmpCurrent;
+            measurement.function = FDMultimeterFunctionMilliAmpCurrent;
             measurement.rangeScale = 0.01 * pow(10, rangeCode & 0x7);
             measurement.functionScale = 1e-3;
             break;
         case 0b0111111: // A current
-            measurement.function = FDMultiMeterFunctionAmpCurrent;
+            measurement.function = FDMultimeterFunctionAmpCurrent;
             measurement.rangeScale = 0.01 * pow(10, rangeCode & 0x7); // ??? not documented -denis
             measurement.functionScale = 1.0;
             break;
             break;
         case 0b0110011: // ohm
-            measurement.function = FDMultiMeterFunctionOhm;
+            measurement.function = FDMultimeterFunctionOhm;
             measurement.rangeScale = 0.1 * pow(10, rangeCode & 0x7);
             measurement.functionScale = 1.0;
             break;
         case 0b0110101: // continuity
-            measurement.function = FDMultiMeterFunctionContinuity;
+            measurement.function = FDMultimeterFunctionContinuity;
             measurement.rangeScale = 1.0;
             measurement.functionScale = 1.0;
             break;
         case 0b0110001: // diode
-            measurement.function = FDMultiMeterFunctionDiode;
+            measurement.function = FDMultimeterFunctionDiode;
             measurement.rangeScale = 1.0;
             measurement.functionScale = 1.0;
             break;
         case 0b0110010: // frequency
-            measurement.function = FDMultiMeterFunctionFrequency;
+            measurement.function = FDMultimeterFunctionFrequency;
             measurement.rangeScale = 1.0 * pow(10, rangeCode & 0x7);
             measurement.functionScale = 1.0;
             break;
         case 0b0110110: // capacitance
-            measurement.function = FDMultiMeterFunctionOhm;
+            measurement.function = FDMultimeterFunctionOhm;
             measurement.rangeScale = 1e-12 * pow(10, rangeCode & 0x7);
             measurement.functionScale = 1e-3;
             break;
         case 0b0110100: // temperature
-            measurement.function = FDMultiMeterFunctionTemperature;
+            measurement.function = FDMultimeterFunctionTemperature;
             measurement.rangeScale = 1.0; // ??? not documented -denis
             measurement.functionScale = 1.0;
             break;
         case 0b0111110: // ADP0
-            measurement.function = FDMultiMeterFunctionADP0;
+            measurement.function = FDMultimeterFunctionADP0;
             measurement.rangeScale = 1.0;
             measurement.functionScale = 1.0;
             break;
         case 0b0111100: // ADP1
-            measurement.function = FDMultiMeterFunctionADP1;
+            measurement.function = FDMultimeterFunctionADP1;
             measurement.rangeScale = 1.0;
             measurement.functionScale = 1.0;
             break;
         case 0b0111000: // ADP2
-            measurement.function = FDMultiMeterFunctionADP2;
+            measurement.function = FDMultimeterFunctionADP2;
             measurement.rangeScale = 1.0;
             measurement.functionScale = 1.0;
             break;
         case 0b0111010: // ADP3
-            measurement.function = FDMultiMeterFunctionADP3;
+            measurement.function = FDMultimeterFunctionADP3;
             measurement.rangeScale = 1.0;
             measurement.functionScale = 1.0;
             break;
         default:
-            NSLog(@"multi-meter unknown function");
+            NSLog(@"multimeter unknown function");
             break;
     }
 
     measurement.digits = [NSString stringWithFormat:@"%c%c%c%c%c", measurement.minusSign ? '-' : '+', digit3, digit2, digit1, digit0];
     measurement.value = [measurement.digits doubleValue] * measurement.rangeScale * measurement.functionScale;
     
-    [_delegate multiMeter:self measurement:measurement];
+    if (_delegate != nil) {
+        [_delegate multimeter:self measurement:measurement];
+    }
 }
 
 @end

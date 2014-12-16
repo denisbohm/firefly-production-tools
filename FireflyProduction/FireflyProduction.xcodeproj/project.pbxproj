@@ -16,6 +16,8 @@
 		9214495B17BED43200FC6BAF /* FDRadioTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9214495917BED43200FC6BAF /* FDRadioTest.m */; };
 		9214AEDD17309E5700F7707E /* features.xml in Resources */ = {isa = PBXBuildFile; fileRef = 9214AEDB17309E5700F7707E /* features.xml */; };
 		9214AEDE17309E5700F7707E /* memory-map.xml in Resources */ = {isa = PBXBuildFile; fileRef = 9214AEDC17309E5700F7707E /* memory-map.xml */; };
+		9219869C1A3FC88100A7311D /* FDBarCodeScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 9219869A1A3FC88100A7311D /* FDBarCodeScanner.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9219869D1A3FC88100A7311D /* FDBarCodeScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 9219869B1A3FC88100A7311D /* FDBarCodeScanner.m */; };
 		9229C48817E4FFAF00B87C60 /* ARMSerialWireDebug.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9229C48117E4FF3C00B87C60 /* ARMSerialWireDebug.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		924988DC1A1AD98400397E54 /* FDFireflyFlashNRF51.h in Headers */ = {isa = PBXBuildFile; fileRef = 924988DA1A1AD98400397E54 /* FDFireflyFlashNRF51.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		924988DD1A1AD98400397E54 /* FDFireflyFlashNRF51.m in Sources */ = {isa = PBXBuildFile; fileRef = 924988DB1A1AD98400397E54 /* FDFireflyFlashNRF51.m */; };
@@ -27,8 +29,8 @@
 		9261C5991A379DD8002909AC /* FDSerialPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 9261C5951A379DD8002909AC /* FDSerialPort.m */; };
 		9261C5A01A379E91002909AC /* FDNumato.h in Headers */ = {isa = PBXBuildFile; fileRef = 9261C59E1A379E91002909AC /* FDNumato.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9261C5A11A379E91002909AC /* FDNumato.m in Sources */ = {isa = PBXBuildFile; fileRef = 9261C59F1A379E91002909AC /* FDNumato.m */; };
-		9261C5A41A37AF81002909AC /* FDMultiMeter.h in Headers */ = {isa = PBXBuildFile; fileRef = 9261C5A21A37AF81002909AC /* FDMultiMeter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9261C5A51A37AF81002909AC /* FDMultiMeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9261C5A31A37AF81002909AC /* FDMultiMeter.m */; };
+		9261C5A41A37AF81002909AC /* FDMultimeter.h in Headers */ = {isa = PBXBuildFile; fileRef = 9261C5A21A37AF81002909AC /* FDMultimeter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9261C5A51A37AF81002909AC /* FDMultimeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9261C5A31A37AF81002909AC /* FDMultimeter.m */; };
 		927483021A3CED6300291C38 /* FireflyProduction.h in Headers */ = {isa = PBXBuildFile; fileRef = 92E774E01730925800A111DF /* FireflyProduction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		927E8574179F3AF90038CEFC /* FireflyFlashEFM32.elf in Resources */ = {isa = PBXBuildFile; fileRef = 927E8573179F3AF90038CEFC /* FireflyFlashEFM32.elf */; };
 		92898BDE179E35D0007B84B7 /* FDFireflyFlash.h in Headers */ = {isa = PBXBuildFile; fileRef = 92898BDC179E35D0007B84B7 /* FDFireflyFlash.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -159,6 +161,8 @@
 		9214495917BED43200FC6BAF /* FDRadioTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDRadioTest.m; sourceTree = "<group>"; };
 		9214AEDB17309E5700F7707E /* features.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = features.xml; sourceTree = "<group>"; };
 		9214AEDC17309E5700F7707E /* memory-map.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "memory-map.xml"; sourceTree = "<group>"; };
+		9219869A1A3FC88100A7311D /* FDBarCodeScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDBarCodeScanner.h; sourceTree = "<group>"; };
+		9219869B1A3FC88100A7311D /* FDBarCodeScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDBarCodeScanner.m; sourceTree = "<group>"; };
 		9229C47B17E4FF3C00B87C60 /* ARMSerialWireDebug.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ARMSerialWireDebug.xcodeproj; path = "../../firefly-arm-swd/ARMSerialWireDebug.xcodeproj"; sourceTree = "<group>"; };
 		924988DA1A1AD98400397E54 /* FDFireflyFlashNRF51.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFireflyFlashNRF51.h; sourceTree = "<group>"; };
 		924988DB1A1AD98400397E54 /* FDFireflyFlashNRF51.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFireflyFlashNRF51.m; sourceTree = "<group>"; };
@@ -170,8 +174,8 @@
 		9261C5951A379DD8002909AC /* FDSerialPort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDSerialPort.m; sourceTree = "<group>"; };
 		9261C59E1A379E91002909AC /* FDNumato.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDNumato.h; sourceTree = "<group>"; };
 		9261C59F1A379E91002909AC /* FDNumato.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDNumato.m; sourceTree = "<group>"; };
-		9261C5A21A37AF81002909AC /* FDMultiMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMultiMeter.h; sourceTree = "<group>"; };
-		9261C5A31A37AF81002909AC /* FDMultiMeter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMultiMeter.m; sourceTree = "<group>"; };
+		9261C5A21A37AF81002909AC /* FDMultimeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMultimeter.h; sourceTree = "<group>"; };
+		9261C5A31A37AF81002909AC /* FDMultimeter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMultimeter.m; sourceTree = "<group>"; };
 		927E8573179F3AF90038CEFC /* FireflyFlashEFM32.elf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FireflyFlashEFM32.elf; sourceTree = "<group>"; };
 		92898BDC179E35D0007B84B7 /* FDFireflyFlash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFireflyFlash.h; sourceTree = "<group>"; };
 		92898BDD179E35D0007B84B7 /* FDFireflyFlash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFireflyFlash.m; sourceTree = "<group>"; };
@@ -314,12 +318,14 @@
 			isa = PBXGroup;
 			children = (
 				92E774DA1730925800A111DF /* Supporting Files */,
+				9219869A1A3FC88100A7311D /* FDBarCodeScanner.h */,
+				9219869B1A3FC88100A7311D /* FDBarCodeScanner.m */,
 				9261C59E1A379E91002909AC /* FDNumato.h */,
 				9261C59F1A379E91002909AC /* FDNumato.m */,
 				9261C5921A379DD8002909AC /* FDPowerSupply.h */,
 				9261C5931A379DD8002909AC /* FDPowerSupply.m */,
-				9261C5A21A37AF81002909AC /* FDMultiMeter.h */,
-				9261C5A31A37AF81002909AC /* FDMultiMeter.m */,
+				9261C5A21A37AF81002909AC /* FDMultimeter.h */,
+				9261C5A31A37AF81002909AC /* FDMultimeter.m */,
 				9261C5941A379DD8002909AC /* FDSerialPort.h */,
 				9261C5951A379DD8002909AC /* FDSerialPort.m */,
 				92E775441730979E00A111DF /* FDExecutable.h */,
@@ -413,8 +419,9 @@
 				92E775581730979E00A111DF /* FDGdbServerSwd.h in Headers */,
 				92BF96241829F38700C37412 /* FDUsbTest.h in Headers */,
 				92B5931C1A37942C0090BCEB /* FDSerialWireDebugOperation.h in Headers */,
+				9219869C1A3FC88100A7311D /* FDBarCodeScanner.h in Headers */,
 				9261C5961A379DD8002909AC /* FDPowerSupply.h in Headers */,
-				9261C5A41A37AF81002909AC /* FDMultiMeter.h in Headers */,
+				9261C5A41A37AF81002909AC /* FDMultimeter.h in Headers */,
 				9261C5A01A379E91002909AC /* FDNumato.h in Headers */,
 				9261C5981A379DD8002909AC /* FDSerialPort.h in Headers */,
 				92B5931A1A37942C0090BCEB /* FDSerialWireDebugTest.h in Headers */,
@@ -614,7 +621,8 @@
 				9261C5971A379DD8002909AC /* FDPowerSupply.m in Sources */,
 				9214495B17BED43200FC6BAF /* FDRadioTest.m in Sources */,
 				921224921A084CB8002006AA /* FDTargetOptionsView.m in Sources */,
-				9261C5A51A37AF81002909AC /* FDMultiMeter.m in Sources */,
+				9219869D1A3FC88100A7311D /* FDBarCodeScanner.m in Sources */,
+				9261C5A51A37AF81002909AC /* FDMultimeter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
