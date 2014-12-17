@@ -45,7 +45,7 @@
      */
 }
 
-- (uint32_t)run:(NSString *)name r0:(uint32_t)r0 r1:(uint32_t)r1
+- (uint32_t)functionAddress:(NSString *)name
 {
     FDExecutableFunction *function = _executable.functions[name];
     if (function == nil) {
@@ -53,7 +53,12 @@
                                        reason:[NSString stringWithFormat:@"unknown function %@", name]
                                      userInfo:nil];
     }
-    return [self.cortexM run:function.address r0:r0 r1:r1 timeout:5.0];
+    return function.address;
+}
+
+- (uint32_t)run:(NSString *)name r0:(uint32_t)r0 r1:(uint32_t)r1
+{
+    return [self.cortexM run:[self functionAddress:name] r0:r0 r1:r1 timeout:5.0];
 }
 
 - (uint32_t)run:(NSString *)name

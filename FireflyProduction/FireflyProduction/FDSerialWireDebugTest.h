@@ -17,6 +17,7 @@
 @property FDExecutable *executable;
 
 - (void)loadExecutable:(NSString *)name;
+- (uint32_t)functionAddress:(NSString *)name;
 - (uint32_t)run:(NSString *)name r0:(uint32_t)r0 r1:(uint32_t)r1;
 - (uint32_t)run:(NSString *)name;
 - (void)GPIO_PinOutClear:(uint32_t)port pin:(uint32_t)pin;
