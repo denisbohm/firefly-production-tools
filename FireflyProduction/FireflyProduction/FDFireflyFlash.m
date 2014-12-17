@@ -28,6 +28,9 @@
     NSString *className = [NSString stringWithFormat:@"FDFireflyFlash%@", processor];
     Class class = NSClassFromString(className);
     FDFireflyFlash *fireflyFlash = [[class alloc] init];
+    if (fireflyFlash == nil) {
+        @throw [NSException exceptionWithName:@"FDFireflyFlashProcessorUnknown" reason:@"FDFireflyFlash: processor unknown" userInfo:nil];
+    }
     fireflyFlash.processor = processor;
     return fireflyFlash;
 }
