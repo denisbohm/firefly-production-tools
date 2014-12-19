@@ -288,8 +288,8 @@ bool FreeHIDObject(io_service_t inHIDObject) {
     // Print the current input and output baud rates.
     // See tcsetattr(4) ("man 4 tcsetattr") for details.
     
-    printf("Current input baud rate is %d\n", (int) cfgetispeed(&options));
-    printf("Current output baud rate is %d\n", (int) cfgetospeed(&options));
+//    printf("Current input baud rate is %d\n", (int) cfgetispeed(&options));
+//    printf("Current output baud rate is %d\n", (int) cfgetospeed(&options));
     
     // Set raw input (non-canonical) mode, with reads blocking until either a single character
     // has been received or a one second timeout expires.
@@ -349,8 +349,8 @@ bool FreeHIDObject(io_service_t inHIDObject) {
     // the current baud rate if the IOSSIOSPEED ioctl was used but will instead return the speed set by the last call
     // to cfsetspeed.
     
-    printf("Input baud rate changed to %d\n", (int) cfgetispeed(&options));
-    printf("Output baud rate changed to %d\n", (int) cfgetospeed(&options));
+//    printf("Input baud rate changed to %d\n", (int) cfgetispeed(&options));
+//    printf("Output baud rate changed to %d\n", (int) cfgetospeed(&options));
     
     // Cause the new options to take effect immediately.
     if (tcsetattr(fileDescriptor, TCSANOW, &options) == -1)
@@ -490,14 +490,14 @@ error:
         [me readable];
     };
     
-    NSLog(@"serial port %@ has been opened", _path);
+//    NSLog(@"serial port %@ has been opened", _path);
 }
 
 - (void)close
 {
     _fileHandle = nil;
     
-    NSLog(@"serial port %@ has been closed", _path);
+//    NSLog(@"serial port %@ has been closed", _path);
 }
 
 @end
