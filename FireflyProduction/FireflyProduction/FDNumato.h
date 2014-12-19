@@ -16,6 +16,7 @@
 
 @optional
 
+- (void)numato:(FDNumato *)numato echo:(NSString *)echo;
 - (void)numato:(FDNumato *)numato ver:(NSString *)value;
 - (void)numato:(FDNumato *)numato id:(NSString *)value;
 - (void)numato:(FDNumato *)numato adc:(uint8_t)channel value:(uint16_t)value;

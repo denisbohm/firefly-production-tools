@@ -145,7 +145,7 @@
 
 - (void)serialPort:(FDSerialPort *)serialPort didReceiveData:(NSData *)data
 {
-    NSLog(@"serial port received data: %@ '%@'", data, [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+//    NSLog(@"serial port received data: %@ '%@'", data, [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     dispatch_async(dispatch_get_main_queue(), ^{
         [self didReceiveData:data];
     });
@@ -155,11 +155,15 @@
 {
     [_receivedData appendData:data];
     if ([self isReceivedDataComplete]) {
-        NSData *data = [_receivedData subdataWithRange:NSMakeRange(0, _receivedData.length - 1)];
+        NSInteger length = _receivedData.length;
+        if ((_currentTransaction != nil) && (_currentTransaction.length == 0)) {
+            length -= 1; // remove null termination
+        }
+        NSData *subdata = [_receivedData subdataWithRange:NSMakeRange(0, length)];
         [_receivedData setLength:0];
         FDTransaction *transaction = _currentTransaction;
         _currentTransaction = nil;
-        [self receive:transaction data:data];
+        [self receive:transaction data:subdata];
     }
 }
 
@@ -173,7 +177,7 @@
 
 - (void)write:(NSData *)data
 {
-    NSLog(@"serial port transmit data: %@ '%@'", data, [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+//    NSLog(@"serial port transmit data: %@ '%@'", data, [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
     [_serialPort writeData:data];
 }
 
@@ -235,7 +239,7 @@
     // Bit rate of 9,600, 8 data bits, no parity, one stop bit, and hardware handshaking
     [_serialPort open];
     
-    _timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkTime:) userInfo:nil repeats:YES];
+    _timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(checkTime:) userInfo:nil repeats:YES];
 }
 
 - (void)close
@@ -274,17 +278,20 @@
 {
     uint8_t *bytes = (uint8_t *)data.bytes;
     uint8_t byte = bytes[0];
-    NSLog(@"status %02x", byte);
     _status.output = byte & PowerSupplyOutput ?  YES : NO;
-    NSLog(@"output %@", _status.output ? @"on" : @"off");
     _status.overVoltageProtection = byte & PowerSupplyOverVoltageProtection ? YES : NO;
-    NSLog(@"over voltage protection %@", _status.overVoltageProtection ? @"on" : @"off");
     _status.overCurrentProtection = byte & PowerSupplyOverCurrentProtection ? YES : NO;
-    NSLog(@"over current protection %@", _status.overCurrentProtection ? @"on" : @"off");
     _status.constantVoltage = byte & PowerSupplyConstantVoltage ? YES : NO;
-    NSLog(@"constant voltage %@", _status.constantVoltage ? @"on" : @"off");
     _status.constantCurrent = byte & PowerSupplyConstantVoltage ? NO : YES;
+    
+    /*
+    NSLog(@"status %02x", byte);
+    NSLog(@"output %@", _status.output ? @"on" : @"off");
+    NSLog(@"over voltage protection %@", _status.overVoltageProtection ? @"on" : @"off");
+    NSLog(@"over current protection %@", _status.overCurrentProtection ? @"on" : @"off");
+    NSLog(@"constant voltage %@", _status.constantVoltage ? @"on" : @"off");
     NSLog(@"constant current %@", _status.constantCurrent ? @"on" : @"off");
+    */
     
     [_delegate powerSupply:self status:[_status clone]];
 }
@@ -339,7 +346,7 @@
 {
     NSString *s = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
     float voltage = [s floatValue];
-    NSLog(@"preset voltage is %0.2f", voltage);
+//    NSLog(@"preset voltage is %0.2f", voltage);
     FDPowerSupplyChannel *channel = _status.channels[transaction.channel - 1];
     channel.presetVoltage = voltage;
 }
@@ -358,7 +365,7 @@
 {
     NSString *s = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
     float voltage = [s floatValue];
-    NSLog(@"voltage is %0.2f", voltage);
+//    NSLog(@"voltage is %0.2f", voltage);
     FDPowerSupplyChannel *channel = _status.channels[transaction.channel - 1];
     channel.voltage = voltage;
 }
@@ -374,14 +381,14 @@
 {
     NSString *s = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
     float current = [s floatValue];
-    NSLog(@"preset current is %0.2f", current);
+//    NSLog(@"preset current is %0.2f", current);
     FDPowerSupplyChannel *channel = _status.channels[transaction.channel - 1];
     channel.presetCurrent = current;
 }
 
 - (void)queryPresetCurrent:(int)channel
 {
-    [self send:[NSString stringWithFormat:@"ISET%d?", channel] receive:@selector(receivePresetCurrent:data:) length:5 channel:channel];
+    [self send:[NSString stringWithFormat:@"ISET%d?", channel] receive:@selector(receivePresetCurrent:data:) length:6 channel:channel];
 }
 
 - (void)setPreset:(int)channel current:(float)current
@@ -393,7 +400,7 @@
 {
     NSString *s = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
     float current = [s floatValue];
-    NSLog(@"current is %0.3f", current);
+//    NSLog(@"current is %0.3f", current);
     FDPowerSupplyChannel *channel = _status.channels[transaction.channel - 1];
     channel.current = current;
 }

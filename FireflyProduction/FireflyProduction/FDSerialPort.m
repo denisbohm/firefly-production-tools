@@ -470,8 +470,9 @@ error:
 {
     NSData *data = [_fileHandle availableData];
 //    NSLog(@"fileHandleReadComplete data.length=%lu data=%@", data.length, data);
-    
-    [_delegate serialPort:self didReceiveData:data];
+    if (data.length > 0) {
+        [_delegate serialPort:self didReceiveData:data];
+    }
 }
 
 - (void)open

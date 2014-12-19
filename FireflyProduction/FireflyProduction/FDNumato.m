@@ -38,8 +38,6 @@
     _serialPort = serialPort;
     
     [_serialPort setDelegate:self];
-    
-    NSLog(@"numato listening to serial port %@", _serialPort.path);
 }
 
 - (void)serialPort:(FDSerialPort *)serialPort didReceiveData:(NSData *)data
@@ -66,12 +64,12 @@
         matchRange.location = 0;
         NSString *match = [_text substringWithRange:matchRange];
         [_text replaceCharactersInRange:matchRange withString:@""];
-        NSLog(@"numato response: %@", match);
         [self dispatch:match];
     }
     
     // if we are getting unrecognizable data then clear it out occasionally...
-    if (_text.length > 50) {
+    if (_text.length > 500) {
+        NSLog(@"clearing junk data");
         [_text deleteCharactersInRange:NSMakeRange(0, _text.length)];
     }
 }
@@ -98,7 +96,7 @@
 - (void)dispatchAdcRead:(NSArray *)tokens
 {
     uint8_t channel = [self parseChannel:tokens[0]];
-    uint16_t value = [tokens[2] unsignedShortValue];
+    uint16_t value = [tokens[2] integerValue];
     [_delegate numato:self adc:channel value:value];
 }
 
@@ -120,6 +118,10 @@
 {
     NSArray *tokens = [response componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
     NSString *command = tokens[0];
+    if (tokens.count == 3) {
+        [_delegate numato:self echo:command];
+        return;
+    }
     if ([command isEqualToString:@"ver"]) {
         [self dispatchVer:tokens];
     } else
@@ -141,9 +143,10 @@
 
 - (void)println:(NSString *)line
 {
-    [_serialPort writeData:[line dataUsingEncoding:NSASCIIStringEncoding]];
-    uint8_t newline[] = {'\r'};
-    [_serialPort writeData:[NSData dataWithBytes:newline length:1]];
+    NSMutableData *data = [NSMutableData dataWithData:[line dataUsingEncoding:NSASCIIStringEncoding]];
+    uint8_t newline = '\r';
+    [data appendBytes:&newline length:1];
+    [_serialPort writeData:data];
 }
 
 - (void)ver {
