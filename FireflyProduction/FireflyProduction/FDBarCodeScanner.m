@@ -10,18 +10,17 @@
 
 @interface FDBarCodeScanner () <FDUSBHIDDeviceDelegate>
 
-@property FDUSBHIDDevice *device;
 @property NSMutableString *scan;
 
 @end
 
 @implementation FDBarCodeScanner
 
-- (id)initWithDevice:(FDUSBHIDDevice *)device
+- (id)initWithDevice:(FDUSBHIDDevice *)hidDevice
 {
     if (self = [super init]) {
-        _device = device;
-        _device.delegate = self;
+        _hidDevice = hidDevice;
+        _hidDevice.delegate = self;
         _scan = [NSMutableString string];
     }
     return self;

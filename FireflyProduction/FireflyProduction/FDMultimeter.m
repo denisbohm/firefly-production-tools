@@ -42,7 +42,7 @@
     
     [_serialPort setDelegate:self];
     
-    NSLog(@"multimeter listening to serial port %@", _serialPort.path);
+//    NSLog(@"multimeter listening to serial port %@", _serialPort.path);
 }
 
 - (void)serialPort:(FDSerialPort *)serialPort didReceiveData:(NSData *)data
@@ -66,7 +66,7 @@
         }
         NSData *match = [_data subdataWithRange:matchRange];
         [_data replaceBytesInRange:NSMakeRange(0, matchRange.location + matchRange.length) withBytes:NULL length:0];
-        NSLog(@"multimeter response: %@", match);
+//        NSLog(@"multimeter response: %@", match);
         [self dispatch:match];
     }
     
@@ -179,7 +179,7 @@
             break;
         default:
             NSLog(@"multimeter unknown function");
-            break;
+            return;
     }
 
     measurement.digits = [NSString stringWithFormat:@"%c%c%c%c%c", measurement.minusSign ? '-' : '+', digit3, digit2, digit1, digit0];

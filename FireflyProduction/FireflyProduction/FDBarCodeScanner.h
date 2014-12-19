@@ -20,8 +20,9 @@
 
 @interface FDBarCodeScanner : NSObject
 
-- (id)initWithDevice:(FDUSBHIDDevice *)device;
+- (id)initWithDevice:(FDUSBHIDDevice *)hidDevice;
 
+@property FDUSBHIDDevice *hidDevice;
 @property id<FDBarCodeScannerDelegate> delegate;
 
 @end
