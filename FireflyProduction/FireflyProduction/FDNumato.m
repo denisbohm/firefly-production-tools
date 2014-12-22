@@ -103,7 +103,7 @@
 - (void)dispatchGpioRead:(NSArray *)tokens
 {
     uint8_t channel = [self parseChannel:tokens[0]];
-    BOOL value = [tokens[2] isEqualToString:@"on"];
+    BOOL value = [tokens[2] isEqualToString:@"1"];
     [_delegate numato:self gpio:channel value:value];
 }
 
