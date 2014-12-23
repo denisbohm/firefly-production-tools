@@ -60,6 +60,10 @@
     if ([fileManager fileExistsAtPath:path isDirectory:NO]) {
         return path;
     }
+    path = [NSString stringWithFormat:@"%@/%@.elf", searchPath, name];
+    if ([fileManager fileExistsAtPath:path isDirectory:NO]) {
+        return path;
+    }
     return [[NSBundle bundleForClass: [self class]] pathForResource:name ofType:@"elf"];
 }
 
