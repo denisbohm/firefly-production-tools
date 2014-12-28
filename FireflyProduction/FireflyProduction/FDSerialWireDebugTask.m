@@ -11,14 +11,6 @@
 #import <ARMSerialWireDebug/FDSerialEngine.h>
 #import <ARMSerialWireDebug/FDEFM32.h>
 
-#define SCS_BASE (0xE000E000)
-#define SCB_BASE (SCS_BASE +  0x0D00)
-#define SCB_VTOR (SCB_BASE + 0x8)
-
-#define SCB_AIRCR 0xE000ED0C
-#define SCB_AIRCR_VECTKEY 0x05FA0000
-#define SCB_AIRCR_VECTRESET 0x00000001
-
 @implementation FDSerialWireDebugTask
 
 - (void)run
@@ -37,12 +29,9 @@
 
 - (void)clearInterrupts
 {
-    [self.serialWireDebug halt];
-    [self.serialWireDebug reset];
     // In "fresh" microcontrollers there seems to be interrupts pending, maybe due to preloaded boot loader?
     // The following resets everything except the debug interface.
-    [self.serialWireDebug writeMemory:SCB_AIRCR value:SCB_AIRCR_VECTKEY | SCB_AIRCR_VECTRESET];
-    [self.serialWireDebug step];
+    [self.serialWireDebug reset];
 }
 
 - (NSString *)getExecutablePath:(NSString *)name type:(NSString *)type searchPath:(NSString *)searchPath
@@ -164,7 +153,8 @@
     }
     
     // remap vector table to program start in RAM
-    [self.serialWireDebug writeMemory:SCB_VTOR value:ramStart];
+    [self.serialWireDebug reset];
+    [self.serialWireDebug setVectorTable:ramStart];
 
     return cortexM;
 }

@@ -19,8 +19,6 @@
 
 - (void)loadExecutable:(NSString *)name
 {
-    [self clearInterrupts];
-    
     NSString *processor = self.resources[@"processor"];
     FDFireflyFlash *flash = [FDFireflyFlash fireflyFlash:processor];
     [flash initialize:self.serialWireDebug];
