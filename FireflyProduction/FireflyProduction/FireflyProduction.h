@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FDI2C.h"
 #import "FDNumato.h"
 #import "FDPowerSupply.h"
 #import "FDMultimeter.h"
