@@ -140,6 +140,13 @@
     [self setupCortexM];
 }
 
+- (void)checkCancel
+{
+    if ([NSThread currentThread].isCancelled) {
+        @throw [NSException exceptionWithName:@"Cancelled" reason:@"Cancelled" userInfo:nil];
+    }
+}
+
 - (void)writePages:(uint32_t)address data:(NSData *)data
 {
     [self writePages:address data:data erase:NO];
@@ -150,6 +157,7 @@
     FDExecutableFunction *writePagesFunction = _fireflyFlashExecutable.functions[@"write_pages"];
     uint32_t offset = 0;
     while (offset < data.length) {
+        [self checkCancel];
         uint32_t length = (uint32_t) (data.length - offset);
         uint32_t pages = length / _pageSize;
         if (pages > _pagesPerWrite) {
