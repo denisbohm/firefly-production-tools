@@ -113,7 +113,7 @@
     FDFireflyIce *fireflyIce = helloTask.fireflyIce;
     id<FDFireflyIceChannel> channel = helloTask.channel;
     FDFirmwareUpdateTask *task = [FDFirmwareUpdateTask firmwareUpdateTask:fireflyIce channel:channel intelHex:_firmware];
-    task.useArea = YES;
+    task.useArea = _useArea;
     task.area = _area;
     task.downgrade = YES;
     task.commit = YES;

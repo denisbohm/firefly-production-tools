@@ -25,6 +25,7 @@
 @property NSString *identifier;
 @property NSObject *location;
 @property FDUSBHIDDevice *usbHidDevice;
+@property BOOL useArea;
 @property uint8_t area;
 @property FDIntelHex *firmware;
 @property FDFireflyIce *fireflyIce;
