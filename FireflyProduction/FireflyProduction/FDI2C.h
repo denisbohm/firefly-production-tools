@@ -18,4 +18,6 @@
 
 - (void)initialize;
 
+- (void)setGpioBit:(NSUInteger)bit value:(BOOL)value;
+
 @end

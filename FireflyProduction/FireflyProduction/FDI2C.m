@@ -51,7 +51,7 @@
     if (self = [super init]) {
         _logger = [[FDLogger alloc] init];
         
-        _gpioDirections = 0b0000000000000000; // all inputs
+        _gpioDirections = 0b1111111111111111; // all outputs
         _gpioOutputs    = 0b0000000000000000;
     }
     return self;
