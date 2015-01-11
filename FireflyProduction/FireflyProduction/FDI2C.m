@@ -25,7 +25,7 @@
 // 10 - black - GND
 //
 // LEDs:
-// ACBUS6 - red
+// ACBUS6 - red // gpio bit 13
 // ACBUS8 - green
 //
 // Power Control to VCC wire:
@@ -42,6 +42,8 @@
 @property UInt16 gpioOutputs;
 @property UInt16 gpioDirections;
 
+@property NSUInteger redLEDBit;
+
 @end
 
 @implementation FDI2C
@@ -50,15 +52,18 @@
 {
     if (self = [super init]) {
         _logger = [[FDLogger alloc] init];
-        
-        _gpioDirections = 0b1111111111111111; // all outputs
-        _gpioOutputs    = 0b0000000000000000;
     }
     return self;
 }
 
 - (void)initialize
 {
+    _gpioDirections = 0b0000000000000000; // all inputs
+    _gpioOutputs    = 0b0000000000000000;
+    
+    _redLEDBit = 13;
+    _gpioDirections |= 1 << _redLEDBit; // output
+    
     @try {
         [_serialEngine read];
     } @catch (NSException *e) {
@@ -83,8 +88,8 @@
 
 - (void)getGpios
 {
-    [_serialEngine getLowByte];
-    [_serialEngine getHighByte];
+    [_serialEngine getLowByte]; // ADBus 7-0
+    [_serialEngine getHighByte]; // ACBus 7-0
     [_serialEngine sendImmediate];
     [_serialEngine write];
     NSData *data = [_serialEngine read:2];
@@ -105,193 +110,226 @@
         return;
     }
     _gpioOutputs = outputs;
+    [self sendGpios:mask];
+}
+
+- (void)sendGpios:(uint16_t)mask
+{
     if (mask & 0x00ff) {
         [_serialEngine setLowByte:_gpioOutputs direction:_gpioDirections];
     } else {
         [_serialEngine setHighByte:_gpioOutputs >> 8 direction:_gpioDirections >> 8];
     }
+    [self.serialEngine write];
 }
 
-#if 0
-typedef uint8_t BYTE;
-typedef uint32_t DWORD;
-typedef uint32_t FT_STATUS;
-typedef uint32_t FT_HANDLE;
-
-const BYTE MSB_FALLING_EDGE_CLOCK_BYTE_IN = '\x24';
-const BYTE MSB_FALLING_EDGE_CLOCK_BYTE_OUT = '\x11';
-const BYTE MSB_RISING_EDGE_CLOCK_BIT_IN = '\x22';
-FT_STATUS ftStatus;
-FT_HANDLE ftHandle;
-BYTE OutputBuffer[1024];
-BYTE InputBuffer[1024];
-DWORD dwClockDivisor = 0x0095;
-DWORD dwNumBytesToSend = 0;
-DWORD dwNumBytesSent = 0, dwNumBytesRead = 0, dwNumInputBuffer = 0;
-DWORD dwCount;
-//Status defined in D2XX to indicate operation result
-//Handle of FT2232H device port
-//Buffer to hold MPSSE commands and data to be sent to FT2232H
-//Buffer to hold Data bytes to be read from FT2232H
-//Value of clock divisor, SCL Frequency = 60/((1+0x0095)*2) (MHz) = 200khz //Index of output buffer
-//////////////////////////////////////////////////////////////////////////////////////
-// Below function will setup the START condition for I2C bus communication. First, set SDA, SCL high and ensure hold time
-// requirement by device is met. Second, set SDA low, SCL high and ensure setup time requirement met. Finally, set SDA, SCL low ////////////////////////////////////////////////////////////////////////////////////////
-void HighSpeedSetI2CStart(void)
+- (void)setRedLED:(BOOL)value
 {
-    for(dwCount=0; dwCount < 4; dwCount++) // Repeat commands to ensure the minimum period of the start hold time ie 600ns is achieved
+    [self setGpioBit:_redLEDBit value:value];
+}
+
+- (void)setTristate:(NSUInteger)bit value:(BOOL)value
+{
+    if (value) {
+        [self configureGpiosAsInputs:1 << bit];
+    } else {
+        [self configureGpiosAsOutputs:1 << bit values:0x0000];
+    }
+}
+
+- (BOOL)getTristate:(NSUInteger)bit
+{
+    [self getGpios];
+    return (_gpioInputs >> bit) & 0x0001;
+}
+
+// Bit Bang I2C
+
+#define WRITE 0x0
+#define READ 0x1
+
+#define READ_SDA() [self getGpioInput:_sdaBit]
+#define SET_SDA_OUT() [self configureGpiosAsOutputs:1 << _sdaBit values:0x0000]
+#define SET_SDA_IN() [self configureGpiosAsInputs:1 << _sdaBit]
+#define SET_SDA(v) if (v) SET_SDA_IN(); else SET_SDA_OUT()
+
+#define READ_SCL() [self getGpioInput:_sclBit]
+#define TOGGLE_SCL()
+#define SET_SCL_OUT() [self configureGpiosAsOutputs:1 << _sclBit values:0x0000]
+#define SET_SCL_IN() [self configureGpiosAsInputs:1 << _sclBit]
+#define SET_SCL(v) if (v) {SET_SCL_IN(); while(!READ_SCL());} else SET_SCL_OUT()
+
+#define SCL_DELAY() [NSThread sleepForTimeInterval:1.0]
+#define SCL_SDA_DELAY() [NSThread sleepForTimeInterval:1.0]
+
+- (BOOL)getGpioInput:(NSUInteger)bit
+{
+    [self getGpios];
+    return (_gpioInputs >> bit) & 0x0001;
+}
+
+- (void)configureGpiosAsOutputs:(uint16_t)mask values:(uint16_t)values
+{
+    _gpioDirections |= mask;
+    _gpioOutputs = (_gpioOutputs & ~mask) | values;
+    [self sendGpios:mask];
+}
+
+- (void)configureGpiosAsInputs:(uint16_t)mask
+{
+    _gpioDirections &= ~mask;
+    [self sendGpios:mask];
+}
+
+- (BOOL)clearBus
+{
+    SET_SDA(1);
+    SET_SCL(1);
+    SCL_DELAY();
+    
+    if (READ_SDA() && READ_SCL()) {
+        return YES;
+    }
+    
+    if (READ_SCL()) {
+        // Clock max 18 pulses worst case scenario(9 for master to send the rest of command and 9 for slave to respond) to SCL line and wait for SDA come high
+        for (int i = 0; i < 18; --i) {
+            SET_SCL(0);
+            SCL_DELAY();
+            SET_SCL(1);
+            SCL_DELAY();
+            
+            if (READ_SDA()) {
+                return YES;
+            }
+        }
+    }
+    
+    return NO;
+}
+
+- (BOOL)twi_start_cond
+{
+    SET_SDA(0);
+    SCL_DELAY();
+    
+    SET_SCL(0);
+    SCL_DELAY();
+    
+    return YES;
+}
+
+- (BOOL)send_slave_address:(uint8_t)read
+{
+    return [self i2c_write_byte:_address | read];
+}
+
+- (BOOL)transmit:(uint8_t *)bytes length:(NSUInteger)length
+{
+    if (![self twi_start_cond]) {
+        return NO;
+    }
+    if (![self send_slave_address:WRITE]) {
+        return NO;
+    }
+    
+    BOOL ack = NO;
+    for (int index = 0; index < length; index++) {
+        ack = [self i2c_write_byte:bytes[index]];
+        if (!ack) {
+            break;
+        }
+    }
+    //put stop here
+    SET_SCL(1);
+    SCL_SDA_DELAY();
+    SET_SDA(1);
+    return ack;
+}
+
+- (BOOL)i2c_write_byte:(uint8_t)byte
+{
+    for (int bit = 0; bit < 8; bit++) {
+        SET_SDA((byte & 0x80) != 0);
+        SET_SCL(1);
+        SCL_DELAY();
+        SET_SCL(0);
+        byte <<= 1;
+        SCL_DELAY();
+    }
+    //release SDA
+    SET_SDA_IN();
+    SET_SCL(1); //goes high for the 9th clock
+    //Check for acknowledgment
+    if (READ_SDA()) {
+        return NO;
+    }
+    SCL_DELAY();
+    SET_SCL(0); //end of byte with acknowledgment.
+    //take SDA
+    SET_SDA_OUT();
+    SCL_DELAY();
+    return YES;
+}
+
+- (BOOL)receive:(uint8_t *)bytes length:(NSUInteger)length
+{
+    if (![self twi_start_cond]) {
+        return NO;
+    }
+    if (![self send_slave_address:READ]) {
+        return NO;
+    }
+    BOOL success = NO;
+    for (NSUInteger index = 0; index < length; index++) {
+        success = [self i2c_read_byte:bytes length:length index:index];
+        if (!success) {
+            break;
+        }
+    }
+    //put stop here
+    SET_SCL(1);
+    SCL_SDA_DELAY();
+    SET_SDA(1);
+    return success;
+}
+
+- (BOOL)i2c_read_byte:(uint8_t *)rcvdata length:(NSUInteger)length index:(NSUInteger)index
+{
+    unsigned char byte = 0;
+    //release SDA
+    SET_SDA_IN();
+    for (int bit = 0; bit < 8; bit++) {
+        SET_SCL(1);
+        if (READ_SDA()) {
+            byte |= (1 << (7 - bit));
+        }
+        SCL_DELAY();
+        SET_SCL(0);
+        SCL_DELAY();
+    }
+    rcvdata[index] = byte;
+    //take SDA
+    SET_SDA_OUT();
+    if (index < (length - 1)) {
+        SET_SDA(0);
+        SET_SCL(1); //goes high for the 9th clock
+        SCL_DELAY();
+        SET_SCL(0); //end of byte with acknowledgment.
+        //release SDA
+        SET_SDA(1);
+        SCL_DELAY();
+    }
+    else //send NACK on the last byte
     {
-        OutputBuffer[dwNumBytesToSend++] = '\x80'; //Command to set directions of lower 8 pins and force value on bits set as output
-    OutputBuffer[dwNumBytesToSend++] = '\x03'; //Set SDA, SCL high, WP disabled by SK, DO at bit „1‟, GPIOL0 at bit „0‟
-    OutputBuffer[dwNumBytesToSend++] = '\x13'; //Set SK,DO,GPIOL0 pins as output with bit „1‟, other pins as input with bit „0‟
+        SET_SDA(1);
+        SET_SCL(1); //goes high for the 9th clock
+        SCL_DELAY();
+        SET_SCL(0); //end of byte with acknowledgment.
+        //release SDA
+        SCL_DELAY();
+    }
+    return YES;
 }
-for(dwCount=0; dwCount < 4; dwCount++) // Repeat commands to ensure the minimum period of the start setup time ie 600ns is achieved
-{
-OutputBuffer[dwNumBytesToSend++] = '\x80'; //Command to set directions of lower 8 pins and force value on bits set as output OutputBuffer[dwNumBytesToSend++] = '\x01'; //Set SDA low, SCL high, WP disabled by SK at bit „1‟, DO, GPIOL0 at bit „0‟ OutputBuffer[dwNumBytesToSend++] = '\x13'; //Set SK,DO,GPIOL0 pins as output with bit „1‟, other pins as input with bit „0‟
-}
-OutputBuffer[dwNumBytesToSend++] = '\x80'; //Command to set directions of lower 8 pins and force value on bits set as output OutputBuffer[dwNumBytesToSend++] = '\x00'; //Set SDA, SCL low, WP disabled by SK, DO, GPIOL0 at bit „0‟ OutputBuffer[dwNumBytesToSend++] = '\x13'; //Set SK,DO,GPIOL0 pins as output with bit „1‟, other pins as input with bit „0‟
-}
-//////////////////////////////////////////////////////////////////////////////////////
-// Below function will setup the STOP condition for I2C bus communication. First, set SDA low, SCL high and ensure setup time
-// requirement by device is met. Second, set SDA, SCL high and ensure hold time requirement met. Finally, set SDA, SCL as input // to tristate the I2C bus.
-////////////////////////////////////////////////////////////////////////////////////////
-void HighSpeedSetI2CStop(void)
-{
-    DWORD dwCount;
-    for(dwCount=0; dwCount<4; dwCount++) // Repeat commands to ensure the minimum period of the stop setup time ie 600ns is achieved
-    {
-        OutputBuffer[dwNumBytesToSend++] = '\x80'; //Command to set directions of lower 8 pins and force value on bits set as output
-    OutputBuffer[dwNumBytesToSend++] = '\x01'; //Set SDA low, SCL high, WP disabled by SK at bit „1‟, DO, GPIOL0 at bit „0‟
-    OutputBuffer[dwNumBytesToSend++] = '\x13'; //Set SK,DO,GPIOL0 pins as output with bit „1‟, other pins as input with bit „0‟
-}
-for(dwCount=0; dwCount<4; dwCount++) // Repeat commands to ensure the minimum period of the stop hold time ie 600ns is achieved
-{
-OutputBuffer[dwNumBytesToSend++] = '\x80'; //Command to set directions of lower 8 pins and force value on bits set as output
-OutputBuffer[dwNumBytesToSend++] = '\x03'; //Set SDA, SCL high, WP disabled by SK, DO at bit „1‟, GPIOL0 at bit „0‟
-OutputBuffer[dwNumBytesToSend++] = '\x13'; //Set SK,DO,GPIOL0 pins as output with bit „1‟, other pins as input with bit „0‟
-}
-//Tristate the SCL, SDA pins
-OutputBuffer[dwNumBytesToSend++] = '\x80'; //Command to set directions of lower 8 pins and force value on bits set as output
-OutputBuffer[dwNumBytesToSend++] = '\x00'; //Set WP disabled by GPIOL0 at bit „0‟
-OutputBuffer[dwNumBytesToSend++] = '\x10'; //Set GPIOL0 pins as output with bit „1‟, SK, DO and other pins as input with bit „0‟
-}
-//////////////////////////////////////////////////////////////////////////////////////
-// Below function will send a data byte to I2C-bus EEPROM 24LC256, then check if the ACK bit sent from 24LC256 device can be received. // Return true if data is successfully sent and ACK bit is received. Return false if error during sending data or ACK bit can‟t be received //////////////////////////////////////////////////////////////////////////////////////
-BOOL SendByteAndCheckACK(BYTE dwDataSend)
-{
-    FT_STATUS ftStatus = FT_OK;
-    OutputBuffer[dwNumBytesToSend++] = MSB_FALLING_EDGE_CLOCK_BYTE_OUT; //Clock data byte out on –ve Clock Edge MSB first
-    ￼ftStatus |= FT_SetChars(ftHandle, false, 0, false, 0);
-    ftStatus |= FT_SetTimeouts(ftHandle, 0, 5000);
-    ftStatus |= FT_SetLatencyTimer(ftHandle, 16);
-    ftStatus |= FT_SetBitMode(ftHandle, 0x0, 0x00);
-    ftStatus |= FT_SetBitMode(ftHandle, 0x0, 0x02);
-    //Disable event and error characters
-    //Sets the read and write timeouts in milliseconds for the FT2232H //Set the latency timer
-    //Reset controller
-    //Enable MPSSE mode
-    if (ftStatus != FT_OK)
-    { /*Error on initialize MPSEE of FT2232H*/ }
-    Sleep(50); // Wait for all the USB stuff to complete and work
-    ￼OutputBuffer[dwNumBytesToSend++] = '\x00';
-    OutputBuffer[dwNumBytesToSend++] = '\x00';
-    OutputBuffer[dwNumBytesToSend++] = dwDataSend;
-    //Get Acknowledge bit from EEPROM
-    OutputBuffer[dwNumBytesToSend++] = '\x80'; //Command to set directions of lower 8 pins and force value on bits set as output
-    OutputBuffer[dwNumBytesToSend++] = '\x00'; //Set SCL low, WP disabled by SK, GPIOL0 at bit „0‟ OutputBuffer[dwNumBytesToSend++] = '\x11'; //Set SK, GPIOL0 pins as output with bit „1‟, DO and other pins as input with bit „0‟
-    OutputBuffer[dwNumBytesToSend++] = MSB_RISING_EDGE_CLOCK_BIT_IN; //Command to scan in ACK bit , -ve clock Edge MSB first
-    OutputBuffer[dwNumBytesToSend++] = '\x0'; //Length of 0x0 means to scan in 1 bit
-    OutputBuffer[dwNumBytesToSend++] = '\x87'; //Send answer back immediate command
-    ftStatus = FT_Write(ftHandle, OutputBuffer, dwNumBytesToSend, &dwNumBytesSent); //Send off the commands dwNumBytesToSend = 0; //Clear output buffer
-    //Check if ACK bit received, may need to read more times to get ACK bit or fail if timeout
-    ftStatus = FT_Read(ftHandle, InputBuffer, 1, &dwNumBytesRead); //Read one byte from device receive buffer
-    if ((ftStatus != FT_OK) || (dwNumBytesRead == 0))
-    { return FALSE; /*Error, can't get the ACK bit from EEPROM */ }
-    else
-        if (((InputBuffer[0] & BYTE('\x1')) != BYTE('\x0')) ) //Check ACK bit 0 on data byte read out
-        { return FALSE; /*Error, can't get the ACK bit from EEPROM */ } OutputBuffer[dwNumBytesToSend++] = '\x80'; //Command to set directions of lower 8 pins and force value on bits set as output OutputBuffer[dwNumBytesToSend++] = '\x02'; //Set SDA high, SCL low, WP disabled by SK at bit '0', DO, GPIOL0 at bit '1' OutputBuffer[dwNumBytesToSend++] = '\x13'; //Set SK,DO,GPIOL0 pins as output with bit „1‟, other pins as input with bit „0‟ return TRUE;
-}
-
-void Initialize(void)
-{
-    ////////////////////////////////////////////////////////////////////
-    //Configure the MPSSE settings for I2C communication with 24LC256 //////////////////////////////////////////////////////////////////
-    OutputBuffer[dwNumBytesToSend++] = '\x8A'; //Ensure disable clock divide by 5 for 60Mhz master clock OutputBuffer[dwNumBytesToSend++] = '\x97'; //Ensure turn off adaptive clocking
-    OutputBuffer[dwNumBytesToSend++] = '\x8D'; //Enable 3 phase data clock, used by I2C to allow data on both clock edges ftStatus = FT_Write(ftHandle, OutputBuffer, dwNumBytesToSend, &dwNumBytesSent); // Send off the commands
-    ￼DWORD dwNumBytesToSend = 0;
-    OutputBuffer[dwNumBytesToSend++] = '\x80';
-    OutputBuffer[dwNumBytesToSend++] = '\x03';
-    OutputBuffer[dwNumBytesToSend++] = '\x13';
-    // The SK clock frequency can be worked out by below algorithm with divide by 5 set as off
-    // SK frequency = 60MHz /((1 + [(1 +0xValueH*256) OR 0xValueL])*2)
-    OutputBuffer[dwNumBytesToSend++] = '\x86'; //Command to set clock divisor OutputBuffer[dwNumBytesToSend++] = dwClockDivisor & '\xFF'; //Set 0xValueL of clock divisor OutputBuffer[dwNumBytesToSend++] = (dwClockDivisor >> 8) & '\xFF'; //Set 0xValueH of clock divisor ftStatus = FT_Write(ftHandle, OutputBuffer, dwNumBytesToSend, &dwNumBytesSent); // Send off the commands
-    //Clear output buffer
-    //Command to set directions of lower 8 pins and force value on bits set as output //Set SDA, SCL high, WP disabled by SK, DO at bit „1‟, GPIOL0 at bit „0‟
-    //Set SK,DO,GPIOL0 pins as output with bit ‟, other pins as input with bit „‟
-    dwNumBytesToSend = 0;
-    Sleep(20);
-    //Turn off loop back in case
-    OutputBuffer[dwNumBytesToSend++] = '\x85';
-    ftStatus = FT_Write(ftHandle, OutputBuffer, dwNumBytesToSend, &dwNumBytesSent); // Send off the commands dwNumBytesToSend = 0; //Clear output buffer
-    Sleep(30);
-    //Delay for a while
-}
-
-void Write(void)
-{
-    BOOL bSucceed = TRUE;
-    BYTE ByteAddressHigh = 0x00; BYTE ByteAddressLow = 0x80; BYTE ByteDataToBeSend = 0x5A;
-    HighSpeedSetI2CStart();
-    bSucceed = SendByteAndCheckACK(0xAE);
-    //Set program address is 0x0080 as example //Set data byte to be programmed as example
-    //Set START condition for I2C communication
-    //Set control byte and check ACK bit. bit 4-7 of control byte is control code, // bit 1-3 of „111‟ as block select bits, bit 0 of „0‟represent Write operation
-    bSucceed = SendByteAndCheckACK(ByteAddressHigh); //Send high address byte and check if ACK bit is received
-    bSucceed = SendByteAndCheckACK(ByteAddressLow); //Send low address byte and check if ACK bit is received
-    bSucceed = SendByteAndCheckACK(ByteDataToBeSend); //Send data byte and check if ACK bit is received
-    HighSpeedSetI2CStop(); //Set STOP condition for I2C communication //Send off the commands
-    ftStatus = FT_Write(ftHandle, OutputBuffer, dwNumBytesToSend, &dwNumBytesSent);
-    dwNumBytesToSend = 0; Sleep(50);
-    //Clear output buffer
-    //Delay for a while to ensure EEPROM program is completed
-}
-
-void Read(void)
-{
-    BOOL bSucceed = TRUE;
-    BYTE ByteAddressHigh = 0x00;
-    BYTE ByteAddressLow = 0x80; //Set read address is 0x0080 as example BYTE ByteDataRead; //Data to be read from EEPROM
-    //Purge USB receive buffer first before read operation
-    ftStatus = FT_GetQueueStatus(ftHandle, &dwNumInputBuffer); // Get the number of bytes in the device receive buffer if ((ftStatus == FT_OK) && (dwNumInputBuffer > 0))
-    FT_Read(ftHandle, &InputBuffer, dwNumInputBuffer, &dwNumBytesRead); //Read out all the data from receive buffer
-    HighSpeedSetI2CStart(); //Set START condition for I2C communication
-    bSucceed = SendByteAndCheckACK(0xAE); //Set control byte and check ACK bit. bit 4-7 of control byte is control code,
-    // bit 1-3 of „111‟ as block select bits, bit 0 of „0‟represent Write operation bSucceed = SendByteAndCheckACK(ByteAddressHigh); //Send high address byte and check if ACK bit is received
-    bSucceed = SendByteAndCheckACK(ByteAddressLow); //Send low address byte and check if ACK bit is received
-    ￼￼HighSpeedSetI2CStart();
-    bSucceed = SendByteAndCheckACK(0xAF); //Set control byte and check ACK bit.  bit 4-7 as 1010 of control byte is control code
-    // bit 1-3 of 111 as block select bits, bit 0 as 1 represent Read operation
-    //////////////////////////////////////////////////////////
-    // Read the data from 24LC256 with no ACK bit check
-    //////////////////////////////////////////////////////////
-    OutputBuffer[dwNumBytesToSend++] = '\x80'; //Command to set directions of lower 8 pins and force value on bits set as output
-    OutputBuffer[dwNumBytesToSend++] = '\x00'; //Set SCL low, WP disabled by SK, GPIOL0 at bit `'
-    OutputBuffer[dwNumBytesToSend++] = '\x11'; //Set SK, CPIOL0 pins as output with bit '', D0 and other pins as input with `'
-    OutputBuffer[dwNumBytesToSend++] = MSB_FALLING_EDGE_CLOCK_BYTE_IN; //Command to clock data byte in on –ve Clock Edge MSB first OutputBuffer[dwNumBytesToSend++] = '\x00';
-    OutputBuffer[dwNumBytesToSend++] = '\x00'; //Data length of 0x0000 means 1 byte data to clock in OutputBuffer[dwNumBytesToSend++] = MSB_RISING_EDGE_CLOCK_BIT_IN; //Command to scan in acknowledge bit , -ve clock Edge MSB first OutputBuffer[dwNumBytesToSend++] = '\x0'; //Length of 0 means to scan in 1 bit
-    OutputBuffer[dwNumBytesToSend++] = '\x87'; //Send answer back immediate command
-    ftStatus = FT_Write(ftHandle, OutputBuffer, dwNumBytesToSend, &dwNumBytesSent); //Send off the commands dwNumBytesToSend = 0; //Clear output buffer
-    //Read two bytes from device receive buffer, first byte is data read from EEPROM, second byte is ACK bit
-    ftStatus = FT_Read(ftHandle, InputBuffer, 2, &dwNumBytesRead);
-    ByteDataRead = InputBuffer[0]; //Return the data read from EEPROM
-    OutputBuffer[dwNumBytesToSend++] = '\x80'; //Command to set directions of lower 8 pins and force value on bits set as output
-    OutputBuffer[dwNumBytesToSend++] = '\x02'; //Set SDA high, SCL low, WP disabled by SK at bit 0, D0, GPIOL0 at bit 1
-    OutputBuffer[dwNumBytesToSend++] = '\x13'; //Set SK,D0,GPIOL0 pins as output with bit '', other pins as input with bit `'
-    HighSpeedSetI2CStop();
-    //Send off the commands
-    ftStatus = FT_Write(ftHandle, OutputBuffer, dwNumBytesToSend, &dwNumBytesSent); dwNumBytesToSend = 0; //Clear output buffer
-}
-
-#endif
 
 @end
