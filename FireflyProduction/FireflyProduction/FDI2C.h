@@ -33,6 +33,8 @@
 - (void)setTristate:(NSUInteger)bit value:(BOOL)value;
 - (BOOL)getTristate:(NSUInteger)bit;
 
+@property NSTimeInterval clockStretchTimeout;
+
 @property NSUInteger sdaBit;
 @property NSUInteger sclBit;
 

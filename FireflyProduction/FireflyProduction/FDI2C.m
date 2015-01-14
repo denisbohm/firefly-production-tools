@@ -52,6 +52,7 @@
 {
     if (self = [super init]) {
         _logger = [[FDLogger alloc] init];
+        _clockStretchTimeout = 1.0;
     }
     return self;
 }
@@ -61,8 +62,9 @@
     _gpioDirections = 0b0000000000000000; // all inputs
     _gpioOutputs    = 0b0000000000000000;
     
-    _redLEDBit = 13;
+    _redLEDBit = 14;
     _gpioDirections |= 1 << _redLEDBit; // output
+    _gpioOutputs |= 1 << _redLEDBit; // high == LED OFF
     
     @try {
         [_serialEngine read];
@@ -125,7 +127,7 @@
 
 - (void)setRedLED:(BOOL)value
 {
-    [self setGpioBit:_redLEDBit value:value];
+    [self setGpioBit:_redLEDBit value:!value];
 }
 
 - (void)setTristate:(NSUInteger)bit value:(BOOL)value
@@ -157,10 +159,10 @@
 #define TOGGLE_SCL()
 #define SET_SCL_OUT() [self configureGpiosAsOutputs:1 << _sclBit values:0x0000]
 #define SET_SCL_IN() [self configureGpiosAsInputs:1 << _sclBit]
-#define SET_SCL(v) if (v) {SET_SCL_IN(); while(!READ_SCL());} else SET_SCL_OUT()
+#define SET_SCL(v) [self setScl:v]
 
-#define SCL_DELAY() [NSThread sleepForTimeInterval:1.0]
-#define SCL_SDA_DELAY() [NSThread sleepForTimeInterval:1.0]
+#define SCL_DELAY() [NSThread sleepForTimeInterval:0.0001]
+#define SCL_SDA_DELAY() [NSThread sleepForTimeInterval:0.0001]
 
 - (BOOL)getGpioInput:(NSUInteger)bit
 {
@@ -193,7 +195,7 @@
     
     if (READ_SCL()) {
         // Clock max 18 pulses worst case scenario(9 for master to send the rest of command and 9 for slave to respond) to SCL line and wait for SDA come high
-        for (int i = 0; i < 18; --i) {
+        for (int i = 0; i < 18; ++i) {
             SET_SCL(0);
             SCL_DELAY();
             SET_SCL(1);
@@ -208,34 +210,47 @@
     return NO;
 }
 
-- (BOOL)twi_start_cond
+- (void)sendStartCondition
 {
+    NSLog(@"i2c start");
+
     SET_SDA(0);
     SCL_DELAY();
     
     SET_SCL(0);
     SCL_DELAY();
-    
-    return YES;
 }
 
-- (BOOL)send_slave_address:(uint8_t)read
+- (void)setScl:(BOOL)value
 {
-    return [self i2c_write_byte:_address | read];
+    if (value) {
+        SET_SCL_IN();
+        NSDate *deadline = [NSDate dateWithTimeIntervalSinceNow:_clockStretchTimeout];
+        while (!READ_SCL()) {
+            if ([[NSDate date] isGreaterThanOrEqualTo:deadline]) {
+                @throw [NSException exceptionWithName:@"ClocKStretchTimeout" reason:@"clock stretch timeout" userInfo:nil];
+            }
+        }
+    } else {
+        SET_SCL_OUT();
+    }
+}
+
+- (BOOL)sendSlaveAddress:(uint8_t)read
+{
+    return [self i2cWriteByte:_address | read];
 }
 
 - (BOOL)transmit:(uint8_t *)bytes length:(NSUInteger)length
 {
-    if (![self twi_start_cond]) {
-        return NO;
-    }
-    if (![self send_slave_address:WRITE]) {
+    [self sendStartCondition];
+    if (![self sendSlaveAddress:WRITE]) {
         return NO;
     }
     
     BOOL ack = NO;
     for (int index = 0; index < length; index++) {
-        ack = [self i2c_write_byte:bytes[index]];
+        ack = [self i2cWriteByte:bytes[index]];
         if (!ack) {
             break;
         }
@@ -244,11 +259,14 @@
     SET_SCL(1);
     SCL_SDA_DELAY();
     SET_SDA(1);
+    NSLog(@"i2c stop");
     return ack;
 }
 
-- (BOOL)i2c_write_byte:(uint8_t)byte
+- (BOOL)i2cWriteByte:(uint8_t)byte
 {
+    NSLog(@"i2c write byte %02x", byte);
+    
     for (int bit = 0; bit < 8; bit++) {
         SET_SDA((byte & 0x80) != 0);
         SET_SCL(1);
@@ -262,6 +280,7 @@
     SET_SCL(1); //goes high for the 9th clock
     //Check for acknowledgment
     if (READ_SDA()) {
+        NSLog(@"i2c write byte NACK");
         return NO;
     }
     SCL_DELAY();
@@ -269,32 +288,28 @@
     //take SDA
     SET_SDA_OUT();
     SCL_DELAY();
+    NSLog(@"i2c write byte ack");
     return YES;
 }
 
 - (BOOL)receive:(uint8_t *)bytes length:(NSUInteger)length
 {
-    if (![self twi_start_cond]) {
+    [self sendStartCondition];
+    if (![self sendSlaveAddress:READ]) {
         return NO;
     }
-    if (![self send_slave_address:READ]) {
-        return NO;
-    }
-    BOOL success = NO;
     for (NSUInteger index = 0; index < length; index++) {
-        success = [self i2c_read_byte:bytes length:length index:index];
-        if (!success) {
-            break;
-        }
+        [self i2cReadByte:bytes length:length index:index];
     }
     //put stop here
     SET_SCL(1);
     SCL_SDA_DELAY();
     SET_SDA(1);
-    return success;
+    NSLog(@"i2c stop");
+    return YES;
 }
 
-- (BOOL)i2c_read_byte:(uint8_t *)rcvdata length:(NSUInteger)length index:(NSUInteger)index
+- (void)i2cReadByte:(uint8_t *)rcvdata length:(NSUInteger)length index:(NSUInteger)index
 {
     unsigned char byte = 0;
     //release SDA
@@ -308,6 +323,8 @@
         SET_SCL(0);
         SCL_DELAY();
     }
+    NSLog(@"i2c read byte %02x", byte);
+    
     rcvdata[index] = byte;
     //take SDA
     SET_SDA_OUT();
@@ -329,7 +346,6 @@
         //release SDA
         SCL_DELAY();
     }
-    return YES;
 }
 
 @end
