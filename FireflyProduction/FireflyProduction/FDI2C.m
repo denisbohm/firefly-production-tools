@@ -219,7 +219,7 @@
 
 - (void)sendStartCondition
 {
-    NSLog(@"i2c start");
+//    NSLog(@"i2c start");
 
     SET_SDA(0);
     SCL_DELAY();
@@ -268,13 +268,13 @@
     SET_SCL(1);
     SCL_SDA_DELAY();
     SET_SDA(1);
-    NSLog(@"i2c stop");
+//    NSLog(@"i2c stop");
     return ack;
 }
 
 - (BOOL)i2cWriteByte:(uint8_t)byte
 {
-    NSLog(@"i2c write byte %02x", byte);
+//    NSLog(@"i2c write byte %02x", byte);
     
     for (int bit = 0; bit < 8; bit++) {
         SET_SDA((byte & 0x80) != 0);
@@ -289,7 +289,7 @@
     SET_SCL(1); //goes high for the 9th clock
     //Check for acknowledgment
     if (READ_SDA()) {
-        NSLog(@"i2c write byte NACK");
+//        NSLog(@"i2c write byte NACK");
         return NO;
     }
     SCL_DELAY();
@@ -297,7 +297,7 @@
     //take SDA
     SET_SDA_OUT();
     SCL_DELAY();
-    NSLog(@"i2c write byte ack");
+//    NSLog(@"i2c write byte ack");
     return YES;
 }
 
@@ -316,7 +316,7 @@
     SET_SCL(1);
     SCL_SDA_DELAY();
     SET_SDA(1);
-    NSLog(@"i2c stop");
+//    NSLog(@"i2c stop");
     return YES;
 }
 
@@ -334,7 +334,7 @@
         SET_SCL(0);
         SCL_DELAY();
     }
-    NSLog(@"i2c read byte %02x", byte);
+//    NSLog(@"i2c read byte %02x", byte);
     
     rcvdata[index] = byte;
     //take SDA
