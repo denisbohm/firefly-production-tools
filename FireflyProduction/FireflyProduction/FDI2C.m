@@ -145,6 +145,13 @@
     return (_gpioInputs >> bit) & 0x0001;
 }
 
+- (void)checkCancel
+{
+    if ([NSThread currentThread].isCancelled) {
+        @throw [NSException exceptionWithName:@"Cancelled" reason:@"Cancelled" userInfo:nil];
+    }
+}
+
 // Bit Bang I2C
 
 #define WRITE 0x0
@@ -243,6 +250,8 @@
 
 - (BOOL)transmit:(uint8_t *)bytes length:(NSUInteger)length
 {
+    [self checkCancel];
+    
     [self sendStartCondition];
     if (![self sendSlaveAddress:WRITE]) {
         return NO;
@@ -294,6 +303,8 @@
 
 - (BOOL)receive:(uint8_t *)bytes length:(NSUInteger)length
 {
+    [self checkCancel];
+    
     [self sendStartCondition];
     if (![self sendSlaveAddress:READ]) {
         return NO;
