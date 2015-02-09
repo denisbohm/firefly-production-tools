@@ -113,7 +113,7 @@
             break;
         case 0b0111101: // uA current
             measurement.function = FDMultimeterFunctionMicroAmpCurrent;
-            measurement.rangeScale = 0.1;
+            measurement.rangeScale = 1.0;
             measurement.functionScale = 1e-6;
             break;
         case 0b0111001: // mA current
@@ -125,7 +125,6 @@
             measurement.function = FDMultimeterFunctionAmpCurrent;
             measurement.rangeScale = 0.01 * pow(10, rangeCode & 0x7); // ??? not documented -denis
             measurement.functionScale = 1.0;
-            break;
             break;
         case 0b0110011: // ohm
             measurement.function = FDMultimeterFunctionOhm;
