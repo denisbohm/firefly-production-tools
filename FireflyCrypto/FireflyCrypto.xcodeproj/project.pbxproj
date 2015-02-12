@@ -1,0 +1,317 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		922A14811A8CEF990069043E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 922A14801A8CEF990069043E /* main.m */; };
+		922A14901A8CF69A0069043E /* FireflyDevice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 922A148D1A8CF5500069043E /* FireflyDevice.framework */; };
+		92FC7E8F1A8D258A002D609F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92FC7E8E1A8D258A002D609F /* Security.framework */; };
+		92FC7E911A8D25BA002D609F /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92FC7E901A8D25BA002D609F /* CoreFoundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		922A148C1A8CF5500069043E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 922A14871A8CF5500069043E /* FireflyDevice.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 921E2FB41A7EEFCA001899B9;
+			remoteInfo = FireflyDevice;
+		};
+		922A148E1A8CF5500069043E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 922A14871A8CF5500069043E /* FireflyDevice.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 921E2FBF1A7EEFCA001899B9;
+			remoteInfo = FireflyDeviceTests;
+		};
+		922A14911A8CF6A00069043E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 922A14871A8CF5500069043E /* FireflyDevice.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 921E2FB31A7EEFCA001899B9;
+			remoteInfo = FireflyDevice;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		922A147B1A8CEF990069043E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		922A147D1A8CEF990069043E /* FireflyCrypto */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FireflyCrypto; sourceTree = BUILT_PRODUCTS_DIR; };
+		922A14801A8CEF990069043E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		922A14871A8CF5500069043E /* FireflyDevice.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FireflyDevice.xcodeproj; path = "../../firefly-ice-api/MacOSX/FireflyDevice/FireflyDevice.xcodeproj"; sourceTree = "<group>"; };
+		92FC7E8E1A8D258A002D609F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		92FC7E901A8D25BA002D609F /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		922A147A1A8CEF990069043E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92FC7E911A8D25BA002D609F /* CoreFoundation.framework in Frameworks */,
+				92FC7E8F1A8D258A002D609F /* Security.framework in Frameworks */,
+				922A14901A8CF69A0069043E /* FireflyDevice.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		922A14741A8CEF990069043E = {
+			isa = PBXGroup;
+			children = (
+				92FC7E901A8D25BA002D609F /* CoreFoundation.framework */,
+				92FC7E8E1A8D258A002D609F /* Security.framework */,
+				922A14871A8CF5500069043E /* FireflyDevice.xcodeproj */,
+				922A147F1A8CEF990069043E /* FireflyCrypto */,
+				922A147E1A8CEF990069043E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		922A147E1A8CEF990069043E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				922A147D1A8CEF990069043E /* FireflyCrypto */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		922A147F1A8CEF990069043E /* FireflyCrypto */ = {
+			isa = PBXGroup;
+			children = (
+				922A14801A8CEF990069043E /* main.m */,
+			);
+			path = FireflyCrypto;
+			sourceTree = "<group>";
+		};
+		922A14881A8CF5500069043E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				922A148D1A8CF5500069043E /* FireflyDevice.framework */,
+				922A148F1A8CF5500069043E /* FireflyDeviceTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		922A147C1A8CEF990069043E /* FireflyCrypto */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 922A14841A8CEF990069043E /* Build configuration list for PBXNativeTarget "FireflyCrypto" */;
+			buildPhases = (
+				922A14791A8CEF990069043E /* Sources */,
+				922A147A1A8CEF990069043E /* Frameworks */,
+				922A147B1A8CEF990069043E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				922A14921A8CF6A00069043E /* PBXTargetDependency */,
+			);
+			name = FireflyCrypto;
+			productName = FireflyCrypto;
+			productReference = 922A147D1A8CEF990069043E /* FireflyCrypto */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		922A14751A8CEF990069043E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = "Firefly Design";
+				TargetAttributes = {
+					922A147C1A8CEF990069043E = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+				};
+			};
+			buildConfigurationList = 922A14781A8CEF990069043E /* Build configuration list for PBXProject "FireflyCrypto" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 922A14741A8CEF990069043E;
+			productRefGroup = 922A147E1A8CEF990069043E /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 922A14881A8CF5500069043E /* Products */;
+					ProjectRef = 922A14871A8CF5500069043E /* FireflyDevice.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				922A147C1A8CEF990069043E /* FireflyCrypto */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		922A148D1A8CF5500069043E /* FireflyDevice.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FireflyDevice.framework;
+			remoteRef = 922A148C1A8CF5500069043E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		922A148F1A8CF5500069043E /* FireflyDeviceTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = FireflyDeviceTests.xctest;
+			remoteRef = 922A148E1A8CF5500069043E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXSourcesBuildPhase section */
+		922A14791A8CEF990069043E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				922A14811A8CEF990069043E /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		922A14921A8CF6A00069043E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FireflyDevice;
+			targetProxy = 922A14911A8CF6A00069043E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		922A14821A8CEF990069043E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		922A14831A8CEF990069043E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		922A14851A8CEF990069043E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		922A14861A8CEF990069043E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		922A14781A8CEF990069043E /* Build configuration list for PBXProject "FireflyCrypto" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				922A14821A8CEF990069043E /* Debug */,
+				922A14831A8CEF990069043E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		922A14841A8CEF990069043E /* Build configuration list for PBXNativeTarget "FireflyCrypto" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				922A14851A8CEF990069043E /* Debug */,
+				922A14861A8CEF990069043E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 922A14751A8CEF990069043E /* Project object */;
+}
