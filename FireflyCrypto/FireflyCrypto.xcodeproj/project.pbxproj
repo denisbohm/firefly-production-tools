@@ -11,6 +11,7 @@
 		920C5C561A956098001FBBA0 /* FDIntelHex.m in Sources */ = {isa = PBXBuildFile; fileRef = 920C5C541A956098001FBBA0 /* FDIntelHex.m */; };
 		920C5C5B1A95639E001FBBA0 /* FDJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 920C5C5A1A95639E001FBBA0 /* FDJSON.m */; };
 		922A14811A8CEF990069043E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 922A14801A8CEF990069043E /* main.m */; };
+		92556A741A958C2100546DE4 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = 92556A731A958C2100546DE4 /* sha1.c */; };
 		92FC7E8F1A8D258A002D609F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92FC7E8E1A8D258A002D609F /* Security.framework */; };
 		92FC7E911A8D25BA002D609F /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92FC7E901A8D25BA002D609F /* CoreFoundation.framework */; };
 /* End PBXBuildFile section */
@@ -45,6 +46,8 @@
 		920C5C5A1A95639E001FBBA0 /* FDJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FDJSON.m; path = "../../../firefly-ice-api/FireflyDevice/FireflyDevice/FDJSON.m"; sourceTree = "<group>"; };
 		922A147D1A8CEF990069043E /* FireflyCrypto */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FireflyCrypto; sourceTree = BUILT_PRODUCTS_DIR; };
 		922A14801A8CEF990069043E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		92556A721A958C2100546DE4 /* sha.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sha.h; path = "../../../firefly-ice-firmware/src/sha.h"; sourceTree = "<group>"; };
+		92556A731A958C2100546DE4 /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sha1.c; path = "../../../firefly-ice-firmware/src/sha1.c"; sourceTree = "<group>"; };
 		92FC7E8E1A8D258A002D609F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		92FC7E901A8D25BA002D609F /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -83,6 +86,8 @@
 		922A147F1A8CEF990069043E /* FireflyCrypto */ = {
 			isa = PBXGroup;
 			children = (
+				92556A721A958C2100546DE4 /* sha.h */,
+				92556A731A958C2100546DE4 /* sha1.c */,
 				920C5C591A95639E001FBBA0 /* FDJSON.h */,
 				920C5C5A1A95639E001FBBA0 /* FDJSON.m */,
 				920C5C511A956098001FBBA0 /* FDCrypto.h */,
@@ -151,6 +156,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92556A741A958C2100546DE4 /* sha1.c in Sources */,
 				920C5C561A956098001FBBA0 /* FDIntelHex.m in Sources */,
 				920C5C551A956098001FBBA0 /* FDCrypto.m in Sources */,
 				922A14811A8CEF990069043E /* main.m in Sources */,

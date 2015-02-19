@@ -11,6 +11,8 @@
 #import "FDCrypto.h"
 #import "FDIntelHex.h"
 
+#include "sha.h"
+
 @interface FDFireflyCrypto : NSObject
 
 - (void)main:(int)argc argv:(char * const [])argv;
@@ -51,6 +53,14 @@
     return data;
 }
 
+- (uint32_t)getHex:(NSString *)object
+{
+    NSScanner *scanner = [NSScanner scannerWithString:object];
+    unsigned int value = 0;
+    [scanner scanHexInt:&value];
+    return value;
+}
+
 - (void)main:(int)argc argv:(char * const [])argv
 {
     NSString *firmwarePath = @"firmware.hex";
@@ -79,7 +89,8 @@
     }
     FDIntelHex *firmware = [FDIntelHex intelHex:content address:0 length:0];
     NSMutableData *data = [NSMutableData dataWithData:firmware.data];
-    NSUInteger padding = (16 - (data.length % 16)) % 16;
+#define BLOCK_SIZE 16
+    NSUInteger padding = (BLOCK_SIZE - (data.length % BLOCK_SIZE)) % BLOCK_SIZE;
     if (padding > 0) {
         [data appendData:[self randomData:padding]];
     }
@@ -88,9 +99,9 @@
     encryptedFirmware.properties = [NSMutableDictionary dictionaryWithDictionary:firmware.properties];
     encryptedFirmware.properties[@"encrypted"] = @YES;
     encryptedFirmware.properties[@"length"] = [NSString stringWithFormat:@"0x%lx", (unsigned long)data.length];
-    encryptedFirmware.properties[@"hash"] = [self formatData:[FDCrypto hash:data]];
+    encryptedFirmware.properties[@"hash"] = [self formatData:[FDCrypto sha1:data]];
     encryptedFirmware.properties[@"cryptIV"] = [self formatData:iv];
-    encryptedFirmware.properties[@"cryptHash"] = [self formatData:[FDCrypto hash:encryptedData]];
+    encryptedFirmware.properties[@"cryptHash"] = [self formatData:[FDCrypto sha1:encryptedData]];
     encryptedFirmware.data = encryptedData;
     NSString *encryptedContent = [encryptedFirmware format];
     NSError *error = nil;
@@ -98,11 +109,25 @@
         @throw [NSException exceptionWithName:@"CanNotWriteFirmware" reason:[NSString stringWithFormat:@"can not write firmware (%@) to %@", error.description, encryptedFirmwarePath] userInfo:nil];
     }
     
+    SHA_CTX context;
+    SHA1_Init(&context);
+    SHA1_Update(&context, (sha1_byte *)encryptedData.bytes, (unsigned)encryptedData.length);
+    unsigned char digest[SHA1_DIGEST_LENGTH];
+    SHA1_Final(digest, &context);
+    NSData *encryptedHash = [FDCrypto sha1:encryptedData];
+    if (memcmp(digest, encryptedHash.bytes, SHA1_DIGEST_LENGTH) != 0) {
+        @throw [NSException exceptionWithName:@"VerifySHAFailure" reason:@"verify SHA failure" userInfo:nil];
+    }
+    
     NSString *verifyContent = [NSString stringWithContentsOfFile:encryptedFirmwarePath encoding:NSUTF8StringEncoding error:&error];
     FDIntelHex *verifyFirmware = [FDIntelHex intelHex:verifyContent address:0 length:0];
-    NSString *verifyHash = [self formatData:[FDCrypto hash:verifyFirmware.data]];
+    uint32_t verifyLength = [self getHex:verifyFirmware.properties[@"length"]];
+    if (verifyLength != data.length) {
+        @throw [NSException exceptionWithName:@"VerifyLengthFailure" reason:@"verify length failure" userInfo:nil];
+    }
+    NSString *verifyHash = [self formatData:[FDCrypto sha1:verifyFirmware.data]];
     if (![verifyHash isEqualToString:encryptedFirmware.properties[@"cryptHash"]]) {
-        @throw [NSException exceptionWithName:@"VerifyFailure" reason:@"verify failure" userInfo:nil];
+        @throw [NSException exceptionWithName:@"VerifyHashFailure" reason:@"verify hash failure" userInfo:nil];
     }
 }
 
