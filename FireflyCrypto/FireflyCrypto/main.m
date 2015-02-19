@@ -87,7 +87,7 @@
     FDIntelHex *encryptedFirmware = [[FDIntelHex alloc] init];
     encryptedFirmware.properties = [NSMutableDictionary dictionaryWithDictionary:firmware.properties];
     encryptedFirmware.properties[@"encrypted"] = @YES;
-    encryptedFirmware.properties[@"length"] = [NSNumber numberWithInteger:data.length];
+    encryptedFirmware.properties[@"length"] = [NSString stringWithFormat:@"0x%lx", (unsigned long)data.length];
     encryptedFirmware.properties[@"hash"] = [self formatData:[FDCrypto hash:data]];
     encryptedFirmware.properties[@"cryptIV"] = [self formatData:iv];
     encryptedFirmware.properties[@"cryptHash"] = [self formatData:[FDCrypto hash:encryptedData]];
