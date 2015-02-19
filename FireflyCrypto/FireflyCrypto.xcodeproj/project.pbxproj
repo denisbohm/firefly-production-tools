@@ -7,37 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		920C5C551A956098001FBBA0 /* FDCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 920C5C521A956098001FBBA0 /* FDCrypto.m */; };
+		920C5C561A956098001FBBA0 /* FDIntelHex.m in Sources */ = {isa = PBXBuildFile; fileRef = 920C5C541A956098001FBBA0 /* FDIntelHex.m */; };
+		920C5C5B1A95639E001FBBA0 /* FDJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 920C5C5A1A95639E001FBBA0 /* FDJSON.m */; };
 		922A14811A8CEF990069043E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 922A14801A8CEF990069043E /* main.m */; };
-		922A14901A8CF69A0069043E /* FireflyDevice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 922A148D1A8CF5500069043E /* FireflyDevice.framework */; };
 		92FC7E8F1A8D258A002D609F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92FC7E8E1A8D258A002D609F /* Security.framework */; };
 		92FC7E911A8D25BA002D609F /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92FC7E901A8D25BA002D609F /* CoreFoundation.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		922A148C1A8CF5500069043E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 922A14871A8CF5500069043E /* FireflyDevice.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 921E2FB41A7EEFCA001899B9;
-			remoteInfo = FireflyDevice;
-		};
-		922A148E1A8CF5500069043E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 922A14871A8CF5500069043E /* FireflyDevice.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 921E2FBF1A7EEFCA001899B9;
-			remoteInfo = FireflyDeviceTests;
-		};
-		922A14911A8CF6A00069043E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 922A14871A8CF5500069043E /* FireflyDevice.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 921E2FB31A7EEFCA001899B9;
-			remoteInfo = FireflyDevice;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
+		920C5C4E1A955DEA001FBBA0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		922A147B1A8CEF990069043E /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -50,9 +37,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		920C5C511A956098001FBBA0 /* FDCrypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FDCrypto.h; path = "../../../firefly-ice-api/FireflyDevice/FireflyDevice/FDCrypto.h"; sourceTree = "<group>"; };
+		920C5C521A956098001FBBA0 /* FDCrypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FDCrypto.m; path = "../../../firefly-ice-api/FireflyDevice/FireflyDevice/FDCrypto.m"; sourceTree = "<group>"; };
+		920C5C531A956098001FBBA0 /* FDIntelHex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FDIntelHex.h; path = "../../../firefly-ice-api/FireflyDevice/FireflyDevice/FDIntelHex.h"; sourceTree = "<group>"; };
+		920C5C541A956098001FBBA0 /* FDIntelHex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FDIntelHex.m; path = "../../../firefly-ice-api/FireflyDevice/FireflyDevice/FDIntelHex.m"; sourceTree = "<group>"; };
+		920C5C591A95639E001FBBA0 /* FDJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FDJSON.h; path = "../../../firefly-ice-api/FireflyDevice/FireflyDevice/FDJSON.h"; sourceTree = "<group>"; };
+		920C5C5A1A95639E001FBBA0 /* FDJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FDJSON.m; path = "../../../firefly-ice-api/FireflyDevice/FireflyDevice/FDJSON.m"; sourceTree = "<group>"; };
 		922A147D1A8CEF990069043E /* FireflyCrypto */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FireflyCrypto; sourceTree = BUILT_PRODUCTS_DIR; };
 		922A14801A8CEF990069043E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		922A14871A8CF5500069043E /* FireflyDevice.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FireflyDevice.xcodeproj; path = "../../firefly-ice-api/MacOSX/FireflyDevice/FireflyDevice.xcodeproj"; sourceTree = "<group>"; };
 		92FC7E8E1A8D258A002D609F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		92FC7E901A8D25BA002D609F /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -64,7 +56,6 @@
 			files = (
 				92FC7E911A8D25BA002D609F /* CoreFoundation.framework in Frameworks */,
 				92FC7E8F1A8D258A002D609F /* Security.framework in Frameworks */,
-				922A14901A8CF69A0069043E /* FireflyDevice.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,7 +67,6 @@
 			children = (
 				92FC7E901A8D25BA002D609F /* CoreFoundation.framework */,
 				92FC7E8E1A8D258A002D609F /* Security.framework */,
-				922A14871A8CF5500069043E /* FireflyDevice.xcodeproj */,
 				922A147F1A8CEF990069043E /* FireflyCrypto */,
 				922A147E1A8CEF990069043E /* Products */,
 			);
@@ -93,18 +83,15 @@
 		922A147F1A8CEF990069043E /* FireflyCrypto */ = {
 			isa = PBXGroup;
 			children = (
+				920C5C591A95639E001FBBA0 /* FDJSON.h */,
+				920C5C5A1A95639E001FBBA0 /* FDJSON.m */,
+				920C5C511A956098001FBBA0 /* FDCrypto.h */,
+				920C5C521A956098001FBBA0 /* FDCrypto.m */,
+				920C5C531A956098001FBBA0 /* FDIntelHex.h */,
+				920C5C541A956098001FBBA0 /* FDIntelHex.m */,
 				922A14801A8CEF990069043E /* main.m */,
 			);
 			path = FireflyCrypto;
-			sourceTree = "<group>";
-		};
-		922A14881A8CF5500069043E /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				922A148D1A8CF5500069043E /* FireflyDevice.framework */,
-				922A148F1A8CF5500069043E /* FireflyDeviceTests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -117,11 +104,11 @@
 				922A14791A8CEF990069043E /* Sources */,
 				922A147A1A8CEF990069043E /* Frameworks */,
 				922A147B1A8CEF990069043E /* CopyFiles */,
+				920C5C4E1A955DEA001FBBA0 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				922A14921A8CF6A00069043E /* PBXTargetDependency */,
 			);
 			name = FireflyCrypto;
 			productName = FireflyCrypto;
@@ -152,12 +139,6 @@
 			mainGroup = 922A14741A8CEF990069043E;
 			productRefGroup = 922A147E1A8CEF990069043E /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 922A14881A8CF5500069043E /* Products */;
-					ProjectRef = 922A14871A8CF5500069043E /* FireflyDevice.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				922A147C1A8CEF990069043E /* FireflyCrypto */,
@@ -165,41 +146,19 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXReferenceProxy section */
-		922A148D1A8CF5500069043E /* FireflyDevice.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FireflyDevice.framework;
-			remoteRef = 922A148C1A8CF5500069043E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		922A148F1A8CF5500069043E /* FireflyDeviceTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = FireflyDeviceTests.xctest;
-			remoteRef = 922A148E1A8CF5500069043E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
-
 /* Begin PBXSourcesBuildPhase section */
 		922A14791A8CEF990069043E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				920C5C561A956098001FBBA0 /* FDIntelHex.m in Sources */,
+				920C5C551A956098001FBBA0 /* FDCrypto.m in Sources */,
 				922A14811A8CEF990069043E /* main.m in Sources */,
+				920C5C5B1A95639E001FBBA0 /* FDJSON.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		922A14921A8CF6A00069043E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = FireflyDevice;
-			targetProxy = 922A14911A8CF6A00069043E /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		922A14821A8CEF990069043E /* Debug */ = {

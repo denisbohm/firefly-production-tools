@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FireflyDevice/FireflyDevice.h>
+#import "FDCrypto.h"
+#import "FDIntelHex.h"
 
 @interface FDFireflyCrypto : NSObject
 
@@ -93,8 +94,8 @@
     encryptedFirmware.data = encryptedData;
     NSString *encryptedContent = [encryptedFirmware format];
     NSError *error = nil;
-    if (![encryptedFirmwarePath writeToFile:encryptedContent atomically:NO encoding:NSUTF8StringEncoding error:&error]) {
-        @throw [NSException exceptionWithName:@"CanNotWriteFirmware" reason:@"can not write firmware" userInfo:nil];
+    if (![encryptedContent writeToFile:encryptedFirmwarePath atomically:YES encoding:NSUTF8StringEncoding error:&error]) {
+        @throw [NSException exceptionWithName:@"CanNotWriteFirmware" reason:[NSString stringWithFormat:@"can not write firmware (%@) to %@", error.description, encryptedFirmwarePath] userInfo:nil];
     }
 }
 
