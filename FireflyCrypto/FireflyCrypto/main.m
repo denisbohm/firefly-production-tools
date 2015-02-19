@@ -97,6 +97,13 @@
     if (![encryptedContent writeToFile:encryptedFirmwarePath atomically:YES encoding:NSUTF8StringEncoding error:&error]) {
         @throw [NSException exceptionWithName:@"CanNotWriteFirmware" reason:[NSString stringWithFormat:@"can not write firmware (%@) to %@", error.description, encryptedFirmwarePath] userInfo:nil];
     }
+    
+    NSString *verifyContent = [NSString stringWithContentsOfFile:encryptedFirmwarePath encoding:NSUTF8StringEncoding error:&error];
+    FDIntelHex *verifyFirmware = [FDIntelHex intelHex:verifyContent address:0 length:0];
+    NSString *verifyHash = [self formatData:[FDCrypto hash:verifyFirmware.data]];
+    if (![verifyHash isEqualToString:encryptedFirmware.properties[@"cryptHash"]]) {
+        @throw [NSException exceptionWithName:@"VerifyFailure" reason:@"verify failure" userInfo:nil];
+    }
 }
 
 @end
