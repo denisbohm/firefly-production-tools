@@ -1,0 +1,68 @@
+# Object files
+*.o
+*.ko
+*.obj
+*.pbi
+*.cout
+*.lst
+*.o
+*.pbi
+
+# Libraries
+*.lib
+*.a
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+desktop.ini
+
+# Altium
+*.OutJob
+
+#Keil files
+*.uvgui.*
+*.bak
+*.austin
+_build/
+arm/
+!arm/*.uvgui
+!arm/*.uvproj
+
+# IAR files
+**/EWARM/Debug/List
+**/EWARM/Debug/Obj
+
+# Crossworks files
+*.hzs
+* THUMB Debug
+* THUMB Release
+
+# XCode files
+**/xcshareddata
+**/xcuserdata
+
+# 3rd party library extracted directories
+STM32F4-Discovery_FW_V1.1.0/
+STM32F4xx_DSP_StdPeriph_Lib_V1.3.0/
+nrf51_sdk_v5_2_0_39364/
+nrf51_sdk_v6_1_0_b2ec2e6/
+s110_nrf51822_6.0.0/
+s110_nrf51822_7.0.0/
+
