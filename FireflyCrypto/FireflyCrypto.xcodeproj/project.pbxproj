@@ -10,6 +10,7 @@
 		920C5C551A956098001FBBA0 /* FDCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 920C5C521A956098001FBBA0 /* FDCrypto.m */; };
 		920C5C561A956098001FBBA0 /* FDIntelHex.m in Sources */ = {isa = PBXBuildFile; fileRef = 920C5C541A956098001FBBA0 /* FDIntelHex.m */; };
 		920C5C5B1A95639E001FBBA0 /* FDJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 920C5C5A1A95639E001FBBA0 /* FDJSON.m */; };
+		922378571A9D4B6900F2EB9F /* fd_hal_aes_soft.c in Sources */ = {isa = PBXBuildFile; fileRef = 922378551A9D4B6900F2EB9F /* fd_hal_aes_soft.c */; };
 		922A14811A8CEF990069043E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 922A14801A8CEF990069043E /* main.m */; };
 		92556A741A958C2100546DE4 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = 92556A731A958C2100546DE4 /* sha1.c */; };
 		92FC7E8F1A8D258A002D609F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92FC7E8E1A8D258A002D609F /* Security.framework */; };
@@ -44,6 +45,8 @@
 		920C5C541A956098001FBBA0 /* FDIntelHex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FDIntelHex.m; path = "../../../firefly-ice-api/FireflyDevice/FireflyDevice/FDIntelHex.m"; sourceTree = "<group>"; };
 		920C5C591A95639E001FBBA0 /* FDJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FDJSON.h; path = "../../../firefly-ice-api/FireflyDevice/FireflyDevice/FDJSON.h"; sourceTree = "<group>"; };
 		920C5C5A1A95639E001FBBA0 /* FDJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FDJSON.m; path = "../../../firefly-ice-api/FireflyDevice/FireflyDevice/FDJSON.m"; sourceTree = "<group>"; };
+		922378551A9D4B6900F2EB9F /* fd_hal_aes_soft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fd_hal_aes_soft.c; path = "../../../firefly-ice-firmware/src/fd_hal_aes_soft.c"; sourceTree = "<group>"; };
+		922378561A9D4B6900F2EB9F /* fd_hal_aes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fd_hal_aes.h; path = "../../../firefly-ice-firmware/src/fd_hal_aes.h"; sourceTree = "<group>"; };
 		922A147D1A8CEF990069043E /* FireflyCrypto */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FireflyCrypto; sourceTree = BUILT_PRODUCTS_DIR; };
 		922A14801A8CEF990069043E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		92556A721A958C2100546DE4 /* sha.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sha.h; path = "../../../firefly-ice-firmware/src/sha.h"; sourceTree = "<group>"; };
@@ -86,6 +89,8 @@
 		922A147F1A8CEF990069043E /* FireflyCrypto */ = {
 			isa = PBXGroup;
 			children = (
+				922378551A9D4B6900F2EB9F /* fd_hal_aes_soft.c */,
+				922378561A9D4B6900F2EB9F /* fd_hal_aes.h */,
 				92556A721A958C2100546DE4 /* sha.h */,
 				92556A731A958C2100546DE4 /* sha1.c */,
 				920C5C591A95639E001FBBA0 /* FDJSON.h */,
@@ -159,6 +164,7 @@
 				92556A741A958C2100546DE4 /* sha1.c in Sources */,
 				920C5C561A956098001FBBA0 /* FDIntelHex.m in Sources */,
 				920C5C551A956098001FBBA0 /* FDCrypto.m in Sources */,
+				922378571A9D4B6900F2EB9F /* fd_hal_aes_soft.c in Sources */,
 				922A14811A8CEF990069043E /* main.m in Sources */,
 				920C5C5B1A95639E001FBBA0 /* FDJSON.m in Sources */,
 			);

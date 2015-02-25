@@ -11,6 +11,7 @@
 #import "FDCrypto.h"
 #import "FDIntelHex.h"
 
+#include "fd_hal_aes.h"
 #include "sha.h"
 
 @interface FDFireflyCrypto : NSObject
@@ -109,14 +110,12 @@
         @throw [NSException exceptionWithName:@"CanNotWriteFirmware" reason:[NSString stringWithFormat:@"can not write firmware (%@) to %@", error.description, encryptedFirmwarePath] userInfo:nil];
     }
     
-    SHA_CTX context;
-    SHA1_Init(&context);
-    SHA1_Update(&context, (sha1_byte *)encryptedData.bytes, (unsigned)encryptedData.length);
-    unsigned char digest[SHA1_DIGEST_LENGTH];
-    SHA1_Final(digest, &context);
-    NSData *encryptedHash = [FDCrypto sha1:encryptedData];
-    if (memcmp(digest, encryptedHash.bytes, SHA1_DIGEST_LENGTH) != 0) {
-        @throw [NSException exceptionWithName:@"VerifySHAFailure" reason:@"verify SHA failure" userInfo:nil];
+    NSMutableData *decrypted = [NSMutableData dataWithLength:encryptedData.length];
+    fd_hal_aes_decrypt_t decrypt;
+    fd_hal_aes_decrypt_start(&decrypt, key.bytes, iv.bytes);
+    fd_hal_aes_decrypt_blocks(&decrypt, (uint8_t *)encryptedData.bytes, decrypted.mutableBytes, (uint32_t)encryptedData.length);
+    if (memcmp(decrypted.bytes, data.bytes, data.length) != 0) {
+        @throw [NSException exceptionWithName:@"VerifyDecryptFailure" reason:@"verify decrypt failure" userInfo:nil];
     }
     
     NSString *verifyContent = [NSString stringWithContentsOfFile:encryptedFirmwarePath encoding:NSUTF8StringEncoding error:&error];
