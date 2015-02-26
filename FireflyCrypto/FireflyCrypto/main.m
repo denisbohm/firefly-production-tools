@@ -67,9 +67,13 @@
     NSString *firmwarePath = @"firmware.hex";
     NSString *keyPath = @"key.h";
     NSString *encryptedFirmwarePath = @"encrypted_firmware.hex";
+    bool zero = false;
     int c;
-    while ((c = getopt(argc, argv, "f:k:e:")) != -1) {
+    while ((c = getopt(argc, argv, "zf:k:e:")) != -1) {
         switch (c) {
+            case 'z': {
+                zero = true;
+            } break;
             case 'f': {
                 firmwarePath = [[NSString stringWithCString:optarg encoding:NSUTF8StringEncoding] stringByStandardizingPath];
             } break;
@@ -83,7 +87,7 @@
     }
     NSString *keyContent = [NSString stringWithContentsOfFile:keyPath encoding:NSUTF8StringEncoding error:nil];
     NSData *key = [self loadData:keyContent];
-    NSData *iv = [self randomData:20];
+    NSData *iv = zero ? [NSMutableData dataWithLength:20] : [self randomData:20];
     NSString *content = [NSString stringWithContentsOfFile:firmwarePath encoding:NSUTF8StringEncoding error:nil];
     if (content == nil) {
         @throw [NSException exceptionWithName:@"CanNotReadFirmware" reason:@"can not read firmware" userInfo:nil];
@@ -93,7 +97,7 @@
 #define BLOCK_SIZE 16
     NSUInteger padding = (BLOCK_SIZE - (data.length % BLOCK_SIZE)) % BLOCK_SIZE;
     if (padding > 0) {
-        [data appendData:[self randomData:padding]];
+        [data appendData:zero ? [NSMutableData dataWithLength:padding] : [self randomData:padding]];
     }
     NSData *encryptedData = [FDCrypto encrypt:key iv:iv data:data];
     FDIntelHex *encryptedFirmware = [[FDIntelHex alloc] init];
