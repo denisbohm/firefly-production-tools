@@ -30,8 +30,9 @@
 
 - (void)setRedLED:(BOOL)value;
 
-- (void)setTristate:(NSUInteger)bit value:(BOOL)value;
-- (BOOL)getTristate:(NSUInteger)bit;
+- (void)setPullDown:(NSUInteger)bit value:(BOOL)value;
+- (void)setPullUp:(NSUInteger)bit value:(BOOL)value;
+- (BOOL)getInput:(NSUInteger)bit;
 
 @property NSTimeInterval clockStretchTimeout;
 

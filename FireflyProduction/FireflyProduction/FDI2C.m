@@ -130,7 +130,7 @@
     [self setGpioBit:_redLEDBit value:!value];
 }
 
-- (void)setTristate:(NSUInteger)bit value:(BOOL)value
+- (void)setPullDown:(NSUInteger)bit value:(BOOL)value
 {
     if (value) {
         [self configureGpiosAsInputs:1 << bit];
@@ -139,7 +139,16 @@
     }
 }
 
-- (BOOL)getTristate:(NSUInteger)bit
+- (void)setPullUp:(NSUInteger)bit value:(BOOL)value
+{
+    if (value) {
+        [self configureGpiosAsOutputs:1 << bit values:1 << bit];
+    } else {
+        [self configureGpiosAsInputs:1 << bit];
+    }
+}
+
+- (BOOL)getInput:(NSUInteger)bit
 {
     [self getGpios];
     return (_gpioInputs >> bit) & 0x0001;
