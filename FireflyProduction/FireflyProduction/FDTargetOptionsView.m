@@ -267,7 +267,7 @@
                                      @"metadataAddress": @"0x37C00",
                                      },
                              @"operatingSystem": @{
-                                     @"firmwareName": @"s110_nrf51822_7.0.0",
+                                     @"firmwareName": @"s110_nrf51822_7.1.0",
                                      @"firmwareAddress": @"0x00000",
                                      @"metadataAddress": @"",
                                      },
