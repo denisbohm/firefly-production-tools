@@ -10,4 +10,6 @@
 
 @interface FDFireflyFlashSTM32F4 : FDFireflyFlash
 
+- (void)writeOneTimeProgrammableBlock:(uint32_t)address data:(NSData *)data;
+
 @end

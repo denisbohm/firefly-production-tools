@@ -52,6 +52,10 @@
 #define FLASH_CR_PSIZE                       ((uint32_t)0x00000300)
 #define FLASH_CR_PSIZE_0                     ((uint32_t)0x00000100)
 #define FLASH_CR_PSIZE_1                     ((uint32_t)0x00000200)
+#define FLASH_CR_PSIZE_X8
+#define FLASH_CR_PSIZE_X16 FLASH_CR_PSIZE_0
+#define FLASH_CR_PSIZE_X32 FLASH_CR_PSIZE_1
+#define FLASH_CR_PSIZE_X64 (FLASH_CR_PSIZE_1 | FLASH_CR_PSIZE_0)
 #define FLASH_CR_STRT                        ((uint32_t)0x00010000)
 #define FLASH_CR_EOPIE                       ((uint32_t)0x01000000)
 #define FLASH_CR_LOCK                        ((uint32_t)0x80000000)
@@ -139,6 +143,27 @@
     
     [self setBits:FLASH_OPTCR value:FLASH_OPTCR_OPTLOCK];
 }
+
+- (void)writeOneTimeProgrammableBlock:(uint32_t)address data:(NSData *)data
+{
+    if ([self.serialWireDebug readMemory:FLASH_CR] & FLASH_CR_LOCK) {
+        [self.serialWireDebug writeMemory:FLASH_KEYR value:FLASH_KEY1];
+        [self.serialWireDebug writeMemory:FLASH_KEYR value:FLASH_KEY2];
+    }
+    
+    while ([self.serialWireDebug readMemory:FLASH_SR] & FLASH_FLAG_BSY);
+    
+    [self replaceBits:FLASH_CR mask:FLASH_CR_PSIZE value:FLASH_CR_PSIZE_X32];
+    [self setBits:FLASH_CR value:FLASH_CR_PG];
+    [self.serialWireDebug writeMemory:address data:data];
+    
+    while ([self.serialWireDebug readMemory:FLASH_SR] & FLASH_FLAG_BSY);
+    
+    [self clearBits:FLASH_CR value:FLASH_CR_PG];
+    
+    [self setBits:FLASH_CR value:FLASH_CR_LOCK];
+}
+
 
 - (void)massEraseFlash
 {
