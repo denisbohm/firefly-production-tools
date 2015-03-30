@@ -65,18 +65,26 @@
 - (void)main:(int)argc argv:(char * const [])argv
 {
     NSString *firmwarePath = @"firmware.hex";
+    NSString *define = @"FD_KEY";
     NSString *keyPath = @"key.h";
     NSString *encryptedFirmwarePath = @"encrypted_firmware.hex";
+    bool generate = false;
     bool zero = false;
     int c;
-    while ((c = getopt(argc, argv, "zf:k:e:")) != -1) {
+    while ((c = getopt(argc, argv, "gzf:d:k:e:")) != -1) {
         switch (c) {
+            case 'g': {
+                generate = true;
+            } break;
             case 'z': {
                 zero = true;
             } break;
             case 'f': {
                 firmwarePath = [[NSString stringWithCString:optarg encoding:NSUTF8StringEncoding] stringByStandardizingPath];
             } break;
+            case 'd': {
+                define = [NSString stringWithCString:optarg encoding:NSUTF8StringEncoding];
+            }
             case 'k': {
                 keyPath = [[NSString stringWithCString:optarg encoding:NSUTF8StringEncoding] stringByStandardizingPath];
             } break;
@@ -85,6 +93,21 @@
             } break;
         }
     }
+    
+    if (generate) {
+        NSData *key = [self randomData:16];
+        NSMutableString *content = [NSMutableString stringWithFormat:@"#ifndef %1$@_H\n#define %1$@_H\n\n#define %1$@", define];
+        for (NSUInteger i = 0; i < key.length; ++i) {
+            if (i > 0) {
+                [content appendString:@","];
+            }
+            [content appendFormat:@" 0x%02x", ((uint8_t *)key.bytes)[i]];
+        }
+        [content appendString:@"\n\n#endif"];
+        [content writeToFile:keyPath atomically:NO encoding:NSUTF8StringEncoding error:nil];
+        return;
+    }
+    
     NSString *keyContent = [NSString stringWithContentsOfFile:keyPath encoding:NSUTF8StringEncoding error:nil];
     NSData *key = [self loadData:keyContent];
     NSData *iv = zero ? [NSMutableData dataWithLength:16] : [self randomData:16];
