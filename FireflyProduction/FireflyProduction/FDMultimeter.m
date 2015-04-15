@@ -177,7 +177,7 @@
             measurement.functionScale = 1.0;
             break;
         default:
-            NSLog(@"multimeter unknown function");
+            NSLog(@"multimeter unknown function %d %@", functionCode, data);
             return;
     }
 
