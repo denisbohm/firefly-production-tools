@@ -55,7 +55,6 @@ arm/
 * THUMB Release
 
 # XCode files
-**/xcshareddata
 **/xcuserdata
 
 # 3rd party library extracted directories
