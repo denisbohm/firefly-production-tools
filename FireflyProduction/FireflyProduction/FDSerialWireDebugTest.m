@@ -51,6 +51,11 @@
                                        reason:[NSString stringWithFormat:@"unknown function %@", name]
                                      userInfo:nil];
     }
+    if (function.address == 0) {
+        @throw [NSException exceptionWithName:@"MissingFunction"
+                                       reason:[NSString stringWithFormat:@"missing function %@", name]
+                                     userInfo:nil];
+    }
     return function.address;
 }
 
