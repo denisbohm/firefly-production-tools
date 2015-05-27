@@ -29,6 +29,7 @@
 
 @property FDSerialPort *serialPort;
 @property id<FDNumatoDelegate> delegate;
+@property NSString *identifier;
 
 - (void)ver;
 
