@@ -44,5 +44,6 @@
 - (BOOL)clearBus;
 - (BOOL)transmit:(uint8_t *)bytes length:(NSUInteger)length;
 - (BOOL)receive:(uint8_t *)bytes length:(NSUInteger)length;
+- (BOOL)readRegister:(uint8_t)registerID value:(uint8_t *)value;
 
 @end
