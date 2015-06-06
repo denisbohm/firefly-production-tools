@@ -228,8 +228,25 @@
 
 - (void)sendStartCondition
 {
-//    NSLog(@"i2c start");
+    //    NSLog(@"i2c start");
+    
+    SET_SDA(0);
+    SCL_DELAY();
+    
+    SET_SCL(0);
+    SCL_DELAY();
+}
 
+- (void)sendRepeatedStartCondition
+{
+    //    NSLog(@"i2c repeated start");
+    
+    SET_SDA(1);
+    SCL_DELAY();
+    
+    SET_SCL(1);
+    SCL_DELAY();
+    
     SET_SDA(0);
     SCL_DELAY();
     
@@ -369,11 +386,8 @@
     }
 }
 
-- (BOOL)readRegister:(uint8_t)registerID value:(uint8_t *)value
+- (BOOL)readRegisters:(uint8_t)registerID value:(uint8_t *)values length:(uint32_t)length
 {
-    uint8_t bytes[] = {registerID};
-    int length = 1;
-    
     [self checkCancel];
 
     [self sendStartCondition];
@@ -382,23 +396,22 @@
     }
 
     BOOL ack = NO;
-    for (int index = 0; index < length; index++) {
+    uint8_t bytes[] = {registerID};
+    for (int index = 0; index < sizeof(bytes); index++) {
         ack = [self i2cWriteByte:bytes[index]];
         if (!ack) {
             break;
         }
     }
     
-    [self sendStartCondition]; // repeated start
+    [self sendRepeatedStartCondition]; // repeated start
     if (![self sendSlaveAddress:READ]) {
         return NO;
     }
     for (NSUInteger index = 0; index < length; index++) {
-        [self i2cReadByte:bytes length:length index:index];
+        [self i2cReadByte:values length:length index:index];
     }
     [self sendStopCondition];
-
-    *value = bytes[0];
     
     return ack;
 }
