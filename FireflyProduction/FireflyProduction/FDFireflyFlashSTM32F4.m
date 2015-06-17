@@ -207,7 +207,7 @@
 - (BOOL)debugLock
 {
     uint32_t flash_optcr = [self.serialWireDebug readMemory:FLASH_OPTCR];
-    return (flash_optcr & FLASH_OPTCR_OPTLOCK) != 0;
+    return (flash_optcr & FLASH_OPTCR_RDP) != FLASH_OPTCR_RDP_LEVEL_0;
 }
 
 @end
