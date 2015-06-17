@@ -69,6 +69,11 @@
     return [self run:name r0:0 r1:0];
 }
 
+- (void)start:(NSString *)name
+{
+    [self.cortexM start:[self functionAddress:name] r0:0 r1:0 r2:0 r3:0];
+}
+
 - (void)GPIO_PinOutClear:(uint32_t)port pin:(uint32_t)pin
 {
     [self run:@"GPIO_PinOutClear" r0:port r1:pin];
