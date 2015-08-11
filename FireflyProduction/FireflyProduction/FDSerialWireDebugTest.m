@@ -27,7 +27,7 @@
     NSString *searchPath = self.resources[@"searchPath"];
     self.executable = [self readExecutable:name searchPath:searchPath];
     [self writeExecutableIntoRam:self.executable];
-    self.cortexM = [self setupCortexRanges:self.executable stackLength:256 heapLength:128];
+    self.cortexM = [self setupCortexRanges:self.executable stackLength:512 heapLength:128];
     FDExecutableFunction *halt = self.executable.functions[@"halt"];
     self.cortexM.breakLocation = halt.address;
     
