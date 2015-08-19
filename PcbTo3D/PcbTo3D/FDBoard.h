@@ -16,6 +16,9 @@
 @property double width;
 @property double curve;
 @property int layer;
+
+- (NSBezierPath *)bezierPath;
+
 @end
 
 @interface FDBoardVertex : NSObject
@@ -28,6 +31,9 @@
 @property double width;
 @property int layer;
 @property NSMutableArray *vertices;
+
+- (NSBezierPath *)bezierPath;
+
 @end
 
 @interface FDBoardVia : NSObject
@@ -51,6 +57,7 @@
 @end
 
 @interface FDBoardSmd : NSObject
+@property NSString *name;
 @property double x;
 @property double y;
 @property double dx;
@@ -71,6 +78,7 @@
 @end
 
 @interface FDBoardInstance : NSObject
+@property NSString *name;
 @property double x;
 @property double y;
 @property BOOL mirror;

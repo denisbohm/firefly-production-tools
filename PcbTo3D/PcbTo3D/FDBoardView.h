@@ -13,5 +13,6 @@
 @interface FDBoardView : NSView
 
 @property FDBoard *board;
+@property NSBezierPath *fixturePath;
 
 @end

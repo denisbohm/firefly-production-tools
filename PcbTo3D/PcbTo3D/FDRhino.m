@@ -114,7 +114,7 @@
             FDBoardVertex *vertex = polygon.vertices[i];
             NSPoint p = [_transform transformPoint:NSMakePoint(vertex.x, vertex.y)];
             if (vertex.curve != 0) {
-                FDBoardVertex *v2 = polygon.vertices[i + 1];
+                FDBoardVertex *v2 = polygon.vertices[(i + 1) % polygon.vertices.count];
                 if (first) {
                     first = NO;
                     [_lines appendFormat:@"(%f, %f, 0)", p.x, p.y];
@@ -198,8 +198,6 @@
         [_lines appendFormat:@"curves.append(rs.AddCircle3Pt((%f, %f, 0), (%f, %f, 0), (%f, %f, 0)))\n", x - r, y, x + r, y, x, y + r];
     }
     [_lines appendString:@"PlacePCB(curves)\n"];
-    
-    
 }
 
 @end

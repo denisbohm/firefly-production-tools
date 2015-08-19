@@ -98,6 +98,8 @@
     }
     [self resourceChange:self];
     
+    _autoCheckBox.state = [userDefaults boolForKey:@"auto"] ? NSOnState : NSOffState;
+    
     _targetOptionsView.delegate = self;
     
 #if 0
@@ -227,6 +229,9 @@
 
 - (IBAction)autoChanged:(id)sender
 {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setBool:_autoCheckBox.state == NSOnState forKey:@"auto"];
+    
     _operation.autoRun = _autoCheckBox.state == NSOnState;
     if (_operation.autoRun && _operation.detected) {
         _operation.run = YES;

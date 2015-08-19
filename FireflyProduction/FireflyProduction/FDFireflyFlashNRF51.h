@@ -6,10 +6,8 @@
 //  Copyright (c) 2014 Firefly Design. All rights reserved.
 //
 
-#import "FDFireflyFlash.h"
+#import "FDFireflyFlashNRF5X.h"
 
-@interface FDFireflyFlashNRF51 : FDFireflyFlash
-
-- (void)eraseUICR;
+@interface FDFireflyFlashNRF51 : FDFireflyFlashNRF5X
 
 @end

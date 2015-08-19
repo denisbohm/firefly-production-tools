@@ -46,66 +46,17 @@
     [color setFill];
 }
 
-+ (void)addCurve:(NSBezierPath *)path x1:(double)x1 y1:(double)y1 x2:(double)x2 y2:(double)y2 curve:(double)curve
-{
-    NSPoint c = [FDBoard getCenterOfCircleX1:x1 y1:y1 x2:x2 y2:y2 angle:curve];
-    double radius = sqrt((x1 - c.x) * (x1 - c.x) + (y1 - c.y) * (y1 - c.y));
-    double startAngle = atan2(y1 - c.y, x1 - c.x) * 180 / M_PI;
-    double endAngle = startAngle + curve;
-    [path appendBezierPathWithArcWithCenter:c radius:radius startAngle:startAngle endAngle:endAngle clockwise:NO];
-}
-
 - (void)drawContainer:(FDBoardContainer *)container
 {
     for (FDBoardWire* wire in container.wires) {
-        double x1 = wire.x1;
-        double y1 = wire.y1;
-        double x2 = wire.x2;
-        double y2 = wire.y2;
-        double width = wire.width;
-        double curve = wire.curve;
         [self setLayerColors:wire.layer];
-        NSBezierPath* path = [NSBezierPath bezierPath];
-        [path setLineWidth:width];
-        [path setLineCapStyle:NSRoundLineCapStyle];
-        [path moveToPoint:NSMakePoint(x1, y1)];
-        if (curve == 0) {
-            [path lineToPoint:NSMakePoint(x2, y2)];
-        } else {
-            [FDBoardView addCurve:path x1:x1 y1:y1 x2:x2 y2:y2 curve:curve];
-        }
+        NSBezierPath* path = wire.bezierPath;
         [path stroke];
     }
     
     for (FDBoardPolygon* polygon in container.polygons) {
         [self setLayerColors:polygon.layer];
-        NSBezierPath* path = [NSBezierPath bezierPath];
-        [path setLineWidth:polygon.width];
-        [path setLineCapStyle:NSRoundLineCapStyle];
-        BOOL first = YES;
-        for (NSInteger i = 0; i < polygon.vertices.count; ++i) {
-            FDBoardVertex *vertex = polygon.vertices[i];
-            if (vertex.curve != 0) {
-                double x1 = vertex.x;
-                double y1 = vertex.y;
-                FDBoardVertex *v2 = polygon.vertices[i + 1];
-                double x2 = v2.x;
-                double y2 = v2.y;
-                if (first) {
-                    first = NO;
-                    [path moveToPoint:NSMakePoint(x1, y1)];
-                }
-                [FDBoardView addCurve:path x1:x1 y1:y1 x2:x2 y2:y2 curve:vertex.curve];
-            } else {
-                if (first) {
-                    first = NO;
-                    [path moveToPoint:NSMakePoint(vertex.x, vertex.y)];
-                } else {
-                    [path lineToPoint:NSMakePoint(vertex.x, vertex.y)];
-                }                
-            }
-        }
-        [path closePath];
+        NSBezierPath* path = polygon.bezierPath;
         [path fill];
         [path stroke];
     }
@@ -243,6 +194,10 @@
     [xform concat];
     
     [self drawContainer:_board.container];
+    
+    [[NSColor blueColor] setStroke];
+    [_fixturePath setLineWidth:0.01];
+    [_fixturePath stroke];
     
     [xform invert];
     [xform concat];

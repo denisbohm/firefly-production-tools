@@ -108,6 +108,8 @@
 
 - (void)helloTaskSuccess:(FDHelloTask *)helloTask
 {
+    NSLog(@"boot version %@", helloTask.fireflyIce.bootVersion);
+    
     [self showHardwareId:_fireflyIce.hardwareId.unique];
 
     FDFireflyIce *fireflyIce = helloTask.fireflyIce;

@@ -178,6 +178,10 @@
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
         return path;
     }
+    path = [NSString stringWithFormat:@"%@/Thumb Flash Release/%@/%@.hex", searchpath, name, name];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return path;
+    }
     path = [NSString stringWithFormat:@"%@/%@/%@_softdevice.hex", searchpath, name, name];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
         return path;

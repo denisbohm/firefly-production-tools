@@ -8,7 +8,41 @@
 
 #import "FDBoard.h"
 
+@interface FDBoardUtilities : NSObject
+
++ (void)addCurve:(NSBezierPath *)path x1:(double)x1 y1:(double)y1 x2:(double)x2 y2:(double)y2 curve:(double)curve;
+
+@end
+
+@implementation FDBoardUtilities
+
++ (void)addCurve:(NSBezierPath *)path x1:(double)x1 y1:(double)y1 x2:(double)x2 y2:(double)y2 curve:(double)curve
+{
+    NSPoint c = [FDBoard getCenterOfCircleX1:x1 y1:y1 x2:x2 y2:y2 angle:curve];
+    double radius = sqrt((x1 - c.x) * (x1 - c.x) + (y1 - c.y) * (y1 - c.y));
+    double startAngle = atan2(y1 - c.y, x1 - c.x) * 180 / M_PI;
+    double endAngle = startAngle + curve;
+    [path appendBezierPathWithArcWithCenter:c radius:radius startAngle:startAngle endAngle:endAngle clockwise:curve < 0];
+}
+
+@end
+
 @implementation FDBoardWire
+
+- (NSBezierPath *)bezierPath
+{
+    NSBezierPath* path = [NSBezierPath bezierPath];
+    [path setLineWidth:_width];
+    [path setLineCapStyle:NSRoundLineCapStyle];
+    [path moveToPoint:NSMakePoint(_x1, _y1)];
+    if (_curve == 0) {
+        [path lineToPoint:NSMakePoint(_x2, _y2)];
+    } else {
+        [FDBoardUtilities addCurve:path x1:_x1 y1:_y1 x2:_x2 y2:_y2 curve:_curve];
+    }
+    return path;
+}
+
 @end
 
 @implementation FDBoardVertex
@@ -23,6 +57,38 @@
         _vertices = [NSMutableArray array];
     }
     return self;
+}
+
+- (NSBezierPath *)bezierPath
+{
+    NSBezierPath* path = [NSBezierPath bezierPath];
+    [path setLineWidth:_width];
+    [path setLineCapStyle:NSRoundLineCapStyle];
+    BOOL first = YES;
+    for (NSInteger i = 0; i < _vertices.count; ++i) {
+        FDBoardVertex *vertex = _vertices[i];
+        if (vertex.curve != 0) {
+            double x1 = vertex.x;
+            double y1 = vertex.y;
+            FDBoardVertex *v2 = _vertices[(i + 1) % _vertices.count];
+            double x2 = v2.x;
+            double y2 = v2.y;
+            if (first) {
+                first = NO;
+                [path moveToPoint:NSMakePoint(x1, y1)];
+            }
+            [FDBoardUtilities addCurve:path x1:x1 y1:y1 x2:x2 y2:y2 curve:vertex.curve];
+        } else {
+            if (first) {
+                first = NO;
+                [path moveToPoint:NSMakePoint(vertex.x, vertex.y)];
+            } else {
+                [path lineToPoint:NSMakePoint(vertex.x, vertex.y)];
+            }
+        }
+    }
+    [path closePath];
+    return path;
 }
 
 @end
@@ -132,7 +198,7 @@ static double ccwdiff(double a1, double a2) {
     double b12 = ccwdiff(b1, b2);
     double bd = b12 - ar;
     
-    if (abs(ad) < abs(bd)) {
+    if (fabs(ad) < fabs(bd)) {
         return NSMakePoint(xc1, yc1);
     } else {
         return NSMakePoint(xc2, yc2);

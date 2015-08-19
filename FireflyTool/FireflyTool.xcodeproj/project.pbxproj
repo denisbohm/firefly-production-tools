@@ -28,6 +28,8 @@
 		9205984717FCAEBA0027FAAD /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9205984617FCAEBA0027FAAD /* IOBluetooth.framework */; };
 		926CCCF817FCAFE000449599 /* ARMSerialWireDebug.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9205982C17FCAD290027FAAD /* ARMSerialWireDebug.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		926CCCFA17FCAFE000449599 /* FireflyProduction.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9205984017FCAE380027FAAD /* FireflyProduction.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		9298F4461A658445007F38AB /* FireflyBoot.hex in Resources */ = {isa = PBXBuildFile; fileRef = 9298F4451A658445007F38AB /* FireflyBoot.hex */; };
+		9298F44D1A65854F007F38AB /* FireflyIce.hex in Resources */ = {isa = PBXBuildFile; fileRef = 9298F44C1A65854F007F38AB /* FireflyIce.hex */; };
 		92BF961C1829F01500C37412 /* FDFireflyIceUsbTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BF961B1829F01500C37412 /* FDFireflyIceUsbTest.m */; };
 		92C0D8311825BB12001884EC /* FireflyRadioTest.elf in Resources */ = {isa = PBXBuildFile; fileRef = 92C0D8301825BB12001884EC /* FireflyRadioTest.elf */; };
 		92C66E24182ABB3C000F5FD5 /* FireflyUsbTest.elf in Resources */ = {isa = PBXBuildFile; fileRef = 92C66E23182ABB3C000F5FD5 /* FireflyUsbTest.elf */; };
@@ -169,6 +171,8 @@
 		9205982617FCAD290027FAAD /* ARMSerialWireDebug.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ARMSerialWireDebug.xcodeproj; path = "../../firefly-arm-swd/ARMSerialWireDebug.xcodeproj"; sourceTree = "<group>"; };
 		9205983817FCAE380027FAAD /* FireflyProduction.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FireflyProduction.xcodeproj; path = ../FireflyProduction/FireflyProduction.xcodeproj; sourceTree = "<group>"; };
 		9205984617FCAEBA0027FAAD /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
+		9298F4451A658445007F38AB /* FireflyBoot.hex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FireflyBoot.hex; sourceTree = "<group>"; };
+		9298F44C1A65854F007F38AB /* FireflyIce.hex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FireflyIce.hex; sourceTree = "<group>"; };
 		92BF961A1829F01500C37412 /* FDFireflyIceUsbTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDFireflyIceUsbTest.h; sourceTree = "<group>"; };
 		92BF961B1829F01500C37412 /* FDFireflyIceUsbTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDFireflyIceUsbTest.m; sourceTree = "<group>"; };
 		92C0D8301825BB12001884EC /* FireflyRadioTest.elf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FireflyRadioTest.elf; sourceTree = "<group>"; };
@@ -317,6 +321,8 @@
 		9251FE8B19D1C718005E717E /* firmware */ = {
 			isa = PBXGroup;
 			children = (
+				9298F44C1A65854F007F38AB /* FireflyIce.hex */,
+				9298F4451A658445007F38AB /* FireflyBoot.hex */,
 				92C66E23182ABB3C000F5FD5 /* FireflyUsbTest.elf */,
 				92C0D8301825BB12001884EC /* FireflyRadioTest.elf */,
 				92E66A4618146C370054A9C2 /* FireflyIceTest.elf */,
@@ -496,7 +502,9 @@
 			files = (
 				920597E717FCAAC20027FAAD /* InfoPlist.strings in Resources */,
 				9205982217FCAB230027FAAD /* FireflyIce.elf in Resources */,
+				9298F44D1A65854F007F38AB /* FireflyIce.hex in Resources */,
 				920597F517FCAAC20027FAAD /* Images.xcassets in Resources */,
+				9298F4461A658445007F38AB /* FireflyBoot.hex in Resources */,
 				920597ED17FCAAC20027FAAD /* Credits.rtf in Resources */,
 				920597F317FCAAC20027FAAD /* MainMenu.xib in Resources */,
 				92C0D8311825BB12001884EC /* FireflyRadioTest.elf in Resources */,
