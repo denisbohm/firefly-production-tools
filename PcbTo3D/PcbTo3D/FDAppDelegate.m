@@ -322,6 +322,12 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
 
 - (NSArray *)testPoints
 {
+    NSMutableDictionary *signalFromElementPad = [NSMutableDictionary dictionary];
+    for (FDBoardContactRef *contactRef in _board.container.contactRefs) {
+        NSString *key = [NSString stringWithFormat:@"%@.%@", contactRef.element, contactRef.pad];
+        [signalFromElementPad setObject:contactRef.signal forKey:key];
+    }
+    
     NSMutableArray *points = [NSMutableArray array];
     
     NSAffineTransform* transform = [NSAffineTransform transform];
@@ -356,8 +362,12 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
                 FDTestPoint *testPoint = [[FDTestPoint alloc] init];
                 testPoint.x = p.x;
                 testPoint.y = p.y;
-                testPoint.name = [NSString stringWithFormat:@"%@_%@", instance.name, smd.name];
-                [points addObject:testPoint];
+                NSString *key = [NSString stringWithFormat:@"%@.%@", instance.name, smd.name];
+                NSString *signal = signalFromElementPad[key];
+                if (signal != nil) {
+                    testPoint.name = signal;
+                    [points addObject:testPoint];
+                }
                 
                 [xform invert];
                 [transform prependTransform:xform];
@@ -373,7 +383,7 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
     return points;
 }
 
-- (NSString *)rhino3D:(NSBezierPath *)path
+- (NSString *)rhino3D:(NSBezierPath *)path z:(double)z name:(NSString *)name
 {
     NSMutableString *lines = [NSMutableString string];
     [lines appendString:@"curves = []\n"];
@@ -390,7 +400,7 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
             case NSLineToBezierPathElement: {
                 NSPoint p = points[0];
                 if (!NSEqualPoints(c, p)) {
-                    [lines appendFormat:@"curves.append(rs.AddLine((%f, %f, 0), (%f, %f, 0)))\n", c.x, c.y, p.x, p.y];
+                    [lines appendFormat:@"curves.append(rs.AddLine((%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f)))\n", c.x, c.y, z, p.x, p.y, z];
                 }
                 c = p;
             } break;
@@ -402,10 +412,10 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
                 NSPoint p3 = points[2]; // ending point
                 
                 [lines appendFormat:@"cvs = []\n"];
-                [lines appendFormat:@"cvs.append(Rhino.Geometry.Point3d(%0.3f, %0.3f, 0.0))\n", p0.x, p0.y];
-                [lines appendFormat:@"cvs.append(Rhino.Geometry.Point3d(%0.3f, %0.3f, 0.0))\n", p1.x, p1.y];
-                [lines appendFormat:@"cvs.append(Rhino.Geometry.Point3d(%0.3f, %0.3f, 0.0))\n", p2.x, p2.y];
-                [lines appendFormat:@"cvs.append(Rhino.Geometry.Point3d(%0.3f, %0.3f, 0.0))\n", p3.x, p3.y];
+                [lines appendFormat:@"cvs.append(Rhino.Geometry.Point3d(%0.3f, %0.3f, %0.3f))\n", p0.x, p0.y, z];
+                [lines appendFormat:@"cvs.append(Rhino.Geometry.Point3d(%0.3f, %0.3f, %0.3f))\n", p1.x, p1.y, z];
+                [lines appendFormat:@"cvs.append(Rhino.Geometry.Point3d(%0.3f, %0.3f, %0.3f))\n", p2.x, p2.y, z];
+                [lines appendFormat:@"cvs.append(Rhino.Geometry.Point3d(%0.3f, %0.3f, %0.3f))\n", p3.x, p3.y, z];
                 
                 [lines appendFormat:@"knots = []\n"];
                 for (int i = 0; i < 3; ++i) {
@@ -425,7 +435,7 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
                 break;
         }
     }
-    [lines appendFormat:@"rs.JoinCurves(curves, True)\n"];
+    [lines appendFormat:@"%@ = rs.JoinCurves(curves, True)\n", name];
     return lines;
 }
 
@@ -485,10 +495,27 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
     
     NSArray *testPoints = [self testPoints];
     
-    // 1 mm diameter mounting hole for Mill-Max Spring Loaded Pin 0985-0-15-20-71-14-11-0
+    // Mill-Max Spring Loaded Pin 0985-0-15-20-71-14-11-0
+    // 1 mm diameter mounting hole
+    // 4.1 mm shaft (fits into plastic hole)
+    // 0.15 exposed at max stroke
+    // 1.4 mm max stroke
+    // 0.7 mm mid stroke
+    // PCB thickness 0.4 mm
+    // tallest component 1.4 mm - use 1.5 mm
+    // distance from PCBA to top of plastic: 4.1 + 0.15 + 0.7 = 4.95 mm - use 4.9 mm
+    // thickness of plastic to clear components: 4.9 - 1.5 = 3.4 mm
     const double d = 1.0;
     const double r = d / 2.0;
+    const double pcbThickness = 0.4;
+    const double maxComponentHeight = 1.4;
+    const double midStroke = 0.7;
+    const double exposed = 0.15;
+    const double shaft = 4.1;
     
+    double ceiling = pcbThickness + maxComponentHeight;
+    double top = pcbThickness + midStroke + exposed + shaft;
+
     // fixture test point display
     for (FDTestPoint *testPoint in testPoints) {
         [all appendBezierPathWithOvalInRect:NSMakeRect(testPoint.x - r, testPoint.y - r, d, d)];
@@ -500,28 +527,60 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
     [lines appendString:@"import rhinoscriptsyntax as rs\n"];
 
     // Rhino 3D test fixture outline
-    [lines appendString:[self rhino3D:ledge]];
-    [lines appendString:[self rhino3D:outline]];
-    [lines appendString:[self rhino3D:bounds]];
+    [lines appendString:[self rhino3D:bounds z:0.0 name:@"bounds"]];
+    [lines appendString:[self rhino3D:bounds z:top name:@"bounds2"]];
+    [lines appendString:[self rhino3D:outline z:0.0 name:@"outline"]];
+    [lines appendString:[self rhino3D:outline z:pcbThickness name:@"outline2"]];
+    [lines appendString:[self rhino3D:ledge z:pcbThickness name:@"ledge"]];
+    [lines appendString:[self rhino3D:ledge z:ceiling name:@"ledge2"]];
+    
+    [lines appendFormat:@"rs.AddPlanarSrf([bounds, outline])\n"];
+    [lines appendFormat:@"boundsWall = rs.ExtrudeCurveStraight(bounds, (%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f))\n", 0.0, 0.0, 0.0, 0.0, 0.0, top];
+    [lines appendFormat:@"outlineWall = rs.ExtrudeCurveStraight(outline, (%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f))\n", 0.0, 0.0, 0.0, 0.0, 0.0, pcbThickness];
+    [lines appendFormat:@"rs.AddPlanarSrf([outline2, ledge])\n"];
+    [lines appendFormat:@"ledgeWall = rs.ExtrudeCurveStraight(ledge, (%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f))\n", 0.0, 0.0, pcbThickness, 0.0, 0.0, ceiling];
+    [lines appendFormat:@"out0 = rs.AddPlanarSrf([ledge2])\n"];
+    [lines appendFormat:@"out1 = rs.AddPlanarSrf([bounds2])\n"];
     
     // Rhino 3D test point curves
-    [lines appendString:@"curves = []\n"];
+    [lines appendString:@"probes = []\n"];
     for (FDTestPoint *testPoint in testPoints) {
         double x = testPoint.x;
         double y = testPoint.y;
-        [lines appendFormat:@"curves.append(rs.AddCircle3Pt((%f, %f, 0), (%f, %f, 0), (%f, %f, 0)))\n", x - r, y, x + r, y, x, y + r];
+        double z = ceiling;
+        [lines appendFormat:@"curve = rs.AddCircle3Pt((%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f))\n", x - r, y, z, x + r, y, z, x, y + r, z];
+        [lines appendFormat:@"probe = rs.ExtrudeCurveStraight(curve, (%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f))\n", x, y, z, x, y, top];
+        [lines appendFormat:@"probes.append(probe)\n"];
+        
+        [lines appendFormat:@"result = rs.SplitBrep(out0, probe, False)\n"];
+        [lines appendFormat:@"rs.DeleteObject(out0)\n"];
+        [lines appendFormat:@"rs.DeleteObject(result[1])\n"];
+        [lines appendFormat:@"out0 = result[0]\n"];
+        
+        [lines appendFormat:@"result = rs.SplitBrep(out1, probe, False)\n"];
+        [lines appendFormat:@"rs.DeleteObject(out1)\n"];
+        [lines appendFormat:@"rs.DeleteObject(result[1])\n"];
+        [lines appendFormat:@"out1 = result[0]\n"];
     }
     
     // Eagle CAD test points
-    int index = 0;
+    NSMutableDictionary *countByName = [NSMutableDictionary dictionary];
+    double x = 2.0;
+    double y = 8.0;
     for (FDTestPoint *testPoint in testPoints) {
-        [lines appendFormat:@"add TARGET-PINPROBE-0985@firefly J%u (%f %f);\n", index, testPoint.x, testPoint.y];
-        ++index;
+        NSString *name = testPoint.name;
+        NSNumber *count = countByName[name];
+        [countByName setObject:[NSNumber numberWithInteger:count.integerValue + 1] forKey:name];
+        if (count.integerValue > 0) {
+            name = [NSString stringWithFormat:@"%@%ld", name, count.integerValue + 1];
+            [countByName setObject:[NSNumber numberWithInteger:1] forKey:name];
+        }
+        testPoint.name = name;
+        [lines appendFormat:@"add TARGET-PINPROBE-0985@firefly '%@' (%f %f);\n", name, x, y];
+        y -= 0.4;
     }
-    index = 0;
     for (FDTestPoint *testPoint in testPoints) {
-        [lines appendFormat:@"move J%u (%f %f);\n", index, testPoint.x, testPoint.y];
-        ++index;
+        [lines appendFormat:@"move '%@' (%f %f);\n", testPoint.name, testPoint.x, testPoint.y];
     }
     [lines appendString:@"LAYER bDocu;\n"];
     [lines appendString:@"SET WIRE_BEND 2;"];
@@ -677,6 +736,15 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
     [container.pads addObject:pad];
 }
 
+- (void)loadContactRef:(FDBoardContainer *)container element:(NSXMLElement *)element
+{
+    FDBoardContactRef *contactRef = [[FDBoardContactRef alloc] init];
+    contactRef.signal = [[((NSXMLElement *)element.parent) attributeForName:@"name"] stringValue];
+    contactRef.element = [[element attributeForName:@"element"] stringValue];
+    contactRef.pad = [[element attributeForName:@"pad"] stringValue];
+    [container.contactRefs addObject:contactRef];
+}
+
 - (void)loadInstance:(FDBoardContainer *)container element:(NSXMLElement *)element
 {
     FDBoardInstance *instance = [[FDBoardInstance alloc] init];
@@ -725,6 +793,9 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
         } else
         if ([@"pad" isEqualToString:name]) {
             [self loadPad:container element:element];
+        } else
+        if ([@"contactref" isEqualToString:name]) {
+            [self loadContactRef:container element:element];
         }
     }
 }

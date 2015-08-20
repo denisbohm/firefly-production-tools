@@ -77,6 +77,12 @@
 @property NSString *shape;
 @end
 
+@interface FDBoardContactRef : NSObject
+@property NSString *signal;
+@property NSString *element;
+@property NSString *pad;
+@end
+
 @interface FDBoardInstance : NSObject
 @property NSString *name;
 @property double x;
@@ -95,6 +101,7 @@
 @property NSMutableArray *holes;
 @property NSMutableArray *smds;
 @property NSMutableArray *pads;
+@property NSMutableArray *contactRefs;
 @property NSMutableArray *instances;
 @end
 

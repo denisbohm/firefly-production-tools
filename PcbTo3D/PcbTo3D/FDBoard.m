@@ -108,6 +108,9 @@
 @implementation FDBoardPad
 @end
 
+@implementation FDBoardContactRef
+@end
+
 @implementation FDBoardInstance
 @end
 
@@ -124,6 +127,7 @@
         _holes = [NSMutableArray array];
         _smds = [NSMutableArray array];
         _pads = [NSMutableArray array];
+        _contactRefs = [NSMutableArray array];
         _instances = [NSMutableArray array];
     }
     return self;

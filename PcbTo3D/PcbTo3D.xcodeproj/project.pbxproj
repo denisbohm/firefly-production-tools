@@ -51,7 +51,7 @@
 		92BCB84617DA662D00B01308 /* PcbTo3D-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PcbTo3D-Prefix.pch"; sourceTree = "<group>"; };
 		92BCB84817DA662D00B01308 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		92BCB84A17DA662D00B01308 /* FDAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FDAppDelegate.h; sourceTree = "<group>"; };
-		92BCB84B17DA662D00B01308 /* FDAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FDAppDelegate.m; sourceTree = "<group>"; };
+		92BCB84B17DA662D00B01308 /* FDAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FDAppDelegate.m; sourceTree = "<group>"; wrapsLines = 1; };
 		92BCB84E17DA662E00B01308 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		92BCB85517DA662E00B01308 /* PcbTo3DTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PcbTo3DTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		92BCB85D17DA662E00B01308 /* PcbTo3DTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PcbTo3DTests-Info.plist"; sourceTree = "<group>"; };
