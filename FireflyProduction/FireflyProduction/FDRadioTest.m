@@ -202,7 +202,7 @@
                   RSSI:(NSNumber *)RSSI
 {
     NSString *name = peripheral.name;
-    NSLog(@"didDiscoverPeripheral %@", peripheral.name);
+//    NSLog(@"didDiscoverPeripheral %@", peripheral.name);
     FDRadioTestContext *context = _tests[name];
     if (context != nil) {
         if (context.peripheral == nil) {
