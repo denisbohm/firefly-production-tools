@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FireflyProduction/FDBarCodeScanner.h>
 #import <FireflyProduction/FDI2C.h>
 #import <FireflyProduction/FDNumato.h>
 #import <FireflyProduction/FDPowerSupply.h>
@@ -17,7 +18,9 @@
 #import <FireflyProduction/FDFireflyFlash.h>
 #import <FireflyProduction/FDFireflyFlashEFM32.h>
 #import <FireflyProduction/FDFireflyFlashNANO1XX.h>
+#import <FireflyProduction/FDFireflyFlashNRF5X.h>
 #import <FireflyProduction/FDFireflyFlashNRF51.h>
+#import <FireflyProduction/FDFireflyFlashNRF52.h>
 #import <FireflyProduction/FDFireflyFlashSTM32F4.h>
 #import <FireflyProduction/FDGdbServer.h>
 #import <FireflyProduction/FDGdbServerSwd.h>
