@@ -77,13 +77,17 @@
 - (void)dispatchVer:(NSArray *)tokens
 {
     NSString *value = tokens[2];
-    [_delegate numato:self ver:value];
+    if ([_delegate respondsToSelector:@selector(numato:ver:)]) {
+        [_delegate numato:self ver:value];
+    }
 }
 
 - (void)dispatchIdGet:(NSArray *)tokens
 {
     NSString *value = tokens[2];
-    [_delegate numato:self id:value];
+    if ([_delegate respondsToSelector:@selector(numato:id:)]) {
+        [_delegate numato:self id:value];
+    }
 }
 
 - (uint8_t)parseChannel:(NSString *)token
@@ -97,21 +101,27 @@
 {
     uint8_t channel = [self parseChannel:tokens[0]];
     uint16_t value = [tokens[2] integerValue];
-    [_delegate numato:self adc:channel value:value];
+    if ([_delegate respondsToSelector:@selector(numato:adc:value:)]) {
+        [_delegate numato:self adc:channel value:value];
+    }
 }
 
 - (void)dispatchGpioRead:(NSArray *)tokens
 {
     uint8_t channel = [self parseChannel:tokens[0]];
     BOOL value = [tokens[2] isEqualToString:@"1"];
-    [_delegate numato:self gpio:channel value:value];
+    if ([_delegate respondsToSelector:@selector(numato:gpio:value:)]) {
+        [_delegate numato:self gpio:channel value:value];
+    }
 }
 
 - (void)dispatchRelayRead:(NSArray *)tokens
 {
     uint8_t channel = [self parseChannel:tokens[0]];
     BOOL value = [tokens[2] isEqualToString:@"on"];
-    [_delegate numato:self relay:channel value:value];
+    if ([_delegate respondsToSelector:@selector(numato:relay:value:)]) {
+        [_delegate numato:self relay:channel value:value];
+    }
 }
 
 - (void)dispatch:(NSString *)response
@@ -119,7 +129,9 @@
     NSArray *tokens = [response componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
     NSString *command = tokens[0];
     if (tokens.count == 3) {
-        [_delegate numato:self echo:command];
+        if ([_delegate respondsToSelector:@selector(numato:echo:)]) {
+            [_delegate numato:self echo:command];
+        }
         return;
     }
     if ([command isEqualToString:@"ver"]) {
