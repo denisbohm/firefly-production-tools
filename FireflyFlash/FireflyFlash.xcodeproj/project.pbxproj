@@ -154,7 +154,7 @@
 			isa = PBXGroup;
 			children = (
 				92DBE9C21730AF0400702ABA /* FireflyProduction.framework */,
-				92DBE9C41730AF0400702ABA /* FireflyProductionTests.octest */,
+				92DBE9C41730AF0400702ABA /* FireflyProductionTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -163,7 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				92DBE9D31730B00B00702ABA /* ARMSerialWireDebug.framework */,
-				92DBE9D51730B00B00702ABA /* ARMSerialWireDebugTests.octest */,
+				92DBE9D51730B00B00702ABA /* ARMSerialWireDebugTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -298,7 +298,7 @@
 			name = FireflyFlashTests;
 			productName = FireflyFlashTests;
 			productReference = 92E775291730958000A111DF /* FireflyFlashTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productType = "com.apple.product-type.bundle.ocunit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -307,6 +307,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = FD;
+				LastTestingUpgradeCheck = 0730;
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Firefly Design";
 				TargetAttributes = {
@@ -351,10 +352,10 @@
 			remoteRef = 92DBE9C11730AF0400702ABA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		92DBE9C41730AF0400702ABA /* FireflyProductionTests.octest */ = {
+		92DBE9C41730AF0400702ABA /* FireflyProductionTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = FireflyProductionTests.octest;
+			path = FireflyProductionTests.xctest;
 			remoteRef = 92DBE9C31730AF0400702ABA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -365,10 +366,10 @@
 			remoteRef = 92DBE9D21730B00B00702ABA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		92DBE9D51730B00B00702ABA /* ARMSerialWireDebugTests.octest */ = {
+		92DBE9D51730B00B00702ABA /* ARMSerialWireDebugTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = ARMSerialWireDebugTests.octest;
+			path = ARMSerialWireDebugTests.xctest;
 			remoteRef = 92DBE9D41730B00B00702ABA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};

@@ -26,7 +26,7 @@
 
 - (void)testExample
 {
-    STFail(@"Unit tests are not implemented yet in PcbTo3DTests");
+//    XCTFail(@"Unit tests are not implemented yet in PcbTo3DTests");
 }
 
 @end

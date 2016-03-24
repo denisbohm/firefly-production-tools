@@ -91,6 +91,7 @@
 @property double rotate;
 @property NSString *library;
 @property NSString *package;
+@property NSMutableDictionary *attributes;
 @end
 
 @interface FDBoardContainer : NSView

@@ -20,6 +20,8 @@
 		92BCB86017DA662E00B01308 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92BCB85E17DA662E00B01308 /* InfoPlist.strings */; };
 		92BCB86317DA662E00B01308 /* PcbTo3DTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BCB86217DA662E00B01308 /* PcbTo3DTests.m */; };
 		92BCB86E17DA6B7E00B01308 /* FDBoardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BCB86D17DA6B7E00B01308 /* FDBoardView.m */; };
+		92E025E21C012B3F003C059C /* clipper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92E025E11C012B3F003C059C /* clipper.cpp */; };
+		92E025E51C012C06003C059C /* FDClipper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 92E025E41C012C06003C059C /* FDClipper.mm */; };
 		DB7CE8B28479F9190C5B5D46 /* libPods-PcbTo3D.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 067E29BFCDFE059EB2DACDEA /* libPods-PcbTo3D.a */; };
 /* End PBXBuildFile section */
 
@@ -60,6 +62,10 @@
 		92BCB86217DA662E00B01308 /* PcbTo3DTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PcbTo3DTests.m; sourceTree = "<group>"; };
 		92BCB86C17DA6B7E00B01308 /* FDBoardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDBoardView.h; sourceTree = "<group>"; };
 		92BCB86D17DA6B7E00B01308 /* FDBoardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDBoardView.m; sourceTree = "<group>"; };
+		92E025DF1C012ADC003C059C /* clipper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = clipper.hpp; sourceTree = "<group>"; };
+		92E025E11C012B3F003C059C /* clipper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = clipper.cpp; sourceTree = "<group>"; };
+		92E025E31C012C06003C059C /* FDClipper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDClipper.h; sourceTree = "<group>"; };
+		92E025E41C012C06003C059C /* FDClipper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FDClipper.mm; sourceTree = "<group>"; };
 		9B612C2E38AB5558353DD9C1 /* Pods-PcbTo3D.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PcbTo3D.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PcbTo3D/Pods-PcbTo3D.debug.xcconfig"; sourceTree = "<group>"; };
 		AEA9C76BF694596FC83D03AC /* Pods-PcbTo3D.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PcbTo3D.release.xcconfig"; path = "Pods/Target Support Files/Pods-PcbTo3D/Pods-PcbTo3D.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -137,6 +143,8 @@
 		92BCB83E17DA662D00B01308 /* PcbTo3D */ = {
 			isa = PBXGroup;
 			children = (
+				92E025E11C012B3F003C059C /* clipper.cpp */,
+				92E025DF1C012ADC003C059C /* clipper.hpp */,
 				92BCB83F17DA662D00B01308 /* Supporting Files */,
 				92BCB84D17DA662E00B01308 /* MainMenu.xib */,
 				92BCB84A17DA662D00B01308 /* FDAppDelegate.h */,
@@ -148,6 +156,8 @@
 				927F5EC217DBA2690047BB95 /* FDBoard.h */,
 				927F5EC317DBA2690047BB95 /* FDBoard.m */,
 				92AAD0C618C66B77009081D2 /* Images.xcassets */,
+				92E025E31C012C06003C059C /* FDClipper.h */,
+				92E025E41C012C06003C059C /* FDClipper.mm */,
 			);
 			path = PcbTo3D;
 			sourceTree = "<group>";
@@ -195,6 +205,7 @@
 				92BCB83217DA662D00B01308 /* Frameworks */,
 				92BCB83317DA662D00B01308 /* Resources */,
 				7204497BC176F7439334A225 /* Copy Pods Resources */,
+				001F8376D14B080F257A3FBB /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -281,6 +292,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		001F8376D14B080F257A3FBB /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PcbTo3D/Pods-PcbTo3D-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		7204497BC176F7439334A225 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -334,6 +360,8 @@
 				92BCB84517DA662D00B01308 /* main.m in Sources */,
 				92BCB84C17DA662D00B01308 /* FDAppDelegate.m in Sources */,
 				92BCB86E17DA6B7E00B01308 /* FDBoardView.m in Sources */,
+				92E025E51C012C06003C059C /* FDClipper.mm in Sources */,
+				92E025E21C012B3F003C059C /* clipper.cpp in Sources */,
 				927F5EC117DBA21A0047BB95 /* FDRhino.m in Sources */,
 				927F5EC417DBA2690047BB95 /* FDBoard.m in Sources */,
 			);

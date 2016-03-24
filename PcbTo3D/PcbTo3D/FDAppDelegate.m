@@ -8,6 +8,7 @@
 
 #import "FDAppDelegate.h"
 #import "FDBoardView.h"
+#import "FDClipper.h"
 #import "FDRhino.h"
 
 #import <DKDrawKit/DKDrawKit.h>
@@ -16,9 +17,52 @@
 @property double x;
 @property double y;
 @property NSString *name;
+@property double diameter;
 @end
 
 @implementation FDTestPoint
+@end
+
+@interface FDFixtureProperties : NSObject
+@property double d;
+@property double pcbThickness;
+@property double maxComponentHeight;
+@property double midStroke;
+@property double exposed;
+@property double shaft;
+@property double pcbOutlineTolerance;
+@property double wallThickness;
+@property double ledgeThickness;
+@end
+
+@implementation FDFixtureProperties
+
+- (id)init
+{
+    if (self = [super init]) {
+        // Mill-Max Spring Loaded Pin 0985-0-15-20-71-14-11-0
+        // 1 mm diameter mounting hole
+        // 4.1 mm shaft (fits into plastic hole)
+        // 0.15 exposed at max stroke
+        // 1.4 mm max stroke
+        // 0.7 mm mid stroke
+        // PCB thickness 0.4 mm
+        // tallest component 1.4 mm - use 1.5 mm
+        // distance from PCBA to top of plastic: 4.1 + 0.15 + 0.7 = 4.95 mm - use 4.9 mm
+        // thickness of plastic to clear components: 4.9 - 1.5 = 3.4 mm
+        _d = 1.0;
+        _pcbThickness = 0.4;
+        _maxComponentHeight = 1.4;
+        _midStroke = 0.7;
+        _exposed = 0.15;
+        _shaft = 4.1;
+        _pcbOutlineTolerance = 0.2;
+        _wallThickness = 2.0;
+        _ledgeThickness = 1.0;
+    }
+    return self;
+}
+
 @end
 
 @interface FDAppDelegate ()
@@ -232,9 +276,9 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
                 NSPoint p = points[0];
                 if ([bounds containsPoint:p] == inside) {
                     [newPath moveToPoint:p];
-//                    NSLog(@"keeping move to %0.3f, %0.3f", p.x, p.y);
+                    //                    NSLog(@"keeping move to %0.3f, %0.3f", p.x, p.y);
                 } else {
-//                    NSLog(@"discarding move to %0.3f, %0.3f", p.x, p.y);
+                    //                    NSLog(@"discarding move to %0.3f, %0.3f", p.x, p.y);
                 }
             } break;
                 
@@ -242,9 +286,9 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
                 NSPoint p = points[0];
                 if ([bounds containsPoint:p] == inside) {
                     [newPath lineToPoint:points[0]];
-//                    NSLog(@"keeping line to %0.3f, %0.3f", p.x, p.y);
+                    //                    NSLog(@"keeping line to %0.3f, %0.3f", p.x, p.y);
                 } else {
-//                    NSLog(@"discarding line to %0.3f, %0.3f", p.x, p.y);
+                    //                    NSLog(@"discarding line to %0.3f, %0.3f", p.x, p.y);
                 }
             } break;
                 
@@ -252,9 +296,9 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
                 NSPoint p = points[2];
                 if ([bounds containsPoint:p] == inside) {
                     [newPath curveToPoint:points[2] controlPoint1:points[0] controlPoint2:points[1]];
-//                    NSLog(@"keeping curve to %0.3f, %0.3f", p.x, p.y);
+                    //                    NSLog(@"keeping curve to %0.3f, %0.3f", p.x, p.y);
                 } else {
-//                    NSLog(@"discarding curve to %0.3f, %0.3f", p.x, p.y);
+                    //                    NSLog(@"discarding curve to %0.3f, %0.3f", p.x, p.y);
                 }
             } break;
                 
@@ -264,6 +308,96 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
         }
     }
     return newPath;
+}
+
+static const double EPSILON = 0.000001;
+
+typedef struct {
+    NSPoint first;
+    NSPoint second;
+} LineSegment;
+
+double crossProduct(NSPoint a, NSPoint b) {
+    return a.x * b.y - b.x * a.y;
+}
+
+bool isPointOnLine(LineSegment a, NSPoint b) {
+    LineSegment aTmp = {.first = {0, 0}, .second = {.x = a.second.x - a.first.x, .y = a.second.y - a.first.y}};
+    NSPoint bTmp = { .x = b.x - a.first.x, .y = b.y - a.first.y};
+    double r = crossProduct(aTmp.second, bTmp);
+    return fabs(r) < EPSILON;
+}
+
+bool isPointRightOfLine(LineSegment a, NSPoint b) {
+    LineSegment aTmp = {.first = {0, 0}, .second = {.x = a.second.x - a.first.x, .y = a.second.y - a.first.y}};
+    NSPoint bTmp = { .x = b.x - a.first.x, .y = b.y - a.first.y};
+    return crossProduct(aTmp.second, bTmp) < 0;
+}
+
+bool lineSegmentTouchesOrCrossesLine(LineSegment a, LineSegment b) {
+    return isPointOnLine(a, b.first) || isPointOnLine(a, b.second) || (isPointRightOfLine(a, b.first) ^ isPointRightOfLine(a, b.second));
+}
+
+bool doLinesIntersect(LineSegment a, LineSegment b) {
+    return lineSegmentTouchesOrCrossesLine(a, b) && lineSegmentTouchesOrCrossesLine(b, a);
+}
+
+- (NSArray *)split:(NSBezierPath *)path withPath:splitPath
+{
+    NSMutableArray *paths = [NSMutableArray array];
+    NSBezierPath *newPath = nil;
+    NSPoint p0;
+    for (int i = 0; i < path.elementCount; ++i) {
+        if (newPath == nil) {
+            newPath = [NSBezierPath bezierPath];
+        }
+        NSPoint	points[3];
+        NSPoint p;
+        NSBezierPathElement kind = [path elementAtIndex:i associatedPoints:points];
+        switch(kind) {
+            default:
+            case NSMoveToBezierPathElement: {
+                p = points[0];
+                NSLog(@"move to %0.3f, %0.3f", p.x, p.y);
+                if (newPath.elementCount > 1) {
+                    [paths addObject:newPath];
+                    newPath = nil;
+                    newPath = [NSBezierPath bezierPath];
+                }
+                [newPath moveToPoint:p];
+            } break;
+                
+            case NSLineToBezierPathElement: {
+                p = points[0];
+                NSLog(@"line to %0.3f, %0.3f", p.x, p.y);
+                [newPath lineToPoint:p];
+            } break;
+                
+            case NSCurveToBezierPathElement: {
+                p = points[2];
+                NSLog(@"curve to %0.3f, %0.3f", p.x, p.y);
+                [newPath curveToPoint:p controlPoint1:points[0] controlPoint2:points[1]];
+            } break;
+                
+            case NSClosePathBezierPathElement:
+                NSLog(@"close");
+                [newPath closePath];
+                [paths addObject:newPath];
+                newPath = nil;
+                break;
+        }
+        if (newPath.elementCount == 1) {
+            p0 = p;
+        } else
+        if (newPath.elementCount > 1) {
+            static const double epsilon = 0.001;
+            if ((fabs(p.x - p0.x) < epsilon) && (fabs(p.y - p0.y) < epsilon)) {
+                [paths addObject:newPath];
+                newPath = nil;
+            }
+        }
+    }
+    return paths;
 }
 
 - (NSBezierPath *)bezierPathForWires:(NSArray *)theWires
@@ -320,7 +454,7 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
 }
 
 
-- (NSArray *)testPoints
+- (NSArray *)testPoints:(BOOL)mirrored
 {
     NSMutableDictionary *signalFromElementPad = [NSMutableDictionary dictionary];
     for (FDBoardContactRef *contactRef in _board.container.contactRefs) {
@@ -338,8 +472,12 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
             continue;
         }
         
-        if ([package.name isEqualToString:@"TP08R"] || [package.name isEqualToString:@"TC2030-MCP-NL"]) {
-            NSLog(@"%@ %0.3f, %0.3f", package.name, instance.x, instance.y);
+        if ([package.name isEqualToString:@"TARGET-PIN-1MM"] || [package.name isEqualToString:@"TP08R"] || [package.name isEqualToString:@"TC2030-MCP-NL"]) {
+//            NSLog(@"%@ %0.3f, %0.3f", package.name, instance.x, instance.y);
+            
+            if (instance.mirror != mirrored) {
+                continue;
+            }
             
             NSAffineTransform* xform = [NSAffineTransform transform];
             [xform translateXBy:instance.x yBy:instance.y];
@@ -366,13 +504,19 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
                 NSString *signal = signalFromElementPad[key];
                 if (signal != nil) {
                     testPoint.name = signal;
-                    [points addObject:testPoint];
+                } else {
+                    testPoint.name = instance.name;
+                }
+                [points addObject:testPoint];
+                NSString *pogoDiameter = instance.attributes[@"POGO_DIAMETER"];
+                if (pogoDiameter != nil) {
+                    testPoint.diameter = [pogoDiameter doubleValue];
                 }
                 
                 [xform invert];
                 [transform prependTransform:xform];
 
-                NSLog(@"  %@ %0.3f, %0.3f %0.3f, %0.3f", smd.name, smd.x, smd.y, p.x, p.y);
+//                NSLog(@"  %@ %0.3f, %0.3f %0.3f, %0.3f", smd.name, smd.x, smd.y, p.x, p.y);
             }
             
             [xform invert];
@@ -475,70 +619,50 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
     return lines;
 }
 
-- (void)generateTestFixture
+- (NSString *)derivedFileName:(NSString *)postfix bottom:(BOOL)bottom
 {
-    // fixture display path
-    NSBezierPath *all = [NSBezierPath bezierPath];
+    return [NSString stringWithFormat:@"%@/%@_%@_%@", _boardPath, [_boardName stringByDeletingPathExtension], bottom ? @"bottom" : @"top", postfix];
+}
 
+- (void)generateTestFixturePlastic:(FDFixtureProperties *)properties bottom:(BOOL)bottom testPoints:(NSArray *)testPoints display:(NSBezierPath *)display
+{
     NSArray *wires = [self wiresForLayer:20]; // 20: "Dimension" (AKA Outline) layer
     NSBezierPath *path = [self bezierPathForWires:wires];
-    // 0.2 mm margin for test fixture
-    NSBezierPath *outline = [self outline:[path strokedPathWithStrokeWidth:0.2] of:path inside:NO];
-    NSBezierPath *simple = [self simplify:outline distance:2.0];
-    NSBezierPath *bounds = [self outline:[simple strokedPathWithStrokeWidth:2.0] of:simple inside:NO];
-    NSBezierPath *ledge = [self outline:[simple strokedPathWithStrokeWidth:1.0] of:simple inside:YES];
-
-    // fixture display outline
-    [all appendBezierPath:outline];
-    [all appendBezierPath:bounds];
-    [all appendBezierPath:ledge];
     
-    NSArray *testPoints = [self testPoints];
+    FDClipper *clipper = [[FDClipper alloc] init];
+    NSBezierPath *outline = [clipper path:path offset:properties.pcbOutlineTolerance];
+    NSBezierPath *bounds = [clipper path:path offset:properties.wallThickness + properties.pcbOutlineTolerance];
+    NSBezierPath *ledge = [clipper path:path offset:-(properties.ledgeThickness - properties.pcbOutlineTolerance)];
     
-    // Mill-Max Spring Loaded Pin 0985-0-15-20-71-14-11-0
-    // 1 mm diameter mounting hole
-    // 4.1 mm shaft (fits into plastic hole)
-    // 0.15 exposed at max stroke
-    // 1.4 mm max stroke
-    // 0.7 mm mid stroke
-    // PCB thickness 0.4 mm
-    // tallest component 1.4 mm - use 1.5 mm
-    // distance from PCBA to top of plastic: 4.1 + 0.15 + 0.7 = 4.95 mm - use 4.9 mm
-    // thickness of plastic to clear components: 4.9 - 1.5 = 3.4 mm
-    const double d = 1.0;
-    const double r = d / 2.0;
-    const double pcbThickness = 0.4;
-    const double maxComponentHeight = 1.4;
-    const double midStroke = 0.7;
-    const double exposed = 0.15;
-    const double shaft = 4.1;
+    const double r = properties.d / 2.0;
     
-    double ceiling = pcbThickness + maxComponentHeight;
-    double top = pcbThickness + midStroke + exposed + shaft;
-
-    // fixture test point display
-    for (FDTestPoint *testPoint in testPoints) {
-        [all appendBezierPathWithOvalInRect:NSMakeRect(testPoint.x - r, testPoint.y - r, d, d)];
+    double ceiling = properties.pcbThickness + properties.maxComponentHeight;
+    double top = properties.pcbThickness + properties.midStroke + properties.exposed + properties.shaft;
+    double pcb = properties.pcbThickness;
+    if (bottom) {
+        ceiling = -ceiling;
+        top = -top;
+        pcb = -pcb;
     }
     
     NSMutableString *lines = [NSMutableString string];
     [lines appendString:@"import Rhino\n"];
     [lines appendString:@"import scriptcontext\n"];
     [lines appendString:@"import rhinoscriptsyntax as rs\n"];
-
+    
     // Rhino 3D test fixture outline
     [lines appendString:[self rhino3D:bounds z:0.0 name:@"bounds"]];
     [lines appendString:[self rhino3D:bounds z:top name:@"bounds2"]];
     [lines appendString:[self rhino3D:outline z:0.0 name:@"outline"]];
-    [lines appendString:[self rhino3D:outline z:pcbThickness name:@"outline2"]];
-    [lines appendString:[self rhino3D:ledge z:pcbThickness name:@"ledge"]];
+    [lines appendString:[self rhino3D:outline z:pcb name:@"outline2"]];
+    [lines appendString:[self rhino3D:ledge z:pcb name:@"ledge"]];
     [lines appendString:[self rhino3D:ledge z:ceiling name:@"ledge2"]];
     
     [lines appendFormat:@"rs.AddPlanarSrf([bounds, outline])\n"];
     [lines appendFormat:@"boundsWall = rs.ExtrudeCurveStraight(bounds, (%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f))\n", 0.0, 0.0, 0.0, 0.0, 0.0, top];
-    [lines appendFormat:@"outlineWall = rs.ExtrudeCurveStraight(outline, (%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f))\n", 0.0, 0.0, 0.0, 0.0, 0.0, pcbThickness];
+    [lines appendFormat:@"outlineWall = rs.ExtrudeCurveStraight(outline, (%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f))\n", 0.0, 0.0, 0.0, 0.0, 0.0, pcb];
     [lines appendFormat:@"rs.AddPlanarSrf([outline2, ledge])\n"];
-    [lines appendFormat:@"ledgeWall = rs.ExtrudeCurveStraight(ledge, (%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f))\n", 0.0, 0.0, pcbThickness, 0.0, 0.0, ceiling];
+    [lines appendFormat:@"ledgeWall = rs.ExtrudeCurveStraight(ledge, (%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f))\n", 0.0, 0.0, pcb, 0.0, 0.0, ceiling];
     [lines appendFormat:@"out0 = rs.AddPlanarSrf([ledge2])\n"];
     [lines appendFormat:@"out1 = rs.AddPlanarSrf([bounds2])\n"];
     
@@ -548,7 +672,11 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
         double x = testPoint.x;
         double y = testPoint.y;
         double z = ceiling;
-        [lines appendFormat:@"curve = rs.AddCircle3Pt((%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f))\n", x - r, y, z, x + r, y, z, x, y + r, z];
+        double tpr = r;
+        if (testPoint.diameter != 0.0) {
+            tpr = testPoint.diameter / 2.0;
+        }
+        [lines appendFormat:@"curve = rs.AddCircle3Pt((%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f))\n", x - tpr, y, z, x + tpr, y, z, x, y + tpr, z];
         [lines appendFormat:@"probe = rs.ExtrudeCurveStraight(curve, (%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f))\n", x, y, z, x, y, top];
         [lines appendFormat:@"probes.append(probe)\n"];
         
@@ -563,7 +691,24 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
         [lines appendFormat:@"out1 = result[0]\n"];
     }
     
-    // Eagle CAD test points
+    NSLog(@"test fixture %@ plastic:\n%@", bottom ? @"bottom" : @"top", lines);
+    NSString *fileName = [self derivedFileName:@"plate.py" bottom:bottom];
+    [lines writeToFile:fileName atomically:NO encoding:NSUTF8StringEncoding error:nil];
+
+    // fixture display outline
+    [display appendBezierPath:outline];
+    [display appendBezierPath:bounds];
+    [display appendBezierPath:ledge];
+    
+    // fixture test point display
+    for (FDTestPoint *testPoint in testPoints) {
+        [display appendBezierPathWithOvalInRect:NSMakeRect(testPoint.x - r, testPoint.y - r, properties.d, properties.d)];
+    }
+}
+
+- (void)generateTestFixtureSchematic:(FDFixtureProperties *)properties bottom:(BOOL)bottom testPoints:(NSArray *)testPoints
+{
+    NSMutableString *lines = [NSMutableString string];
     NSMutableDictionary *countByName = [NSMutableDictionary dictionary];
     double x = 2.0;
     double y = 8.0;
@@ -579,16 +724,46 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
         [lines appendFormat:@"add TARGET-PINPROBE-0985@firefly '%@' (%f %f);\n", name, x, y];
         y -= 0.4;
     }
+    
+    NSLog(@"test fixture top schematic:\n%@", lines);
+    NSString *fileName = [self derivedFileName:@"plate_schematic.scr" bottom:bottom];
+    [lines writeToFile:fileName atomically:NO encoding:NSUTF8StringEncoding error:nil];
+}
+
+- (void)generateTestFixtureLayout:(FDFixtureProperties *)properties bottom:(BOOL)bottom testPoints:(NSArray *)testPoints
+{
+    NSMutableString *lines = [NSMutableString string];
     for (FDTestPoint *testPoint in testPoints) {
         [lines appendFormat:@"move '%@' (%f %f);\n", testPoint.name, testPoint.x, testPoint.y];
     }
     [lines appendString:@"LAYER bDocu;\n"];
     [lines appendString:@"SET WIRE_BEND 2;"];
     [lines appendString:@"WIRE 0.1"];
+    NSBezierPath *outline = [self bezierPathForWires:[self wiresForLayer:20]]; // 20: "Dimension" layer
     [lines appendString:[self eagle:outline]];
     [lines appendString:@";\n"];
     
-    NSLog(@"fixture CAD:\n%@", lines);
+    NSLog(@"test fixture top layout:\n%@", lines);
+    NSString *fileName = [self derivedFileName:@"plate_layout.scr" bottom:bottom];
+    [lines writeToFile:fileName atomically:NO encoding:NSUTF8StringEncoding error:nil];
+}
+
+- (void)generateTestFixture
+{
+    // fixture display path
+    NSBezierPath *all = [NSBezierPath bezierPath];
+    
+    FDFixtureProperties *properties = [[FDFixtureProperties alloc] init];
+
+    NSArray *topTestPoints = [self testPoints:NO];
+    [self generateTestFixturePlastic:properties bottom:NO testPoints:topTestPoints display:all];
+    [self generateTestFixtureSchematic:properties bottom:NO testPoints:topTestPoints];
+    [self generateTestFixtureLayout:properties bottom:NO testPoints:topTestPoints];
+
+    NSArray *bottomTestPoints = [self testPoints:YES];
+    [self generateTestFixturePlastic:properties bottom:YES testPoints:bottomTestPoints display:all];
+    [self generateTestFixtureSchematic:properties bottom:YES testPoints:bottomTestPoints];
+    [self generateTestFixtureLayout:properties bottom:YES testPoints:bottomTestPoints];
     
     _boardView.fixturePath = all;
 }
@@ -759,6 +934,11 @@ static BOOL LineIntersection(NSPoint v1, NSPoint v2, NSPoint v3, NSPoint v4, NSP
     instance.rotate = rotate;
     instance.library = [[element attributeForName:@"library"] stringValue];
     instance.package = [[element attributeForName:@"package"] stringValue];
+    for (NSXMLElement *attributeElement in [element elementsForName:@"attribute"]) {
+        NSString *name = [[attributeElement attributeForName:@"name"] stringValue];
+        NSString *value = [[attributeElement attributeForName:@"value"] stringValue];
+        instance.attributes[name] = value;
+    }
     [container.instances addObject:instance];
 }
 

@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 Firefly Design. All rights reserved.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
-@interface PcbTo3DTests : SenTestCase
+@interface PcbTo3DTests : XCTest
 
 @end

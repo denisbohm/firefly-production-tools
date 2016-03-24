@@ -12,7 +12,8 @@
 #import <FireflyProduction/FDFireflyFlash.h>
 #import <FireflyProduction/FDGdbServer.h>
 #import <FireflyProduction/FDGdbServerSwd.h>
-#import <FireflyProduction/FDUSBHIDMonitor.h>
+
+#import <FireflyDevice/FDUSBHIDMonitor.h>
 
 #import <ARMSerialWireDebug/FDCortexM.h>
 #import <ARMSerialWireDebug/FDLogger.h>

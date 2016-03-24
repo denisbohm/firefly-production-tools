@@ -112,6 +112,15 @@
 @end
 
 @implementation FDBoardInstance
+
+- (id)init
+{
+    if (self = [super init]) {
+        self.attributes = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
+
 @end
 
 @implementation FDBoardContainer

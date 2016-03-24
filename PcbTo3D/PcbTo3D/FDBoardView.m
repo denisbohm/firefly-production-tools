@@ -188,7 +188,7 @@
     double scale = 20.0;
     
     NSAffineTransform* xform = [NSAffineTransform transform];
-    [xform translateXBy:0 yBy:0];
+    [xform translateXBy:140 yBy:10];
     [xform rotateByDegrees:0];
     [xform scaleXBy:scale yBy:scale];
     [xform concat];
