@@ -256,7 +256,7 @@
     executable.sections = sections;
     
     FDLog(@"Loading FireflyFlash into RAM...");
-    FDFireflyFlash *flash = [[FDFireflyFlash alloc] init];
+    FDFireflyFlash *flash = [FDFireflyFlash fireflyFlash:@"NRF51"]; // !!! need to pick the correct processor here -denis
     flash.logger = self.logger;
     [flash initialize:serialWireDebug];
     

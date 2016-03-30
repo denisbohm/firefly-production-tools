@@ -14,8 +14,8 @@
 		924A83991731A76F0041EB46 /* FireflyFlash.icns in Resources */ = {isa = PBXBuildFile; fileRef = 924A83981731A76F0041EB46 /* FireflyFlash.icns */; };
 		92AAD0CF18C67370009081D2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92AAD0CE18C67370009081D2 /* Images.xcassets */; };
 		92DBE9C51730AF4700702ABA /* FireflyProduction.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DBE9C21730AF0400702ABA /* FireflyProduction.framework */; };
-		92DBE9CC1730AFA600702ABA /* FireflyProduction.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92DBE9C21730AF0400702ABA /* FireflyProduction.framework */; };
-		92DBE9D81730B01B00702ABA /* ARMSerialWireDebug.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92DBE9D31730B00B00702ABA /* ARMSerialWireDebug.framework */; };
+		92DBE9CC1730AFA600702ABA /* FireflyProduction.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92DBE9C21730AF0400702ABA /* FireflyProduction.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		92DBE9D81730B01B00702ABA /* ARMSerialWireDebug.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92DBE9D31730B00B00702ABA /* ARMSerialWireDebug.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		92DBE9D91730B05400702ABA /* ARMSerialWireDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DBE9D31730B00B00702ABA /* ARMSerialWireDebug.framework */; };
 		92E7750D1730958000A111DF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E7750C1730958000A111DF /* Cocoa.framework */; };
 		92E775171730958000A111DF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92E775151730958000A111DF /* InfoPlist.strings */; };
@@ -308,7 +308,7 @@
 			attributes = {
 				CLASSPREFIX = FD;
 				LastTestingUpgradeCheck = 0730;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Firefly Design";
 				TargetAttributes = {
 					92E775081730958000A111DF = {
@@ -505,6 +505,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -562,6 +563,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FireflyFlash/FireflyFlash-Prefix.pch";
 				INFOPLIST_FILE = "FireflyFlash/FireflyFlash-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.fireflydesign.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -578,6 +580,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FireflyFlash/FireflyFlash-Prefix.pch";
 				INFOPLIST_FILE = "FireflyFlash/FireflyFlash-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.fireflydesign.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -593,6 +596,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FireflyFlash/FireflyFlash-Prefix.pch";
 				INFOPLIST_FILE = "FireflyFlashTests/FireflyFlashTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.fireflydesign.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
@@ -608,6 +612,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FireflyFlash/FireflyFlash-Prefix.pch";
 				INFOPLIST_FILE = "FireflyFlashTests/FireflyFlashTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.fireflydesign.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
