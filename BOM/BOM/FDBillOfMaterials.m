@@ -59,6 +59,33 @@
     }
 }
 
+- (FDPart *)copyInstance:(NSString *)instanceName
+{
+    FDPart *part = [[FDPart alloc] init];
+    part.name = [NSString stringWithFormat:@"%@.%@", instanceName, self.name];
+    part.value = self.value;
+    part.package = self.package;
+    part.manufacturer = self.manufacturer;
+    part.orderingCode = self.orderingCode;
+    part.distributor = self.distributor;
+    part.distributorOrderingCode = self.distributorOrderingCode;
+    part.note = self.note;
+    part.variants = self.variants;
+    part.doNotStuff = self.doNotStuff;
+    part.doNotSubstitute = self.doNotSubstitute;
+    part.namePrefix = [NSString stringWithFormat:@"%@.%@", instanceName, self.namePrefix];
+    part.nameNumber = self.nameNumber;
+    return part;
+}
+
+@end
+
+@implementation FDModule
+
+@end
+
+@implementation FDModuleInstance
+
 @end
 
 @implementation FDItem
@@ -215,6 +242,125 @@
     return options;
 }
 
+- (NSArray *)readParts:(NSString *)context document:(NSXMLDocument *)document partElements:(NSArray *)partElements packageByName:(NSMutableDictionary *)packageByName deviceByFullDeviceName:(NSMutableDictionary *)deviceByFullDeviceName
+{
+    NSMutableArray *parts = [NSMutableArray array];
+    NSError *error;
+    for (NSXMLElement *partElement in partElements) {
+        FDPart *part = [[FDPart alloc] init];
+        part.name = [[partElement attributeForName:@"name"] stringValue];
+        part.value = [[partElement attributeForName:@"value"] stringValue];
+        NSString *device = [[partElement attributeForName:@"device"] stringValue];
+        NSString *deviceset = [[partElement attributeForName:@"deviceset"] stringValue];
+        NSString *packageName = [NSString stringWithFormat:@"%@ %@", deviceset, device];
+        part.package = packageByName[packageName];
+        NSArray *attributes = [partElement objectsForXQuery:@"attribute" error:&error];
+        for (NSXMLElement *attribute in attributes) {
+            NSString *attributeName = [[attribute attributeForName:@"name"] stringValue];
+            NSString *attributeValue = [[attribute attributeForName:@"value"] stringValue];
+            if ([attributeName isEqualToString:@"ORDERING-CODE"]) {
+                part.orderingCode = attributeValue;
+            } else
+                if ([attributeName isEqualToString:@"MANUFACTURER"]) {
+                    part.manufacturer = attributeValue;
+                } else
+                    if ([attributeName isEqualToString:@"DISTRIBUTOR"]) {
+                        part.distributor = attributeValue;
+                    } else
+                        if ([attributeName isEqualToString:@"DISTRIBUTOR-ORDERING-CODE"]) {
+                            part.distributorOrderingCode = attributeValue;
+                        } else
+                            if ([attributeName isEqualToString:@"NOTE"]) {
+                                part.note = attributeValue;
+                            } else
+                                if ([attributeName isEqualToString:@"VARIANTS"]) {
+                                    for (NSString *token in [attributeValue componentsSeparatedByString:@","]) {
+                                        [part.variants addObject:token];
+                                    }
+                                } else
+                                    if ([attributeName isEqualToString:@"DNS"]) {
+                                        part.doNotStuff = [attributeValue isEqualToString:@"true"];
+                                    } else
+                                        if ([attributeName isEqualToString:@"NS"]) {
+                                            part.doNotSubstitute = [attributeValue isEqualToString:@"true"];
+                                        } else {
+                                            //                NSLog(@"Unknown %@ Attribute %@", part.name, attributeName);
+                                        }
+        }
+        if (part.manufacturer == nil) {
+            NSString *fullDeviceName = [NSString stringWithFormat:@"%@ %@", deviceset, device];
+            FDDevice *device = deviceByFullDeviceName[fullDeviceName];
+            if (device != nil) {
+                part.manufacturer = device.manufacturer;
+            }
+        }
+        if (part.orderingCode == nil) {
+            NSString *fullDeviceName = [NSString stringWithFormat:@"%@ %@", deviceset, device];
+            FDDevice *device = deviceByFullDeviceName[fullDeviceName];
+            if (device != nil) {
+                part.orderingCode = device.orderingCode;
+            }
+        }
+
+        NSString *library = [[partElement attributeForName:@"library"] stringValue];
+        if ([library isEqualToString:@"frames"]) {
+            continue;
+        }
+        if ([deviceset isEqualToString:@"GND"]) {
+            continue;
+        }
+        if ([deviceset isEqualToString:@"VCC"]) {
+            continue;
+        }
+        if ([deviceset isEqualToString:@"TARGET-PIN"]) {
+            continue;
+        }
+        if ([deviceset isEqualToString:@"V+"]) {
+            continue;
+        }
+
+        if (part.variants.count > 0) {
+            if (![part.variants intersectsSet:_options]) {
+                NSLog(@"do not stuff %@ Part %@ (not in variants)", context, part.name);
+                part.doNotStuff = YES;
+            }
+        }
+
+        if ((part.package == nil) && (part.orderingCode == nil)) {
+            continue;
+        }
+        if (part.package == nil) {
+            NSLog(@"Cannot Find Package %@ for %@ Part %@", packageName, context, part.name);
+        }
+        if (part.orderingCode == nil) {
+            NSLog(@"Missing Ordering Code for %@ Part %@", context, part.name);
+            continue;
+        }
+
+        [part parseName];
+        [parts addObject:part];
+    }
+    return parts;
+}
+
+- (NSMutableDictionary *)itemsForParts:(NSArray *)parts
+{
+    NSMutableDictionary *itemsByOrderingId = [NSMutableDictionary dictionary];
+    for (FDPart *part in parts) {
+        NSString *orderingId = [NSString stringWithFormat:@"%@ DNS=%@ NS=%@ NOTE=%@", part.orderingCode, part.doNotStuff ? @"YES" : @"NO", part.doNotSubstitute ? @"YES" : @"NO", part.note];
+        FDItem *item = itemsByOrderingId[orderingId];
+        if (item == nil) {
+            item = [[FDItem alloc] init];
+            item.orderingCode = part.orderingCode;
+            item.doNotStuff = part.doNotStuff;
+            item.doNotSubstitute = part.doNotSubstitute;
+            itemsByOrderingId[orderingId] = item;
+        }
+        [item.parts addObject:part];
+    }
+    return itemsByOrderingId;
+}
+
 - (void)read
 {
     NSXMLDocument *document = [self getDocument];
@@ -287,7 +433,10 @@
                     [deviceByFullDeviceName setValue:device forKey:fullDeviceName];
                 }
             }
-            
+
+            if (packageName == nil) {
+                continue;
+            }
             FDPackage *package = packageByName[packageName];
             if (package == nil) {
                 NSLog(@"Cannot Find Package %@ for Device %@", packageName, fullDeviceName);
@@ -297,115 +446,50 @@
         }
     }
 
-    NSMutableDictionary *itemsByOrderingId = [NSMutableDictionary dictionary];
-    NSArray *partElements = [document objectsForXQuery:@"./eagle/drawing/schematic/parts/part" error:&error];
-    for (NSXMLElement *partElement in partElements) {
-        FDPart *part = [[FDPart alloc] init];
-        part.name = [[partElement attributeForName:@"name"] stringValue];
-        part.value = [[partElement attributeForName:@"value"] stringValue];
-        NSString *device = [[partElement attributeForName:@"device"] stringValue];
-        NSString *deviceset = [[partElement attributeForName:@"deviceset"] stringValue];
-        NSString *packageName = [NSString stringWithFormat:@"%@ %@", deviceset, device];
-        part.package = packageByName[packageName];
-        NSArray *attributes = [partElement objectsForXQuery:@"attribute" error:&error];
-        for (NSXMLElement *attribute in attributes) {
-            NSString *attributeName = [[attribute attributeForName:@"name"] stringValue];
-            NSString *attributeValue = [[attribute attributeForName:@"value"] stringValue];
-            if ([attributeName isEqualToString:@"ORDERING-CODE"]) {
-                part.orderingCode = attributeValue;
-            } else
-            if ([attributeName isEqualToString:@"MANUFACTURER"]) {
-                part.manufacturer = attributeValue;
-            } else
-            if ([attributeName isEqualToString:@"DISTRIBUTOR"]) {
-                part.distributor = attributeValue;
-            } else
-            if ([attributeName isEqualToString:@"DISTRIBUTOR-ORDERING-CODE"]) {
-                part.distributorOrderingCode = attributeValue;
-            } else
-            if ([attributeName isEqualToString:@"NOTE"]) {
-                part.note = attributeValue;
-            } else
-            if ([attributeName isEqualToString:@"VARIANTS"]) {
-                for (NSString *token in [attributeValue componentsSeparatedByString:@","]) {
-                    [part.variants addObject:token];
-                }
-            } else
-            if ([attributeName isEqualToString:@"DNS"]) {
-                part.doNotStuff = [attributeValue isEqualToString:@"true"];
-            } else
-            if ([attributeName isEqualToString:@"NS"]) {
-                part.doNotSubstitute = [attributeValue isEqualToString:@"true"];
-            } else {
-//                NSLog(@"Unknown %@ Attribute %@", part.name, attributeName);
-            }
-        }
-        if (part.manufacturer == nil) {
-            NSString *fullDeviceName = [NSString stringWithFormat:@"%@ %@", deviceset, device];
-            FDDevice *device = deviceByFullDeviceName[fullDeviceName];
-            if (device != nil) {
-                part.manufacturer = device.manufacturer;
-            }            
-        }
-        if (part.orderingCode == nil) {
-            NSString *fullDeviceName = [NSString stringWithFormat:@"%@ %@", deviceset, device];
-            FDDevice *device = deviceByFullDeviceName[fullDeviceName];
-            if (device != nil) {
-                part.orderingCode = device.orderingCode;
-            }
-        }
-        
-        NSString *library = [[partElement attributeForName:@"library"] stringValue];
-        if ([library isEqualToString:@"frames"]) {
-            continue;
-        }
-        if ([deviceset isEqualToString:@"GND"]) {
-            continue;
-        }
-        if ([deviceset isEqualToString:@"VCC"]) {
-            continue;
-        }
-        if ([deviceset isEqualToString:@"TARGET-PIN"]) {
-            continue;
-        }
-        if ([deviceset isEqualToString:@"V+"]) {
-            continue;
-        }
-
-        if (part.variants.count > 0) {
-            if (![part.variants intersectsSet:_options]) {
-                NSLog(@"do not stuff %@ (not in variants)", part.name);
-                part.doNotStuff = YES;
-            }
-        }
-
-        if (part.package == nil) {
-            NSLog(@"Cannot Find Package %@ for Part %@", packageName, part.name);
-        }
-        if (part.orderingCode == nil) {
-            NSLog(@"Missing Ordering Code for Part %@", part.name);
-            continue;
-        }
-        
-        [part parseName];
-        NSString *orderingId = [NSString stringWithFormat:@"%@ DNS=%@ NS=%@ NOTE=%@", part.orderingCode, part.doNotStuff ? @"YES" : @"NO", part.doNotSubstitute ? @"YES" : @"NO", part.note];
-        FDItem *item = itemsByOrderingId[orderingId];
-        if (item == nil) {
-            item = [[FDItem alloc] init];
-            item.orderingCode = part.orderingCode;
-            item.doNotStuff = part.doNotStuff;
-            item.doNotSubstitute = part.doNotSubstitute;
-            itemsByOrderingId[orderingId] = item;
-        }
-        [item.parts addObject:part];
+    NSMutableDictionary *moduleByName = [NSMutableDictionary dictionary];
+    NSArray *moduleElements = [document objectsForXQuery:@"./eagle/drawing/schematic/modules/module" error:&error];
+    for (NSXMLElement *moduleElement in moduleElements) {
+        FDModule *module = [[FDModule alloc] init];
+        module.name = [[moduleElement attributeForName:@"name"] stringValue];
+        NSArray *partElements = [moduleElement objectsForXQuery:@"parts/part" error:&error];
+        module.parts = [self readParts:module.name document:document partElements:partElements packageByName:packageByName deviceByFullDeviceName:deviceByFullDeviceName];
+        [moduleByName setObject:module forKey:module.name];
     }
+
+    NSMutableArray *flattenedParts = [NSMutableArray array];
+
+    NSMutableArray *moduleInstances = [NSMutableArray array];
+    NSArray *moduleInstanceElements = [document objectsForXQuery:@"./eagle/drawing/schematic/sheets/sheet/moduleinsts/moduleinst" error:&error];
+    for (NSXMLElement *moduleInstanceElement in moduleInstanceElements) {
+        FDModuleInstance *instance = [[FDModuleInstance alloc] init];
+        instance.name = [[moduleInstanceElement attributeForName:@"name"] stringValue];
+        instance.module = [[moduleInstanceElement attributeForName:@"module"] stringValue];
+        [moduleInstances addObject:instance];
+
+        FDModule *module = moduleByName[instance.module];
+        for (FDPart *part in module.parts) {
+            FDPart *flattenedPart = [part copyInstance:instance.name];
+            [flattenedParts addObject:flattenedPart];
+        }
+    }
+
+    NSArray *partElements = [document objectsForXQuery:@"./eagle/drawing/schematic/parts/part" error:&error];
+    NSArray *parts = [self readParts:@"schematic" document:document partElements:partElements packageByName:packageByName deviceByFullDeviceName:deviceByFullDeviceName];
+    [flattenedParts addObjectsFromArray:parts];
+    NSMutableDictionary *itemsByOrderingId = [self itemsForParts:flattenedParts];
 
 #if 0
     // extra parts that are not in the schematic
     [self addExtraItem:itemsByOrderingId name:@"BC1" value:@"Battery Cover" manufacturer:@"Memory Protection Devices" orderingCode:@"BHSD-2032-COVER" distributor:nil distributorOrderingCode:nil];
     [self addExtraItem:itemsByOrderingId name:@"BCR1" value:@"Coin Cell" manufacturer:@"Panasonic - BSG" orderingCode:@"CR2032" distributor:@"Digikey" distributorOrderingCode:@"P189-ND"];
 #endif
-    
+
+//    [self addExtraItem:itemsByOrderingId name:@"WC1" value:@"26-wire cable" manufacturer:@"CW Industries" orderingCode:@"C3BBG-2636M" distributor:@"Digikey" distributorOrderingCode:@"C3BBG-2636M-ND"];
+    [self addExtraItem:itemsByOrderingId name:@"WC1" value:@"26-conductor ribbon cable" manufacturer:@"Assmann WSW Components" orderingCode:@"AWG28-26/F/300" distributor:@"Digikey" distributorOrderingCode:@"AE26M-5-ND"];
+    [self addExtraItem:itemsByOrderingId name:@"WC2" value:@"26-conductor ribbon cable connector" manufacturer:@"CW Industries" orderingCode:@"CWR-210-26-0000" distributor:@"Digikey" distributorOrderingCode:@"CSR26G-ND"];
+    [self addExtraItem:itemsByOrderingId name:@"WC3" value:@"26-conductor ribbon cable connector" manufacturer:@"CW Industries" orderingCode:@"CWR-210-26-0000" distributor:@"Digikey" distributorOrderingCode:@"CSR26G-ND"];
+
+
     for (FDItem *item in [itemsByOrderingId allValues]) {
         [item createReference];
     }

@@ -57,6 +57,22 @@
 
 - (void)parseName;
 
+- (FDPart *)copyInstance:(NSString *)instanceName;
+
+@end
+
+@interface FDModule : NSObject
+
+@property NSString *name;
+@property NSArray *parts;
+
+@end
+
+@interface FDModuleInstance : NSObject
+
+@property NSString *name;
+@property NSString *module;
+
 @end
 
 @interface FDItem : NSObject
