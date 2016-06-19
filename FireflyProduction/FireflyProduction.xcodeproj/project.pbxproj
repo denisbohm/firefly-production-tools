@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9201187B1CD83DA800165509 /* FDIntelHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9201187A1CD83DA800165509 /* FDIntelHex.swift */; };
 		9212248D1A084B7F002006AA /* FDBuilderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9212248B1A084B7F002006AA /* FDBuilderView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9212248E1A084B7F002006AA /* FDBuilderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9212248C1A084B7F002006AA /* FDBuilderView.m */; };
 		921224911A084CB8002006AA /* FDTargetOptionsView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9212248F1A084CB8002006AA /* FDTargetOptionsView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -33,7 +34,6 @@
 		9261C5A11A379E91002909AC /* FDNumato.m in Sources */ = {isa = PBXBuildFile; fileRef = 9261C59F1A379E91002909AC /* FDNumato.m */; };
 		9261C5A41A37AF81002909AC /* FDMultimeter.h in Headers */ = {isa = PBXBuildFile; fileRef = 9261C5A21A37AF81002909AC /* FDMultimeter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9261C5A51A37AF81002909AC /* FDMultimeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9261C5A31A37AF81002909AC /* FDMultimeter.m */; };
-		927483021A3CED6300291C38 /* FireflyProduction.h in Headers */ = {isa = PBXBuildFile; fileRef = 92E774E01730925800A111DF /* FireflyProduction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		927E8574179F3AF90038CEFC /* FireflyFlashEFM32.elf in Resources */ = {isa = PBXBuildFile; fileRef = 927E8573179F3AF90038CEFC /* FireflyFlashEFM32.elf */; };
 		92898BDE179E35D0007B84B7 /* FDFireflyFlash.h in Headers */ = {isa = PBXBuildFile; fileRef = 92898BDC179E35D0007B84B7 /* FDFireflyFlash.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92898BDF179E35D0007B84B7 /* FDFireflyFlash.m in Sources */ = {isa = PBXBuildFile; fileRef = 92898BDD179E35D0007B84B7 /* FDFireflyFlash.m */; };
@@ -145,6 +145,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9201186F1CD83C1A00165509 /* FireflyProduction-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FireflyProduction-Bridging-Header.h"; sourceTree = "<group>"; };
+		9201187A1CD83DA800165509 /* FDIntelHex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FDIntelHex.swift; sourceTree = "<group>"; };
 		9212248B1A084B7F002006AA /* FDBuilderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDBuilderView.h; sourceTree = "<group>"; };
 		9212248C1A084B7F002006AA /* FDBuilderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDBuilderView.m; sourceTree = "<group>"; };
 		9212248F1A084CB8002006AA /* FDTargetOptionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDTargetOptionsView.h; sourceTree = "<group>"; };
@@ -316,6 +318,7 @@
 			isa = PBXGroup;
 			children = (
 				92E774DA1730925800A111DF /* Supporting Files */,
+				9201186F1CD83C1A00165509 /* FireflyProduction-Bridging-Header.h */,
 				92DF38D11A50C6C5008BC3CC /* FDI2C.h */,
 				92DF38D21A50C6C5008BC3CC /* FDI2C.m */,
 				9219869A1A3FC88100A7311D /* FDBarCodeScanner.h */,
@@ -365,6 +368,7 @@
 				92B593151A37942C0090BCEB /* FDSerialWireDebugTest.m */,
 				92B593161A37942C0090BCEB /* FDSerialWireDebugOperation.h */,
 				92B593171A37942C0090BCEB /* FDSerialWireDebugOperation.m */,
+				9201187A1CD83DA800165509 /* FDIntelHex.swift */,
 			);
 			path = FireflyProduction;
 			sourceTree = "<group>";
@@ -411,7 +415,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				927483021A3CED6300291C38 /* FireflyProduction.h in Headers */,
 				9212248D1A084B7F002006AA /* FDBuilderView.h in Headers */,
 				92E775521730979E00A111DF /* FDExecutable.h in Headers */,
 				92898BDE179E35D0007B84B7 /* FDFireflyFlash.h in Headers */,
@@ -487,6 +490,7 @@
 		92E774C71730925800A111DF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0730;
 				LastTestingUpgradeCheck = 0510;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Firefly Design";
@@ -619,6 +623,7 @@
 				9261C5971A379DD8002909AC /* FDPowerSupply.m in Sources */,
 				9214495B17BED43200FC6BAF /* FDRadioTest.m in Sources */,
 				921224921A084CB8002006AA /* FDTargetOptionsView.m in Sources */,
+				9201187B1CD83DA800165509 /* FDIntelHex.swift in Sources */,
 				9219869D1A3FC88100A7311D /* FDBarCodeScanner.m in Sources */,
 				9261C5A51A37AF81002909AC /* FDMultimeter.m in Sources */,
 			);
@@ -733,6 +738,7 @@
 		92E774FB1730925800A111DF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -744,10 +750,14 @@
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = "FireflyProduction/FireflyProduction-Info.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.fireflydesign.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "FireflyProduction/FireflyProduction-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Debug;
@@ -755,6 +765,7 @@
 		92E774FC1730925800A111DF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -766,10 +777,13 @@
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = "FireflyProduction/FireflyProduction-Info.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.fireflydesign.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "FireflyProduction/FireflyProduction-Bridging-Header.h";
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
