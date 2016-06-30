@@ -22,6 +22,7 @@
 		9220F9821A7EFAE900594745 /* FireflyDevice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9220F97D1A7EFACD00594745 /* FireflyDevice.framework */; };
 		9220F9831A7EFAF500594745 /* FireflyDevice.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9220F97D1A7EFACD00594745 /* FireflyDevice.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9229C48817E4FFAF00B87C60 /* ARMSerialWireDebug.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9229C48117E4FF3C00B87C60 /* ARMSerialWireDebug.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		923E17011D24BE5200E0DD5F /* FireflyProduction-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 9201186F1CD83C1A00165509 /* FireflyProduction-Bridging-Header.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		924988DC1A1AD98400397E54 /* FDFireflyFlashNRF51.h in Headers */ = {isa = PBXBuildFile; fileRef = 924988DA1A1AD98400397E54 /* FDFireflyFlashNRF51.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		924988DD1A1AD98400397E54 /* FDFireflyFlashNRF51.m in Sources */ = {isa = PBXBuildFile; fileRef = 924988DB1A1AD98400397E54 /* FDFireflyFlashNRF51.m */; };
 		924988E41A1AF84F00397E54 /* FDFireflyFlashNANO1XX.h in Headers */ = {isa = PBXBuildFile; fileRef = 924988E21A1AF84F00397E54 /* FDFireflyFlashNANO1XX.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -438,6 +439,7 @@
 				92B593181A37942C0090BCEB /* FDSerialWireDebugTask.h in Headers */,
 				9214495A17BED43200FC6BAF /* FDRadioTest.h in Headers */,
 				92DF38D31A50C6C5008BC3CC /* FDI2C.h in Headers */,
+				923E17011D24BE5200E0DD5F /* FireflyProduction-Bridging-Header.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
