@@ -10,11 +10,7 @@
 
 #import <ARMSerialWireDebug/FDLogger.h>
 
-#if TARGET_OS_IPHONE
 #import <CoreBluetooth/CoreBluetooth.h>
-#else
-#import <IOBluetooth/IOBluetooth.h>
-#endif
 
 @implementation FDRadioTestResult
 @end
