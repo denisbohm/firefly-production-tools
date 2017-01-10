@@ -209,6 +209,16 @@
     [_resetButton setEnabled:YES];
     [_disconnectButton setEnabled:YES];
     [_swdJtagImageView setAlphaValue:1.0];
+#if 0
+    uint32_t address = 0x10000;
+    NSMutableString *string = [NSMutableString stringWithFormat:@"%08x:", address];
+    NSData *data = [serialWireDebug readMemory:address length:64];
+    uint8_t *bytes = (uint8_t *)data.bytes;
+    for (int i = 0; i < data.length; ++i) {
+        [string appendFormat:@" %02x", bytes[i]];
+    }
+    NSLog(@"memory content @%@", string);
+#endif
 }
 
 - (IBAction)swdDisconnect:(id)sender
@@ -241,7 +251,7 @@
 - (IBAction)swdProgram:(id)sender
 {
     FDSerialWireDebug *serialWireDebug = _gdbServerSwd.serialWireDebug;
-    
+
     NSString *firmwarePath = _swdPathControl.URL.path;
     if (!firmwarePath) {
         FDLog(@"no firmware file selected");
@@ -252,9 +262,10 @@
     FDLog(@"reading %@", firmwarePath);
     FDExecutable *executable = [[FDExecutable alloc] init];
     [executable load:firmwarePath];
-    NSArray *sections = [executable combineSectionsType:FDExecutableSectionTypeProgram address:0 length:0x40000 pageSize:2048];
+    uint32_t address = 0x08000000;
+    NSArray *sections = [executable combineSectionsType:FDExecutableSectionTypeProgram address:address length:0x40000 pageSize:2048];
     executable.sections = sections;
-    
+
     FDLog(@"Loading FireflyFlash into RAM...");
     FDFireflyFlash *flash = [FDFireflyFlash fireflyFlash:@"NRF51"]; // !!! need to pick the correct processor here -denis
     flash.logger = self.logger;
@@ -265,7 +276,6 @@
 
     FDLog(@"loading firmware into flash...");
     FDExecutableSection *section = executable.sections[0];
-    uint32_t address = 0x00000000;
     [flash writePages:address data:section.data erase:YES];
     [self verify:address data:section.data];
 

@@ -66,6 +66,7 @@
     part.value = self.value;
     part.package = self.package;
     part.manufacturer = self.manufacturer;
+    part.brand = self.brand;
     part.orderingCode = self.orderingCode;
     part.distributor = self.distributor;
     part.distributorOrderingCode = self.distributorOrderingCode;
@@ -176,6 +177,7 @@
                     name:(NSString *)name
                    value:(NSString *)value
             manufacturer:(NSString *)manufacturer
+                   brand:(NSString *)brand
             orderingCode:(NSString *)orderingCode
              distributor:(NSString *)distributor
  distributorOrderingCode:(NSString *)distributorOrderingCode
@@ -185,6 +187,7 @@
     part.name = name;
     part.value = value;
     part.manufacturer = manufacturer;
+    part.brand = brand;
     part.orderingCode = orderingCode;
     part.distributor = distributor;
     part.distributorOrderingCode = distributorOrderingCode;
@@ -238,8 +241,8 @@
             }
         }
     }
-    NSArray *options = [variants allObjects];
-    return options;
+    NSArray<NSString *> *options = [variants allObjects];
+    return [options sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
 }
 
 - (NSArray *)readParts:(NSString *)context document:(NSXMLDocument *)document partElements:(NSArray *)partElements packageByName:(NSMutableDictionary *)packageByName deviceByFullDeviceName:(NSMutableDictionary *)deviceByFullDeviceName
@@ -264,6 +267,9 @@
                 if ([attributeName isEqualToString:@"MANUFACTURER"]) {
                     part.manufacturer = attributeValue;
                 } else
+                    if ([attributeName isEqualToString:@"BRAND"]) {
+                        part.brand = attributeValue;
+                    } else
                     if ([attributeName isEqualToString:@"DISTRIBUTOR"]) {
                         part.distributor = attributeValue;
                     } else
@@ -332,7 +338,7 @@
         if (part.package == nil) {
             NSLog(@"Cannot Find Package %@ for %@ Part %@", packageName, context, part.name);
         }
-        if (part.orderingCode == nil) {
+        if ((part.orderingCode == nil) && !part.doNotStuff) {
             NSLog(@"Missing Ordering Code for %@ Part %@", context, part.name);
             continue;
         }
@@ -351,6 +357,7 @@
         FDItem *item = itemsByOrderingId[orderingId];
         if (item == nil) {
             item = [[FDItem alloc] init];
+            item.brand = part.brand;
             item.orderingCode = part.orderingCode;
             item.doNotStuff = part.doNotStuff;
             item.doNotSubstitute = part.doNotSubstitute;
@@ -484,11 +491,13 @@
     [self addExtraItem:itemsByOrderingId name:@"BCR1" value:@"Coin Cell" manufacturer:@"Panasonic - BSG" orderingCode:@"CR2032" distributor:@"Digikey" distributorOrderingCode:@"P189-ND"];
 #endif
 
+    // for instrument board
+#if 0
 //    [self addExtraItem:itemsByOrderingId name:@"WC1" value:@"26-wire cable" manufacturer:@"CW Industries" orderingCode:@"C3BBG-2636M" distributor:@"Digikey" distributorOrderingCode:@"C3BBG-2636M-ND"];
     [self addExtraItem:itemsByOrderingId name:@"WC1" value:@"26-conductor ribbon cable" manufacturer:@"Assmann WSW Components" orderingCode:@"AWG28-26/F/300" distributor:@"Digikey" distributorOrderingCode:@"AE26M-5-ND"];
     [self addExtraItem:itemsByOrderingId name:@"WC2" value:@"26-conductor ribbon cable connector" manufacturer:@"CW Industries" orderingCode:@"CWR-210-26-0000" distributor:@"Digikey" distributorOrderingCode:@"CSR26G-ND"];
     [self addExtraItem:itemsByOrderingId name:@"WC3" value:@"26-conductor ribbon cable connector" manufacturer:@"CW Industries" orderingCode:@"CWR-210-26-0000" distributor:@"Digikey" distributorOrderingCode:@"CSR26G-ND"];
-
+#endif
 
     for (FDItem *item in [itemsByOrderingId allValues]) {
         [item createReference];
@@ -758,12 +767,16 @@
     double totalPrice = 0.0;
     for (FDItem *item in _items) {
         if (item.doNotStuff) {
-            NSLog(@"DNS %@", item.orderingCode);
+            if (item.orderingCode) {
+                NSLog(@"DNS %@ (%@)", item.reference, item.orderingCode);
+            } else {
+                NSLog(@"DNS %@", item.reference);
+            }
             continue;
         }
         NSUInteger itemQuantity = [item.orderQuantities[quantityIndex] unsignedIntegerValue];
         FDPartBuy *partBuy = nil;
-        NSArray *sellers = [partSearch findOffersWithManufacturerPartNumber:item.orderingCode];
+        NSArray *sellers = [partSearch findOffersWithManufacturerPartNumber:item.orderingCode withBrand:item.brand];
         partBuy = [self getSingleSellerFullBuy:item itemQuantity:itemQuantity sellers:sellers];
         if (partBuy == nil) {
             partBuy = [self getMultipleSellerBuy:item itemQuantity:itemQuantity sellers:sellers];

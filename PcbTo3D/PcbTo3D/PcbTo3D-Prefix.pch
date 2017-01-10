@@ -1,7 +1,0 @@
-//
-// Prefix header for all source files of the 'PcbTo3D' target in the 'PcbTo3D' project
-//
-
-#ifdef __OBJC__
-    #import <Cocoa/Cocoa.h>
-#endif

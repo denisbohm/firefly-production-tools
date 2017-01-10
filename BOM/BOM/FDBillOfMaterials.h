@@ -44,6 +44,7 @@
 @property NSString *value;
 @property FDPackage *package;
 @property NSString *manufacturer;
+@property NSString *brand;
 @property NSString *orderingCode;
 @property NSString *distributor;
 @property NSString *distributorOrderingCode;
@@ -77,6 +78,7 @@
 
 @interface FDItem : NSObject
 
+@property NSString *brand;
 @property NSString *orderingCode;
 @property BOOL doNotStuff;
 @property BOOL doNotSubstitute;

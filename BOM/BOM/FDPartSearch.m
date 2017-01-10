@@ -144,7 +144,7 @@ NSInteger getInteger(id value)
      -d apikey=EXAMPLE_KEY \
      -d pretty_print=true
  */
-- (NSArray *)findOffersWithManufacturerPartNumber:(NSString *)manufacturerPartNumber
+- (NSArray *)findOffersWithManufacturerPartNumber:(NSString *)manufacturerPartNumber withBrand:(NSString *)brand
 {
     // return any previous search result, so we don't use up part search API requests (they cost $)
     NSArray *documentsSearchPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -159,7 +159,12 @@ NSInteger getInteger(id value)
     [partFilename replaceOccurrencesOfString:@":" withString:@"_" options:0 range:NSMakeRange(0, [partFilename length])];
     NSString *partPath = [partsPath stringByAppendingPathComponent:partFilename];
     if (![fileManager fileExistsAtPath:partPath]) {
-        NSString *queries = [NSString stringWithFormat:@"[{\"mpn\":\"%@\"}]", manufacturerPartNumber];
+        NSString *queries;
+        if (brand != nil) {
+            queries = [NSString stringWithFormat:@"[{\"brand\":\"%@\", \"mpn\":\"%@\"}]", brand, manufacturerPartNumber];
+        } else {
+            queries = [NSString stringWithFormat:@"[{\"mpn\":\"%@\"}]", manufacturerPartNumber];
+        }
         NSData *data = [FDPartSearch get:_url parameters:@{@"queries": queries, @"apikey": _apikey, @"pretty_print": @"true"}];
         if (data != nil) {
             [data writeToFile:partPath atomically:NO];

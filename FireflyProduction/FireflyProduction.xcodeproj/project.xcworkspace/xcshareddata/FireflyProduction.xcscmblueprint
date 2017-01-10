@@ -1,0 +1,44 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "748AFA8E6955F8400637FBF13A3E8767AEFB4A06",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "15C3BA0301A08E95AE15A9FD52FD2A6C11888548" : 0,
+    "855710B1EB773B99E48B2BD5CABD225926A65C4A" : 0,
+    "5A131E55697F8004CAC31E4EEC549228502767EB" : 0,
+    "748AFA8E6955F8400637FBF13A3E8767AEFB4A06" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "C5F1C35D-A72E-4527-BD6F-FDD7FCB021B8",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "15C3BA0301A08E95AE15A9FD52FD2A6C11888548" : "firefly-arm-swd",
+    "855710B1EB773B99E48B2BD5CABD225926A65C4A" : "",
+    "5A131E55697F8004CAC31E4EEC549228502767EB" : "firefly-ice-api",
+    "748AFA8E6955F8400637FBF13A3E8767AEFB4A06" : "firefly-production-tools"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "FireflyProduction",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "FireflyProduction\/FireflyProduction.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/denisbohm\/firefly-arm-swd.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "15C3BA0301A08E95AE15A9FD52FD2A6C11888548"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/denisbohm\/firefly-ice-api.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "5A131E55697F8004CAC31E4EEC549228502767EB"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/denisbohm\/firefly-production-tools.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "748AFA8E6955F8400637FBF13A3E8767AEFB4A06"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/atlaswearables\/firmware.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "855710B1EB773B99E48B2BD5CABD225926A65C4A"
+    }
+  ]
+}

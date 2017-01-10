@@ -40,6 +40,6 @@
 
 @property NSString *apikey;
 
-- (NSArray *)findOffersWithManufacturerPartNumber:(NSString *)manufacturerPartNumber;
+- (NSArray *)findOffersWithManufacturerPartNumber:(NSString *)manufacturerPartNumber withBrand:(NSString *)brand;
 
 @end
