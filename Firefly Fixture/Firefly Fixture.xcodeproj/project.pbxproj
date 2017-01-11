@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		9275D9311E2415A300BCE1FD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9275D9301E2415A300BCE1FD /* AppDelegate.swift */; };
-		9275D9331E2415A300BCE1FD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9275D9321E2415A300BCE1FD /* ViewController.swift */; };
 		9275D9351E2415A300BCE1FD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9275D9341E2415A300BCE1FD /* Assets.xcassets */; };
 		9275D9381E2415A400BCE1FD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9275D9361E2415A400BCE1FD /* Main.storyboard */; };
 		9275D9431E2415A400BCE1FD /* Firefly_FixtureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9275D9421E2415A400BCE1FD /* Firefly_FixtureTests.swift */; };
@@ -43,7 +42,6 @@
 /* Begin PBXFileReference section */
 		9275D92D1E2415A300BCE1FD /* Firefly Fixture.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Firefly Fixture.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9275D9301E2415A300BCE1FD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		9275D9321E2415A300BCE1FD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		9275D9341E2415A300BCE1FD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9275D9371E2415A400BCE1FD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9275D9391E2415A400BCE1FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -91,6 +89,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		922569A61E255EDD002B9626 /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+				9275D9301E2415A300BCE1FD /* AppDelegate.swift */,
+				9275D9341E2415A300BCE1FD /* Assets.xcassets */,
+				9275D9391E2415A400BCE1FD /* Info.plist */,
+				9275D95B1E241A9400BCE1FD /* Firefly Fixture-Bridging-Header.h */,
+			);
+			name = Misc;
+			sourceTree = "<group>";
+		};
 		9275D9241E2415A300BCE1FD = {
 			isa = PBXGroup;
 			children = (
@@ -114,19 +123,15 @@
 		9275D92F1E2415A300BCE1FD /* Firefly Fixture */ = {
 			isa = PBXGroup;
 			children = (
-				9275D96E1E241CB700BCE1FD /* Clipper */,
-				9275D9301E2415A300BCE1FD /* AppDelegate.swift */,
-				9275D9321E2415A300BCE1FD /* ViewController.swift */,
-				9275D9341E2415A300BCE1FD /* Assets.xcassets */,
+				9275D9811E2447E500BCE1FD /* Fixture.swift */,
 				9275D9361E2415A400BCE1FD /* Main.storyboard */,
-				9275D9391E2415A400BCE1FD /* Info.plist */,
-				9275D95B1E241A9400BCE1FD /* Firefly Fixture-Bridging-Header.h */,
-				9275D97B1E241D2900BCE1FD /* Board.swift */,
+				92C350BD1E254CC6000A1D61 /* BoardViewController.swift */,
 				9275D97D1E242C6200BCE1FD /* BoardView.swift */,
+				9275D97B1E241D2900BCE1FD /* Board.swift */,
 				9275D9831E24498300BCE1FD /* Eagle.swift */,
 				9275D97F1E2434F900BCE1FD /* Rhino.swift */,
-				9275D9811E2447E500BCE1FD /* Fixture.swift */,
-				92C350BD1E254CC6000A1D61 /* BoardViewController.swift */,
+				9275D96E1E241CB700BCE1FD /* Clipper */,
+				922569A61E255EDD002B9626 /* Misc */,
 			);
 			path = "Firefly Fixture";
 			sourceTree = "<group>";
@@ -301,7 +306,6 @@
 				92C350BE1E254CC6000A1D61 /* BoardViewController.swift in Sources */,
 				9275D9691E241AF900BCE1FD /* clipper.cpp in Sources */,
 				9275D96D1E241B3300BCE1FD /* FDClipper.mm in Sources */,
-				9275D9331E2415A300BCE1FD /* ViewController.swift in Sources */,
 				9275D9311E2415A300BCE1FD /* AppDelegate.swift in Sources */,
 				9275D9821E2447E500BCE1FD /* Fixture.swift in Sources */,
 				9275D9801E2434F900BCE1FD /* Rhino.swift in Sources */,

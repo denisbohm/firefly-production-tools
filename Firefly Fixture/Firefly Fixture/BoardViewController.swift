@@ -15,6 +15,8 @@ class BoardViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        boardPathControl?.url = URL(fileURLWithPath: "/Users/denis/sandbox/lumo/hardware/LUMObackMod.brd")
     }
 
     @IBAction func reloadBoard(_ sender: AnyObject) {
