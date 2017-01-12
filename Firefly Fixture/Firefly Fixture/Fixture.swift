@@ -106,10 +106,36 @@ class Fixture {
 
 
     class TestPoint {
+
         var x: Board.PhysicalUnit = 0
         var y: Board.PhysicalUnit = 0
-        var name: String = ""
         var diameter: Board.PhysicalUnit = 0
+        var name: String = ""
+
+        init() {
+        }
+
+        init(x: Board.PhysicalUnit = 0, y: Board.PhysicalUnit = 0, diameter: Board.PhysicalUnit = 0, name: String = "") {
+            self.x = x
+            self.y = y
+            self.diameter = diameter
+            self.name = name
+        }
+
+    }
+
+    func diameter(name: String, fallback: Board.PhysicalUnit) -> Board.PhysicalUnit {
+        if name.hasSuffix("MM") {
+            if let range = name.range(of: "-", options: [], range: nil, locale: nil) {
+                let lower = name.index(range.upperBound, offsetBy: 0)
+                let upper = name.index(name.endIndex, offsetBy: -2)
+                let token = name.substring(with: lower ..< upper)
+                if let diameter = Float(token) {
+                    return Board.PhysicalUnit(diameter)
+                }
+            }
+        }
+        return fallback
     }
 
     func probeTestPoints(mirrored: Bool, defaultDiameter: Board.PhysicalUnit) -> [TestPoint] {
@@ -184,7 +210,7 @@ class Fixture {
         return points
     }
     
-    func ledTestPoints(mirrored: Bool, defaultDiameter: Board.PhysicalUnit) -> [TestPoint] {
+    func testPoints(packageNamePrefix: String, mirrored: Bool, defaultDiameter: Board.PhysicalUnit) -> [TestPoint] {
         var points: [TestPoint] = []
 
         var transform = AffineTransform()
@@ -194,7 +220,7 @@ class Fixture {
                 continue
             }
 
-            if (package.name == "SML-LX0404SIUPGUSB") {
+            if package.name.hasPrefix(packageNamePrefix) {
                 // NSLog(@"%@ %0.3f, %0.3f", package.name, instance.x, instance.y);
 
                 if instance.mirror != mirrored {
@@ -215,12 +241,7 @@ class Fixture {
                 testPoint.x = p.x
                 testPoint.y = p.y
                 testPoint.name = instance.name
-                testPoint.diameter = defaultDiameter
-                if let pipeDiameterString = instance.attributes["PIPE_DIAMETER"] {
-                    if let pipeDiameter = Float(pipeDiameterString) {
-                        testPoint.diameter = Board.PhysicalUnit(pipeDiameter)
-                    }
-                }
+                testPoint.diameter = diameter(name: package.name, fallback: defaultDiameter)
                 points.append(testPoint)
 
                 xform.invert()
@@ -230,7 +251,7 @@ class Fixture {
         
         return points
     }
-    
+
     func rhino3D(path: NSBezierPath, z: Board.PhysicalUnit, name: String) -> String {
         var lines = "curves = []\n"
         var c: NSPoint = NSPoint(x: 0, y: 0)
@@ -357,14 +378,32 @@ class Fixture {
             lines += extrude(curve: "curve", asSurface: "probe", fromZ: z0, toZ: z1)
             lines += "probes.append(probe)\n"
 
-            lines += cut(surface: "probe", fromSurface: "out0")
-            lines += cut(surface: "probe", fromSurface: "out1")
+            lines += cut(surface: "probe", fromSurface: surface0)
+            lines += cut(surface: "probe", fromSurface: surface1)
 
             display.appendOval(in: NSRect(x: x - r, y: y - r, width: r * 2, height: r * 2))
         }
         return lines
     }
+    
+    func addPosts(testPoints: [TestPoint], surface0: String, z0: Board.PhysicalUnit, z1: Board.PhysicalUnit, display: inout NSBezierPath) -> String {
+        var lines = "posts = []\n"
+        for testPoint in testPoints {
+            let x = testPoint.x
+            let y = testPoint.y
+            let r = testPoint.diameter / 2.0
+            lines += circle(asCurve: "curve", cx: x, cy: y, r: r, z: z1)
+            lines += "rs.AddPlanarSrf([curve])\n"
+            lines += extrude(curve: "curve", asSurface: "post", fromZ: z1, toZ: z0)
+            lines += "posts.append(post)\n"
 
+            lines += cut(surface: "post", fromSurface: surface0)
+
+            display.appendOval(in: NSRect(x: x - r, y: y - r, width: r * 2, height: r * 2))
+        }
+        return lines
+    }
+    
     // Mill-Max Spring Loaded Pin 0985-0-15-20-71-14-11-0
     // 1 mm diameter mounting hole
     // 4.1 mm shaft (fits into plastic hole)
@@ -386,14 +425,15 @@ class Fixture {
         let standardBottomPlateThickness: Board.PhysicalUnit = 4.0
         let standardTopPlateThickness: Board.PhysicalUnit = 4.0
 
-        let defaultLedHoleRadius: Board.PhysicalUnit = 3.25 / 2.0
-        let defaultProbeHoleRadius: Board.PhysicalUnit = 1.0 / 2.0
+        let defaultSupportPostDiameter: Board.PhysicalUnit = 2.0
+        let defaultLedHoleDiameter: Board.PhysicalUnit = 3.25
+        let defaultProbeHoleDiameter: Board.PhysicalUnit = 1.0
         let pcbOutlineTolerance: Board.PhysicalUnit = 0.25
         let wallThickness: Board.PhysicalUnit = 4.0
         let ledgeThickness: Board.PhysicalUnit = 2.0
     }
 
-    func generateTestFixtureTopPlastic(properties: Properties, probeTestPoints: [TestPoint], ledTestPoints: [TestPoint], display: inout NSBezierPath) throws {
+    func generateTestFixtureTopPlastic(properties: Properties, probeTestPoints: [TestPoint], ledTestPoints: [TestPoint], supportPoints: [TestPoint], display: inout NSBezierPath) throws {
         let bps: Board.PhysicalUnit = 0.0
         let bpi: Board.PhysicalUnit = bps + properties.pcbThickness + properties.probeStroke + properties.ledgeOverage
 
@@ -427,6 +467,9 @@ class Fixture {
         lines += cutProbeHoles(testPoints: probeTestPoints, surface0: "out0", z0: tpn, surface1: "out1", z1: tpo, display: &display)
         lines += cutProbeHoles(testPoints: ledTestPoints, surface0: "out0", z0: tpn, surface1: "out1", z1: tpo, display: &display)
 
+        // add supports
+        lines += addPosts(testPoints: supportPoints, surface0: "out0", z0: tpn, z1: tps, display: &display)
+
         NSLog(String(format: "test fixture %@ plastic:\n%@", "top", lines))
         let fileName = derivedFileName(postfix: "plate.py", bottom: false)
         try lines.write(toFile: fileName, atomically: false, encoding: String.Encoding.utf8)
@@ -436,7 +479,7 @@ class Fixture {
         display.append(bounds)
     }
 
-    func generateTestFixtureBottomPlastic(properties: Properties, probeTestPoints: [TestPoint], ledTestPoints: [TestPoint], display: inout NSBezierPath) throws {
+    func generateTestFixtureBottomPlastic(properties: Properties, probeTestPoints: [TestPoint], ledTestPoints: [TestPoint], supportPoints: [TestPoint], display: inout NSBezierPath) throws {
         let bps: Board.PhysicalUnit = 0.0
         let bpi: Board.PhysicalUnit = bps + properties.pcbThickness + properties.probeStroke + properties.ledgeOverage
         let bpn: Board.PhysicalUnit = bps - properties.pcbBottomComponentClearance
@@ -471,6 +514,9 @@ class Fixture {
         // cut out test point openings
         lines += cutProbeHoles(testPoints: probeTestPoints, surface0: "out0", z0: bpn, surface1: "out1", z1: bpo, display: &display)
         lines += cutProbeHoles(testPoints: ledTestPoints, surface0: "out0", z0: bpn, surface1: "out1", z1: bpo, display: &display)
+
+        // add supports
+        lines += addPosts(testPoints: supportPoints, surface0: "out0", z0: bpn, z1: bps, display: &display)
 
         NSLog(String(format: "test fixture %@ plastic:\n%@", "bottom", lines))
         let fileName = derivedFileName(postfix: "plate.py", bottom: true)
@@ -533,15 +579,17 @@ class Fixture {
         
         let properties = Properties()
 
-        let topProbeTestPoints = probeTestPoints(mirrored: false, defaultDiameter: properties.defaultProbeHoleRadius)
-        let topLedTestPoints = ledTestPoints(mirrored: false, defaultDiameter: properties.defaultLedHoleRadius)
-        try generateTestFixtureTopPlastic(properties: properties, probeTestPoints: topProbeTestPoints, ledTestPoints: topLedTestPoints, display: &all)
+        let topProbeTestPoints = probeTestPoints(mirrored: false, defaultDiameter: properties.defaultProbeHoleDiameter)
+        let topLedTestPoints = testPoints(packageNamePrefix: "LED_TEST_POINT", mirrored: false, defaultDiameter: properties.defaultLedHoleDiameter)
+        let topSupportPoints = testPoints(packageNamePrefix: "SUPPORT", mirrored: false, defaultDiameter: properties.defaultSupportPostDiameter)
+        try generateTestFixtureTopPlastic(properties: properties, probeTestPoints: topProbeTestPoints, ledTestPoints: topLedTestPoints, supportPoints: topSupportPoints, display: &all)
         try generateTestFixtureSchematic(properties: properties, bottom: false, probeTestPoints: topProbeTestPoints, ledTestPoints: topLedTestPoints)
         try generateTestFixtureLayout(properties: properties, bottom: false, probeTestPoints: topProbeTestPoints, ledTestPoints: topLedTestPoints)
 
-        let bottomProbeTestPoints = probeTestPoints(mirrored: true, defaultDiameter: properties.defaultProbeHoleRadius)
-        let bottomLedTestPoints = ledTestPoints(mirrored: true, defaultDiameter: properties.defaultLedHoleRadius)
-        try generateTestFixtureBottomPlastic(properties: properties, probeTestPoints: bottomProbeTestPoints, ledTestPoints: bottomLedTestPoints, display: &all)
+        let bottomProbeTestPoints = probeTestPoints(mirrored: true, defaultDiameter: properties.defaultProbeHoleDiameter)
+        let bottomLedTestPoints = testPoints(packageNamePrefix: "LED_TEST_POINT", mirrored: true, defaultDiameter: properties.defaultLedHoleDiameter)
+        let bottomSupportPoints = testPoints(packageNamePrefix: "SUPPORT", mirrored: true, defaultDiameter: properties.defaultSupportPostDiameter)
+        try generateTestFixtureBottomPlastic(properties: properties, probeTestPoints: bottomProbeTestPoints, ledTestPoints: bottomLedTestPoints, supportPoints: bottomSupportPoints, display: &all)
         try generateTestFixtureSchematic(properties: properties, bottom: true, probeTestPoints: bottomProbeTestPoints, ledTestPoints: bottomLedTestPoints)
         try generateTestFixtureLayout(properties: properties, bottom: true, probeTestPoints: bottomProbeTestPoints, ledTestPoints: bottomLedTestPoints)
         
