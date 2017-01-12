@@ -255,12 +255,18 @@ class Fixture {
     func rhino3D(path: NSBezierPath, z: Board.PhysicalUnit, name: String) -> String {
         var lines = "curves = []\n"
         var c: NSPoint = NSPoint(x: 0, y: 0)
+        var origin: NSPoint = NSPoint(x: 0, y: 0)
+        var hasOrigin: Bool = false
         for i in 0 ..< path.elementCount {
             var points: [NSPoint] = [NSPoint(x: 0, y: 0), NSPoint(x: 0, y: 0), NSPoint(x: 0, y: 0)]
             let kind = path.element(at: i, associatedPoints: &points)
             switch (kind) {
                 case .moveToBezierPathElement:
                     c = points[0]
+                    if !hasOrigin {
+                        hasOrigin = true
+                        origin = c
+                    }
                 case .lineToBezierPathElement:
                     let p = points[0]
                     if c != p {
@@ -292,6 +298,11 @@ class Fixture {
                     
                     c = p3
                 case .closePathBezierPathElement:
+                    if c != origin {
+                        let p = origin
+                        lines += String(format: "curves.append(rs.AddLine((%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f)))\n", c.x, c.y, z, p.x, p.y, z)
+                        c = p
+                    }
                     break
             }
         }
@@ -424,6 +435,11 @@ class Fixture {
         let ledgeOverage: Board.PhysicalUnit = 0.0
         let standardBottomPlateThickness: Board.PhysicalUnit = 4.0
         let standardTopPlateThickness: Board.PhysicalUnit = 4.0
+        let mountingWidth: Board.PhysicalUnit = 80.0
+        let mountingHeight: Board.PhysicalUnit = 60.0
+        let mountingThickness: Board.PhysicalUnit = 3.0
+        let mountingScrewHole: Board.PhysicalUnit = 1.7
+        let mountingScrewOffset: Board.PhysicalUnit = 5.0
 
         let defaultSupportPostDiameter: Board.PhysicalUnit = 2.0
         let defaultLedHoleDiameter: Board.PhysicalUnit = 3.25
@@ -431,6 +447,25 @@ class Fixture {
         let pcbOutlineTolerance: Board.PhysicalUnit = 0.25
         let wallThickness: Board.PhysicalUnit = 4.0
         let ledgeThickness: Board.PhysicalUnit = 2.0
+    }
+
+    func mountingFeatures(dimension: NSBezierPath, properties: Properties) -> (path: NSBezierPath, holes: [TestPoint]) {
+        let extents = dimension.bounds
+        let middleX = extents.midX
+        let middleY = extents.midY
+        let origin = NSPoint(x: middleX - properties.mountingWidth / 2.0, y: middleY - properties.mountingHeight / 2.0)
+        let size = NSSize(width: properties.mountingWidth, height: properties.mountingHeight)
+        let rect = NSRect(origin: origin, size: size)
+        let path = NSBezierPath(rect: rect)
+
+        let holes = [
+            TestPoint(x: rect.minX + properties.mountingScrewOffset, y: rect.minY + properties.mountingScrewOffset, diameter: properties.mountingScrewHole, name: "minxminy"),
+            TestPoint(x: rect.minX + properties.mountingScrewOffset, y: rect.maxY - properties.mountingScrewOffset, diameter: properties.mountingScrewHole, name: "minxmaxy"),
+            TestPoint(x: rect.maxX - properties.mountingScrewOffset, y: rect.maxY - properties.mountingScrewOffset, diameter: properties.mountingScrewHole, name: "maxxmaxy"),
+            TestPoint(x: rect.maxX - properties.mountingScrewOffset, y: rect.minY + properties.mountingScrewOffset, diameter: properties.mountingScrewHole, name: "maxxminy"),
+            ]
+
+        return (path: path, holes: holes)
     }
 
     func generateTestFixtureTopPlastic(properties: Properties, probeTestPoints: [TestPoint], ledTestPoints: [TestPoint], supportPoints: [TestPoint], display: inout NSBezierPath) throws {
@@ -441,6 +476,7 @@ class Fixture {
         let tpi: Board.PhysicalUnit = bpi
         let tpn: Board.PhysicalUnit = tps + properties.pcbTopComponentClearance
         let tpo: Board.PhysicalUnit = tpn + properties.probeSupportThickness
+        let tpm: Board.PhysicalUnit = tpo - properties.mountingThickness
 
         var lines = rhinoHeader()
         
@@ -451,24 +487,33 @@ class Fixture {
         let bounds = clipper.path(dimension, offset: properties.wallThickness + properties.pcbOutlineTolerance)
         let outline = clipper.path(bounds, offset: -properties.wallThickness)
 
-        // bottom fixture main body
+        let (mounting, holes) = mountingFeatures(dimension: dimension, properties: properties)
+
+        // main body
+        lines += rhino3D(path: mounting, z: tpm, name: "mounting")
+        lines += rhino3D(path: mounting, z: tpo, name: "mounting2")
         lines += rhino3D(path: bounds, z: tpi, name: "bounds")
-        lines += rhino3D(path: bounds, z: tpo, name: "bounds2")
+        lines += rhino3D(path: bounds, z: tpm, name: "bounds2")
         lines += rhino3D(path: outline, z: tpi, name: "outline")
         lines += rhino3D(path: outline, z: tpn, name: "outline2")
         //
+        lines += "out1 = rs.AddPlanarSrf([mounting2])\n"
+        lines += extrude(curve: "mounting", asSurface: "mountingWall", fromZ: tpm, toZ: tpo)
+        lines += "out2 = rs.AddPlanarSrf([mounting, bounds2])\n"
+        lines += extrude(curve: "bounds", asSurface: "boundsWall", fromZ: tpi, toZ: tpm)
         lines += "rs.AddPlanarSrf([bounds, outline])\n"
-        lines += extrude(curve: "bounds", asSurface: "boundsWall", fromZ: tpi, toZ: tpo)
         lines += extrude(curve: "outline", asSurface: "outlineWall", fromZ: tpi, toZ: tpn)
         lines += "out0 = rs.AddPlanarSrf([outline2])\n"
-        lines += "out1 = rs.AddPlanarSrf([bounds2])\n"
-        
+
         // cut out test point openings
         lines += cutProbeHoles(testPoints: probeTestPoints, surface0: "out0", z0: tpn, surface1: "out1", z1: tpo, display: &display)
         lines += cutProbeHoles(testPoints: ledTestPoints, surface0: "out0", z0: tpn, surface1: "out1", z1: tpo, display: &display)
 
         // add supports
         lines += addPosts(testPoints: supportPoints, surface0: "out0", z0: tpn, z1: tps, display: &display)
+
+        // cut out mounting holes
+        lines += cutProbeHoles(testPoints: holes, surface0: "out2", z0: tpm, surface1: "out1", z1: tpo, display: &display)
 
         NSLog(String(format: "test fixture %@ plastic:\n%@", "top", lines))
         let fileName = derivedFileName(postfix: "plate.py", bottom: false)
@@ -484,6 +529,7 @@ class Fixture {
         let bpi: Board.PhysicalUnit = bps + properties.pcbThickness + properties.probeStroke + properties.ledgeOverage
         let bpn: Board.PhysicalUnit = bps - properties.pcbBottomComponentClearance
         let bpo: Board.PhysicalUnit = bpn - properties.probeSupportThickness
+        let bpm: Board.PhysicalUnit = bpo + properties.mountingThickness
 
         var lines = rhinoHeader()
 
@@ -495,21 +541,27 @@ class Fixture {
         let outline = clipper.path(dimension, offset: properties.pcbOutlineTolerance)
         let ledge = clipper.path(dimension, offset: -(properties.ledgeThickness - properties.pcbOutlineTolerance))
 
-        // bottom fixture main body
+        let (mounting, holes) = mountingFeatures(dimension: dimension, properties: properties)
+
+        // main body
+        lines += rhino3D(path: mounting, z: bpm, name: "mounting")
+        lines += rhino3D(path: mounting, z: bpo, name: "mounting2")
         lines += rhino3D(path: bounds, z: bpi, name: "bounds")
-        lines += rhino3D(path: bounds, z: bpo, name: "bounds2")
+        lines += rhino3D(path: bounds, z: bpm, name: "bounds2")
         lines += rhino3D(path: outline, z: bpi, name: "outline")
         lines += rhino3D(path: outline, z: bps, name: "outline2")
         lines += rhino3D(path: ledge, z: bps, name: "ledge")
         lines += rhino3D(path: ledge, z: bpn, name: "ledge2")
         //
+        lines += "out1 = rs.AddPlanarSrf([mounting2])\n"
+        lines += extrude(curve: "mounting", asSurface: "mountingWall", fromZ: bpm, toZ: bpo)
+        lines += "out2 = rs.AddPlanarSrf([mounting, bounds2])\n"
+        lines += extrude(curve: "bounds", asSurface: "boundsWall", fromZ: bpi, toZ: bpm)
         lines += "rs.AddPlanarSrf([bounds, outline])\n"
-        lines += extrude(curve: "bounds", asSurface: "boundsWall", fromZ: bpi, toZ: bpo)
         lines += extrude(curve: "outline", asSurface: "outlineWall", fromZ: bpi, toZ: bps)
         lines += "rs.AddPlanarSrf([outline2, ledge])\n"
         lines += extrude(curve: "ledge", asSurface: "ledgeWall", fromZ: bps, toZ: bpn)
         lines += "out0 = rs.AddPlanarSrf([ledge2])\n"
-        lines += "out1 = rs.AddPlanarSrf([bounds2])\n"
 
         // cut out test point openings
         lines += cutProbeHoles(testPoints: probeTestPoints, surface0: "out0", z0: bpn, surface1: "out1", z1: bpo, display: &display)
@@ -517,6 +569,9 @@ class Fixture {
 
         // add supports
         lines += addPosts(testPoints: supportPoints, surface0: "out0", z0: bpn, z1: bps, display: &display)
+
+        // cut out mounting holes
+        lines += cutProbeHoles(testPoints: holes, surface0: "out2", z0: bpm, surface1: "out1", z1: bpo, display: &display)
 
         NSLog(String(format: "test fixture %@ plastic:\n%@", "bottom", lines))
         let fileName = derivedFileName(postfix: "plate.py", bottom: true)
@@ -552,13 +607,19 @@ class Fixture {
     }
 
     func generateTestFixtureLayout(properties: Properties, bottom: Bool, probeTestPoints: [TestPoint], ledTestPoints: [TestPoint]) throws {
+        let dimension = bezierPathForWires(wires: wiresForLayer(layer: 20)) // 20: "Dimension" layer
+        let (mounting, holes) = mountingFeatures(dimension: dimension, properties: properties)
+
         var lines = ""
         lines += "LAYER bDocu;\n"
         lines += "SET WIRE_BEND 2;"
         lines += "WIRE 0.1"
-        let outline = bezierPathForWires(wires: wiresForLayer(layer: 20)) // 20: "Dimension" layer
-        lines += eagle(bezierPath: outline)
+        lines += eagle(bezierPath: mounting)
         lines += ";\n"
+
+        for testPoint in holes {
+            lines += String(format: "hole %0.3f (%f %f);\n", testPoint.diameter, testPoint.x, testPoint.y)
+        }
 
         for testPoint in probeTestPoints {
             lines += String(format: "move '%@' (%f %f);\n", testPoint.name, testPoint.x, testPoint.y)

@@ -222,6 +222,6 @@ class Board {
 
     var packages: [String: Package] = [:]
     var container: Container = Container()
-    var thickness: PhysicalUnit = 1.6
+    var thickness: PhysicalUnit = 0.4
 
 }

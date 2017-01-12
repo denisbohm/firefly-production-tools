@@ -135,8 +135,9 @@ class Rhino {
             guard let package = board.packages[instance.package] else {
                 continue
             }
-            
-            lines += "PlaceInstance(\"\(package.name)\", \(instance.x), \(instance.y), \(instance.mirror), \(instance.rotate))\n"
+
+            let mirrorString = instance.mirror ? "True" : "False"
+            lines += "PlaceInstance(\"\(package.name)\", \(instance.x), \(instance.y), \(mirrorString), \(instance.rotate))\n"
             
             transformStack = []
             transform = AffineTransform()
