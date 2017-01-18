@@ -201,10 +201,54 @@ class Fixture {
 
                     // NSLog(@"  %@ %0.3f, %0.3f %0.3f, %0.3f", smd.name, smd.x, smd.y, p.x, p.y);
                 }
-
+                
                 xform.invert()
                 transform.prepend(xform)
             }
+        }
+        
+        return points
+    }
+
+    func holeTestPoints() -> [TestPoint] {
+        var points: [TestPoint] = []
+
+        var transform = AffineTransform()
+
+        for instance in board.container.instances {
+            guard let package = board.packages[instance.package] else {
+                continue
+            }
+
+            var xform = AffineTransform()
+            xform.translate(x: instance.x, y: instance.y)
+            if instance.mirror {
+                xform.scale(x: -1, y: 1)
+            }
+            xform.rotate(byDegrees: instance.rotate)
+            transform.prepend(xform)
+
+            for hole in package.container.holes {
+                var xform = AffineTransform()
+                xform.translate(x: hole.x, y: hole.y)
+                transform.prepend(xform)
+
+                let p = transform.transform(NSPoint(x: 0, y: 0))
+                let testPoint = TestPoint()
+                testPoint.x = p.x
+                testPoint.y = p.y
+                testPoint.name = "\(instance.name).hole"
+                testPoint.diameter = hole.drill
+                points.append(testPoint)
+
+                xform.invert()
+                transform.prepend(xform)
+
+                // NSLog(@"  %@ %0.3f, %0.3f %0.3f, %0.3f", smd.name, smd.x, smd.y, p.x, p.y);
+            }
+
+            xform.invert()
+            transform.prepend(xform)
         }
         
         return points
@@ -317,6 +361,8 @@ class Fixture {
         NSBezierPath.setDefaultFlatness(0.01)
         let path = bezierPath.flattened
         NSBezierPath.setDefaultFlatness(flatness)
+        var origin = NSPoint()
+        var hasOrigin = false
         var lines = ""
         for i in 0 ..< path.elementCount {
             var points: [NSPoint] = [NSPoint(x: 0, y: 0), NSPoint(x: 0, y: 0), NSPoint(x: 0, y: 0)]
@@ -324,6 +370,10 @@ class Fixture {
             switch (kind) {
                 case .moveToBezierPathElement:
                     let p = points[0]
+                    if !hasOrigin {
+                        hasOrigin = true
+                        origin = p
+                    }
                     lines += String(format: " (%0.3f %0.3f)", p.x + tx, p.y + ty)
                 case .lineToBezierPathElement:
                     let p = points[0]
@@ -332,6 +382,8 @@ class Fixture {
                     let p = points[2]
                     lines += String(format: " (%0.3f %0.3f)", p.x + tx, p.y + ty)
                 case .closePathBezierPathElement:
+                    let p = origin
+                    lines += String(format: " (%0.3f %0.3f)", p.x + tx, p.y + ty)
                     break
             }
         }
@@ -414,6 +466,39 @@ class Fixture {
         }
         return lines
     }
+
+    func addAlignmentPosts(testPoints: [TestPoint], outset: Board.PhysicalUnit, inset: Board.PhysicalUnit, within: NSBezierPath, surface0: String, z0: Board.PhysicalUnit, z1: Board.PhysicalUnit, z2: Board.PhysicalUnit, display: inout NSBezierPath) -> String {
+        var lines = "alignmentPosts = []\n"
+        let clipper = FDClipper()
+        for testPoint in testPoints {
+            let x = testPoint.x
+            let y = testPoint.y
+            let r1 = (testPoint.diameter + outset) / 2.0
+            let open: Board.PhysicalUnit = 0.5
+            let bounds = clipper.path(within, offset: -(r1 + open))
+            if !bounds.contains(NSPoint(x: x, y: y)) {
+                continue
+            }
+
+            lines += circle(asCurve: "curve", cx: x, cy: y, r: r1, z: z1)
+            lines += "plane = rs.AddPlanarSrf([curve])\n"
+            lines += extrude(curve: "curve", asSurface: "post", fromZ: z1, toZ: z0)
+            lines += cut(surface: "post", fromSurface: surface0)
+
+            let r2 = (testPoint.diameter - inset) / 2.0
+            lines += circle(asCurve: "curve", cx: x, cy: y, r: r2, z: z2)
+            lines += "rs.AddPlanarSrf([curve])\n"
+            lines += extrude(curve: "curve", asSurface: "mount", fromZ: z2, toZ: z1)
+            lines += cut(surface: "mount", fromSurface: "plane")
+
+            lines += "alignmentPosts.append(post)\n"
+
+
+            display.appendOval(in: NSRect(x: x - r1, y: y - r1, width: r1 * 2, height: r1 * 2))
+            display.appendOval(in: NSRect(x: x - r2, y: y - r2, width: r2 * 2, height: r2 * 2))
+        }
+        return lines
+    }
     
     // Mill-Max Spring Loaded Pin 0985-0-15-20-71-14-11-0
     // 1 mm diameter mounting hole
@@ -447,6 +532,8 @@ class Fixture {
         let pcbOutlineTolerance: Board.PhysicalUnit = 0.25
         let wallThickness: Board.PhysicalUnit = 4.0
         let ledgeThickness: Board.PhysicalUnit = 2.0
+        let postOutset: Board.PhysicalUnit = 0.4
+        let postInset: Board.PhysicalUnit = 0.1
     }
 
     func mountingFeatures(dimension: NSBezierPath, properties: Properties) -> (path: NSBezierPath, holes: [TestPoint]) {
@@ -524,7 +611,7 @@ class Fixture {
         display.append(bounds)
     }
 
-    func generateTestFixtureBottomPlastic(properties: Properties, probeTestPoints: [TestPoint], ledTestPoints: [TestPoint], supportPoints: [TestPoint], display: inout NSBezierPath) throws {
+    func generateTestFixtureBottomPlastic(properties: Properties, probeTestPoints: [TestPoint], ledTestPoints: [TestPoint], supportPoints: [TestPoint], alignmentSupportPoints: [TestPoint], display: inout NSBezierPath) throws {
         let bps: Board.PhysicalUnit = 0.0
         let bpi: Board.PhysicalUnit = bps + properties.pcbThickness + properties.probeStroke + properties.ledgeOverage
         let bpn: Board.PhysicalUnit = bps - properties.pcbBottomComponentClearance
@@ -570,6 +657,9 @@ class Fixture {
         // add supports
         lines += addPosts(testPoints: supportPoints, surface0: "out0", z0: bpn, z1: bps, display: &display)
 
+        // add alignment supports
+        lines += addAlignmentPosts(testPoints: alignmentSupportPoints, outset: properties.postOutset, inset: properties.postInset, within: ledge, surface0: "out0", z0: bpn, z1: bps, z2: bpi, display: &display)
+
         // cut out mounting holes
         lines += cutProbeHoles(testPoints: holes, surface0: "out2", z0: bpm, surface1: "out1", z1: bpo, display: &display)
 
@@ -585,6 +675,11 @@ class Fixture {
 
     func generateTestFixtureSchematic(properties: Properties, bottom: Bool, probeTestPoints: [TestPoint], ledTestPoints: [TestPoint]) throws {
         var lines = ""
+
+        // add schematic frame
+
+        // add test instrument header & signals
+
         var countByName: [String: Int] = [:]
         let x = 2.0
         var y = 8.0
@@ -608,14 +703,28 @@ class Fixture {
 
     func generateTestFixtureLayout(properties: Properties, bottom: Bool, probeTestPoints: [TestPoint], ledTestPoints: [TestPoint]) throws {
         let dimension = bezierPathForWires(wires: wiresForLayer(layer: 20)) // 20: "Dimension" layer
+        dimension.close()
         let (mounting, holes) = mountingFeatures(dimension: dimension, properties: properties)
 
         var lines = ""
-        lines += "LAYER bDocu;\n"
+
+        // delete default board outline
+        lines += "DISPLAY NONE Dimension;\n"
+        lines += "GROUP ALL;\n"
+        lines += "DELETE (C> 0 0);\n"
+        lines += "DISPLAY LAST;\n"
+
+        // add board outline
+        lines += "LAYER Dimension;\n"
         lines += "SET WIRE_BEND 2;"
         lines += "WIRE 0.1"
         lines += eagle(bezierPath: mounting)
         lines += ";\n"
+
+        // add silk for board location (makes it easy to check the probe holes...)
+        lines += "LAYER " + (bottom ? "t" : "b") + "Place;\n"
+        lines += "SET WIRE_BEND 2;"
+        lines += "WIRE 0.1" + eagle(bezierPath: dimension) + ";\n"
 
         for testPoint in holes {
             lines += String(format: "hole %0.3f (%f %f);\n", testPoint.diameter, testPoint.x, testPoint.y)
@@ -650,7 +759,8 @@ class Fixture {
         let bottomProbeTestPoints = probeTestPoints(mirrored: true, defaultDiameter: properties.defaultProbeHoleDiameter)
         let bottomLedTestPoints = testPoints(packageNamePrefix: "LED_TEST_POINT", mirrored: true, defaultDiameter: properties.defaultLedHoleDiameter)
         let bottomSupportPoints = testPoints(packageNamePrefix: "SUPPORT", mirrored: true, defaultDiameter: properties.defaultSupportPostDiameter)
-        try generateTestFixtureBottomPlastic(properties: properties, probeTestPoints: bottomProbeTestPoints, ledTestPoints: bottomLedTestPoints, supportPoints: bottomSupportPoints, display: &all)
+        let alignmentSupportPoints = holeTestPoints()
+        try generateTestFixtureBottomPlastic(properties: properties, probeTestPoints: bottomProbeTestPoints, ledTestPoints: bottomLedTestPoints, supportPoints: bottomSupportPoints, alignmentSupportPoints: alignmentSupportPoints, display: &all)
         try generateTestFixtureSchematic(properties: properties, bottom: true, probeTestPoints: bottomProbeTestPoints, ledTestPoints: bottomLedTestPoints)
         try generateTestFixtureLayout(properties: properties, bottom: true, probeTestPoints: bottomProbeTestPoints, ledTestPoints: bottomLedTestPoints)
         
