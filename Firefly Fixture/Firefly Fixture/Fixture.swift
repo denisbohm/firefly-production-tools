@@ -510,6 +510,7 @@ class Fixture {
     // tallest component 1.4 mm - use 1.5 mm
     // distance from PCBA to top of plastic: 4.1 + 0.15 + 0.7 = 4.95 mm - use 4.9 mm
     // thickness of plastic to clear components: 4.9 - 1.5 = 3.4 mm
+    // locating pins: MISUMI JPRBPB6-8 8mm
     class Properties {
         let pcbThickness: Board.PhysicalUnit = 0.4
         let pcbTopComponentClearance: Board.PhysicalUnit = 1.5
@@ -525,6 +526,10 @@ class Fixture {
         let mountingThickness: Board.PhysicalUnit = 3.0
         let mountingScrewHole: Board.PhysicalUnit = 1.7
         let mountingScrewOffset: Board.PhysicalUnit = 5.0
+        let locators = [
+            TestPoint(x: 0.0, y: -21.0, diameter: 8.0, name: "LP1"),
+            TestPoint(x: 0.0, y: +21.0, diameter: 8.0, name: "LP2"),
+            ]
 
         let defaultSupportPostDiameter: Board.PhysicalUnit = 2.0
         let defaultLedHoleDiameter: Board.PhysicalUnit = 3.25
@@ -602,6 +607,9 @@ class Fixture {
         // cut out mounting holes
         lines += cutProbeHoles(testPoints: holes, surface0: "out2", z0: tpm, surface1: "out1", z1: tpo, display: &display)
 
+        // add locating post holes
+        lines += cutProbeHoles(testPoints: properties.locators, surface0: "out2", z0: tpm, surface1: "out1", z1: tpo, display: &display)
+
         NSLog(String(format: "test fixture %@ plastic:\n%@", "top", lines))
         let fileName = derivedFileName(postfix: "plate.py", bottom: false)
         try lines.write(toFile: fileName, atomically: false, encoding: String.Encoding.utf8)
@@ -662,6 +670,9 @@ class Fixture {
 
         // cut out mounting holes
         lines += cutProbeHoles(testPoints: holes, surface0: "out2", z0: bpm, surface1: "out1", z1: bpo, display: &display)
+
+        // add locating post holes
+        lines += cutProbeHoles(testPoints: properties.locators, surface0: "out2", z0: bpm, surface1: "out1", z1: bpo, display: &display)
 
         NSLog(String(format: "test fixture %@ plastic:\n%@", "bottom", lines))
         let fileName = derivedFileName(postfix: "plate.py", bottom: true)
@@ -748,6 +759,14 @@ class Fixture {
         var all = NSBezierPath()
         
         let properties = Properties()
+        let dimension = bezierPathForWires(wires: wiresForLayer(layer: 20))
+        let extents = dimension.bounds
+        let dx = extents.midX
+        let dy = extents.midY
+        for locator in properties.locators {
+            locator.x += dx
+            locator.y += dy
+        }
 
         let topProbeTestPoints = probeTestPoints(mirrored: false, defaultDiameter: properties.defaultProbeHoleDiameter)
         let topLedTestPoints = testPoints(packageNamePrefix: "LED_TEST_POINT", mirrored: false, defaultDiameter: properties.defaultLedHoleDiameter)
