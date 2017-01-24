@@ -122,7 +122,7 @@ class Eagle {
         try parseRot(rot: rot, mirror: &mirror, rotate: &rotate)
         pad.mirror = mirror
         pad.rotate = rotate
-        pad.shape = try getAttribute(element: element, name: "shape")
+        pad.shape = try getOptionalAttribute(element: element, name: "shape") ?? "round"
         container.pads.append(pad)
     }
 

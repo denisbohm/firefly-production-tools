@@ -100,7 +100,6 @@ class Fixture {
         return wires
     }
 
-
     class TestPoint {
 
         var x: Board.PhysicalUnit = 0
@@ -444,6 +443,15 @@ class Fixture {
         return lines
     }
     
+    func cut(path: NSBezierPath, surface0: String, z0: Board.PhysicalUnit, surface1: String, z1: Board.PhysicalUnit, display: inout NSBezierPath) -> String {
+        var lines = rhino3D(path: path, z: z0, name: "curve")
+        lines += extrude(curve: "curve", asSurface: "cutout", fromZ: z0, toZ: z1)
+        lines += cut(surface: "cutout", fromSurface: surface0)
+        lines += cut(surface: "cutout", fromSurface: surface1)
+        display.append(path)
+        return lines
+    }
+    
     func addPosts(testPoints: [TestPoint], surface0: String, z0: Board.PhysicalUnit, z1: Board.PhysicalUnit, display: inout NSBezierPath) -> String {
         var lines = "posts = []\n"
         for testPoint in testPoints {
@@ -506,6 +514,8 @@ class Fixture {
     // distance from PCBA to top of plastic: 4.1 + 0.15 + 0.7 = 4.95 mm - use 4.9 mm
     // thickness of plastic to clear components: 4.9 - 1.5 = 3.4 mm
     // locating pins: MISUMI JPRBPB6-8 8mm
+    // fixture PCB mounting screws: M2 8mm (1.5mm drive) McMaster-Carr 91290A015
+    // fixture mounting screws: M3 20mm (2mm drive) McMaster-Carr 93070A076
     class Properties {
         let pcbThickness: Board.PhysicalUnit = 0.4
         let pcbTopComponentClearance: Board.PhysicalUnit = 1.5
@@ -528,7 +538,9 @@ class Fixture {
         let pcbMountingWidth: Board.PhysicalUnit = 80.0
         let pcbMountingHeight: Board.PhysicalUnit = 44.0
         let pcbMountingScrewHole: Board.PhysicalUnit = 2.2
-        let pcbMountingScrewOffset: Board.PhysicalUnit = 3.5
+        let pcbMountingScrewOffsetX: Board.PhysicalUnit = 28
+        let pcbMountingScrewOffsetY: Board.PhysicalUnit = 18.5
+        let pcbHeader = NSBezierPath(rect: NSRect(x: -(36.0 + 9.0 / 2.0), y: -(0.0 + 38.0 / 2.0), width: 9.0, height: 38.0))
 
         let defaultSupportPostDiameter: Board.PhysicalUnit = 2.0
         let defaultLedHoleDiameter: Board.PhysicalUnit = 3.25
@@ -569,10 +581,10 @@ class Fixture {
         let path = NSBezierPath(rect: rect)
 
         let holes = [
-            TestPoint(x: rect.minX + properties.pcbMountingScrewOffset, y: rect.minY + properties.pcbMountingScrewOffset, diameter: properties.pcbMountingScrewHole, name: "minxminy"),
-            TestPoint(x: rect.minX + properties.pcbMountingScrewOffset, y: rect.maxY - properties.pcbMountingScrewOffset, diameter: properties.pcbMountingScrewHole, name: "minxmaxy"),
-            TestPoint(x: rect.maxX - properties.pcbMountingScrewOffset, y: rect.maxY - properties.pcbMountingScrewOffset, diameter: properties.pcbMountingScrewHole, name: "maxxmaxy"),
-            TestPoint(x: rect.maxX - properties.pcbMountingScrewOffset, y: rect.minY + properties.pcbMountingScrewOffset, diameter: properties.pcbMountingScrewHole, name: "maxxminy"),
+            TestPoint(x: middleX - properties.pcbMountingScrewOffsetX, y: middleY - properties.pcbMountingScrewOffsetY, diameter: properties.pcbMountingScrewHole, name: "minxminy"),
+            TestPoint(x: middleX - properties.pcbMountingScrewOffsetX, y: middleY + properties.pcbMountingScrewOffsetY, diameter: properties.pcbMountingScrewHole, name: "minxmaxy"),
+            TestPoint(x: middleX + properties.pcbMountingScrewOffsetX, y: middleY + properties.pcbMountingScrewOffsetY, diameter: properties.pcbMountingScrewHole, name: "maxxmaxy"),
+            TestPoint(x: middleX + properties.pcbMountingScrewOffsetX, y: middleY - properties.pcbMountingScrewOffsetY, diameter: properties.pcbMountingScrewHole, name: "maxxminy"),
             ]
 
         return (path: path, holes: holes)
@@ -628,9 +640,12 @@ class Fixture {
         // add locating post holes
         lines += cutProbeHoles(testPoints: properties.locators, surface0: "out2", z0: tpm, surface1: "out1", z1: tpo, display: &display)
 
-        // cut out pcb mounting holes
+        // cut out fixture pcba mounting holes
         let (_, pcbHoles) = pcbMountingFeatures(dimension: dimension, properties: properties)
         lines += cutProbeHoles(testPoints: pcbHoles, surface0: "out2", z0: tpm, surface1: "out1", z1: tpo, display: &display)
+
+        // cut out fixture pcba clearance openings
+        lines += cut(path: properties.pcbHeader, surface0: "out2", z0: tpm, surface1: "out1", z1: tpo, display: &display)
 
         NSLog(String(format: "test fixture %@ plastic:\n%@", "top", lines))
         let fileName = derivedFileName(postfix: "plate.py", bottom: false)
@@ -700,6 +715,9 @@ class Fixture {
         let (_, pcbHoles) = pcbMountingFeatures(dimension: dimension, properties: properties)
         lines += cutProbeHoles(testPoints: pcbHoles, surface0: "out2", z0: bpm, surface1: "out1", z1: bpo, display: &display)
 
+        // cut out fixture pcba clearance openings
+        lines += cut(path: properties.pcbHeader, surface0: "out2", z0: bpm, surface1: "out1", z1: bpo, display: &display)
+
         NSLog(String(format: "test fixture %@ plastic:\n%@", "bottom", lines))
         let fileName = derivedFileName(postfix: "plate.py", bottom: true)
         try lines.write(toFile: fileName, atomically: false, encoding: String.Encoding.utf8)
@@ -748,7 +766,7 @@ class Fixture {
 
     func generateTestFixtureLayout(properties: Properties, bottom: Bool, probeTestPoints: [TestPoint], ledTestPoints: [TestPoint]) throws {
         // template schematic has frame plus test instrument header & signals
-        maybeCopyTemplate(type: "sch", bottom: bottom)
+        maybeCopyTemplate(type: "brd", bottom: bottom)
 
         let dimension = bezierPathForWires(wires: wiresForLayer(layer: 20)) // 20: "Dimension" layer
         dimension.close()
@@ -808,6 +826,9 @@ class Fixture {
             locator.x += dx
             locator.y += dy
         }
+        let transform = AffineTransform(translationByX: dx, byY: dy)
+        properties.pcbHeader.transform(using: transform)
+
         let (mounting, _) = mountingFeatures(dimension: dimension, properties: properties)
         all.append(mounting)
         let (pcbMounting, _) = pcbMountingFeatures(dimension: dimension, properties: properties)

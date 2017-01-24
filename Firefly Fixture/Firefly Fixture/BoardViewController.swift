@@ -50,12 +50,14 @@ class BoardViewController: NSViewController {
         guard let fixturePath = try? fixture.generateTestFixture() else {
             return
         }
-        let topPath = "\(board.path)/\(board.name)_top_plate_layout.brd"
+        let topPath = "\(board.path)/\(board.name)_top_plate.brd"
         if let topBoard = try? Eagle.load(path: topPath) {
+            topBoard.thickness = 1.6
             rhino(board: topBoard, scriptPath: scriptPath)
         }
-        let bottomPath = "\(board.path)/\(board.name)_bottom_plate_layout.brd"
+        let bottomPath = "\(board.path)/\(board.name)_bottom_plate.brd"
         if let bottomBoard = try? Eagle.load(path: bottomPath) {
+            bottomBoard.thickness = 1.6
             rhino(board: bottomBoard, scriptPath: scriptPath)
         }
 
