@@ -220,6 +220,8 @@ class Board {
         var container: Container = Container()
     }
 
+    var name: String = ""
+    var path: String = ""
     var packages: [String: Package] = [:]
     var container: Container = Container()
     var thickness: PhysicalUnit = 0.4

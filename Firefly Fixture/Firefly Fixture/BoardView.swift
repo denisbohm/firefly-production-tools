@@ -191,18 +191,24 @@ class BoardView: NSView {
         NSColor.white.setFill()
         NSRectFill(dirtyRect)
         
-        let scale: Board.PhysicalUnit = 20.0
-        
         let xform = NSAffineTransform()
-        xform.translateX(by: 140.0, yBy: 10.0)
-        xform.rotate(byDegrees: 0.0)
-        xform.scaleX(by: scale, yBy: scale)
+        if !fixturePath.isEmpty {
+            let bounds = fixturePath.bounds
+            let margin: CGFloat = 10.0
+            let scaleX = (frame.width - margin) / bounds.width
+            let scaleY = (frame.height - margin) / bounds.height
+            let scale = min(scaleX, scaleY)
+            xform.scaleX(by: scale, yBy: scale)
+            let dx = (frame.width / scale) - bounds.width
+            let dy = (frame.height / scale) - bounds.height
+            xform.translateX(by: (dx / 2.0) - bounds.minX, yBy: (dy / 2.0) - bounds.minY)
+        }
         xform.concat()
         
         drawContainer(container: board.container)
         
         NSColor.blue.setStroke()
-        fixturePath.lineWidth = 0.01
+        fixturePath.lineWidth = 0.1
         fixturePath.stroke()
         
         xform.invert()

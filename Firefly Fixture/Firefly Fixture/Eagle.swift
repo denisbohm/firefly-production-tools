@@ -259,6 +259,9 @@ class Eagle {
             throw LocalError.invalidDocument
         }
         let board = Board()
+        let url = URL(fileURLWithPath: path)
+        board.path = url.deletingLastPathComponent().path
+        board.name = url.deletingPathExtension().lastPathComponent
         let layerElements = try getElements(document: document, query: "./eagle/drawing/board/layers/layer/*")
         for layerElement in layerElements {
             let number: Int = try getAttribute(element: layerElement, name: "number")
@@ -287,6 +290,11 @@ class Eagle {
             try loadInstance(container: board.container, element: instanceElement)
         }
         return board
+    }
+
+    static func load(path: String) throws -> Board {
+        let eagle = Eagle()
+        return try eagle.loadBoard(path: path)
     }
 
 }

@@ -10,16 +10,12 @@ import Foundation
 
 class Fixture {
 
-    var scriptPath: String
-    var boardPath: String
-    var boardName: String
     var board: Board
+    var scriptPath: String
 
-    init(scriptPath: String, boardPath: String, boardName: String, board: Board) {
-        self.scriptPath = scriptPath
-        self.boardPath = boardPath
-        self.boardName = boardName
+    init(board: Board, scriptPath: String) {
         self.board = board
+        self.scriptPath = scriptPath
     }
 
     func join(path: NSBezierPath) -> NSBezierPath {
@@ -391,8 +387,7 @@ class Fixture {
     }
 
     func derivedFileName(postfix: String, bottom: Bool) -> String {
-        let base = (boardName as NSString).deletingPathExtension
-        return String(format: "%@/%@_%@_%@", boardPath, base, bottom ? "bottom" : "top", postfix)
+        return String(format: "%@/%@_%@_%@", board.path, board.name, bottom ? "bottom" : "top", postfix)
     }
 
     func extrude(curve: String, asSurface surface: String, from: (x: Board.PhysicalUnit, y: Board.PhysicalUnit, z: Board.PhysicalUnit), to: (x: Board.PhysicalUnit, y: Board.PhysicalUnit, z: Board.PhysicalUnit)) -> String {
@@ -521,15 +516,19 @@ class Fixture {
         let ledgeOverage: Board.PhysicalUnit = 0.0
         let standardBottomPlateThickness: Board.PhysicalUnit = 4.0
         let standardTopPlateThickness: Board.PhysicalUnit = 4.0
-        let mountingWidth: Board.PhysicalUnit = 80.0
-        let mountingHeight: Board.PhysicalUnit = 60.0
+        let mountingWidth: Board.PhysicalUnit = 100.0
+        let mountingHeight: Board.PhysicalUnit = 80.0
         let mountingThickness: Board.PhysicalUnit = 3.0
-        let mountingScrewHole: Board.PhysicalUnit = 1.7
-        let mountingScrewOffset: Board.PhysicalUnit = 5.0
+        let mountingScrewHole: Board.PhysicalUnit = 3.4
+        let mountingScrewOffset: Board.PhysicalUnit = 8.0
         let locators = [
-            TestPoint(x: 0.0, y: -21.0, diameter: 8.0, name: "LP1"),
-            TestPoint(x: 0.0, y: +21.0, diameter: 8.0, name: "LP2"),
+            TestPoint(x: 0.0, y: -31.0, diameter: 8.0, name: "LP1"),
+            TestPoint(x: 0.0, y: +31.0, diameter: 8.0, name: "LP2"),
             ]
+        let pcbMountingWidth: Board.PhysicalUnit = 80.0
+        let pcbMountingHeight: Board.PhysicalUnit = 44.0
+        let pcbMountingScrewHole: Board.PhysicalUnit = 2.2
+        let pcbMountingScrewOffset: Board.PhysicalUnit = 3.5
 
         let defaultSupportPostDiameter: Board.PhysicalUnit = 2.0
         let defaultLedHoleDiameter: Board.PhysicalUnit = 3.25
@@ -555,6 +554,25 @@ class Fixture {
             TestPoint(x: rect.minX + properties.mountingScrewOffset, y: rect.maxY - properties.mountingScrewOffset, diameter: properties.mountingScrewHole, name: "minxmaxy"),
             TestPoint(x: rect.maxX - properties.mountingScrewOffset, y: rect.maxY - properties.mountingScrewOffset, diameter: properties.mountingScrewHole, name: "maxxmaxy"),
             TestPoint(x: rect.maxX - properties.mountingScrewOffset, y: rect.minY + properties.mountingScrewOffset, diameter: properties.mountingScrewHole, name: "maxxminy"),
+            ]
+
+        return (path: path, holes: holes)
+    }
+
+    func pcbMountingFeatures(dimension: NSBezierPath, properties: Properties) -> (path: NSBezierPath, holes: [TestPoint]) {
+        let extents = dimension.bounds
+        let middleX = extents.midX
+        let middleY = extents.midY
+        let origin = NSPoint(x: middleX - properties.pcbMountingWidth / 2.0, y: middleY - properties.pcbMountingHeight / 2.0)
+        let size = NSSize(width: properties.pcbMountingWidth, height: properties.pcbMountingHeight)
+        let rect = NSRect(origin: origin, size: size)
+        let path = NSBezierPath(rect: rect)
+
+        let holes = [
+            TestPoint(x: rect.minX + properties.pcbMountingScrewOffset, y: rect.minY + properties.pcbMountingScrewOffset, diameter: properties.pcbMountingScrewHole, name: "minxminy"),
+            TestPoint(x: rect.minX + properties.pcbMountingScrewOffset, y: rect.maxY - properties.pcbMountingScrewOffset, diameter: properties.pcbMountingScrewHole, name: "minxmaxy"),
+            TestPoint(x: rect.maxX - properties.pcbMountingScrewOffset, y: rect.maxY - properties.pcbMountingScrewOffset, diameter: properties.pcbMountingScrewHole, name: "maxxmaxy"),
+            TestPoint(x: rect.maxX - properties.pcbMountingScrewOffset, y: rect.minY + properties.pcbMountingScrewOffset, diameter: properties.pcbMountingScrewHole, name: "maxxminy"),
             ]
 
         return (path: path, holes: holes)
@@ -609,6 +627,10 @@ class Fixture {
 
         // add locating post holes
         lines += cutProbeHoles(testPoints: properties.locators, surface0: "out2", z0: tpm, surface1: "out1", z1: tpo, display: &display)
+
+        // cut out pcb mounting holes
+        let (_, pcbHoles) = pcbMountingFeatures(dimension: dimension, properties: properties)
+        lines += cutProbeHoles(testPoints: pcbHoles, surface0: "out2", z0: tpm, surface1: "out1", z1: tpo, display: &display)
 
         NSLog(String(format: "test fixture %@ plastic:\n%@", "top", lines))
         let fileName = derivedFileName(postfix: "plate.py", bottom: false)
@@ -674,6 +696,10 @@ class Fixture {
         // add locating post holes
         lines += cutProbeHoles(testPoints: properties.locators, surface0: "out2", z0: bpm, surface1: "out1", z1: bpo, display: &display)
 
+        // cut out pcb mounting holes
+        let (_, pcbHoles) = pcbMountingFeatures(dimension: dimension, properties: properties)
+        lines += cutProbeHoles(testPoints: pcbHoles, surface0: "out2", z0: bpm, surface1: "out1", z1: bpo, display: &display)
+
         NSLog(String(format: "test fixture %@ plastic:\n%@", "bottom", lines))
         let fileName = derivedFileName(postfix: "plate.py", bottom: true)
         try lines.write(toFile: fileName, atomically: false, encoding: String.Encoding.utf8)
@@ -684,12 +710,20 @@ class Fixture {
         display.append(ledge)
     }
 
+    func maybeCopyTemplate(type: String, bottom: Bool) {
+        let destinationURL = URL(fileURLWithPath: derivedFileName(postfix: "plate.\(type)", bottom: bottom))
+        if !((try? destinationURL.checkResourceIsReachable()) ?? false) {
+            let templateURL = URL(fileURLWithPath: "/Users/denis/sandbox/denisbohm/firefly-eagle-library/plate_template.\(type)")
+            let fileManager = FileManager.default
+            try? fileManager.copyItem(at: templateURL, to: destinationURL)
+        }
+    }
+
     func generateTestFixtureSchematic(properties: Properties, bottom: Bool, probeTestPoints: [TestPoint], ledTestPoints: [TestPoint]) throws {
+        // template schematic has frame plus test instrument header & signals
+        maybeCopyTemplate(type: "sch", bottom: bottom)
+
         var lines = ""
-
-        // add schematic frame
-
-        // add test instrument header & signals
 
         var countByName: [String: Int] = [:]
         let x = 2.0
@@ -713,11 +747,17 @@ class Fixture {
     }
 
     func generateTestFixtureLayout(properties: Properties, bottom: Bool, probeTestPoints: [TestPoint], ledTestPoints: [TestPoint]) throws {
+        // template schematic has frame plus test instrument header & signals
+        maybeCopyTemplate(type: "sch", bottom: bottom)
+
         let dimension = bezierPathForWires(wires: wiresForLayer(layer: 20)) // 20: "Dimension" layer
         dimension.close()
-        let (mounting, holes) = mountingFeatures(dimension: dimension, properties: properties)
 
         var lines = ""
+
+        // This is in the template now...
+        /*
+        let (mounting, holes) = pcbMountingFeatures(dimension: dimension, properties: properties)
 
         // delete default board outline
         lines += "DISPLAY NONE Dimension;\n"
@@ -732,14 +772,15 @@ class Fixture {
         lines += eagle(bezierPath: mounting)
         lines += ";\n"
 
+        for testPoint in holes {
+            lines += String(format: "hole %0.3f (%f %f);\n", testPoint.diameter, testPoint.x, testPoint.y)
+        }
+         */
+
         // add silk for board location (makes it easy to check the probe holes...)
         lines += "LAYER " + (bottom ? "t" : "b") + "Place;\n"
         lines += "SET WIRE_BEND 2;"
         lines += "WIRE 0.1" + eagle(bezierPath: dimension) + ";\n"
-
-        for testPoint in holes {
-            lines += String(format: "hole %0.3f (%f %f);\n", testPoint.diameter, testPoint.x, testPoint.y)
-        }
 
         for testPoint in probeTestPoints {
             lines += String(format: "move '%@' (%f %f);\n", testPoint.name, testPoint.x, testPoint.y)
@@ -767,6 +808,10 @@ class Fixture {
             locator.x += dx
             locator.y += dy
         }
+        let (mounting, _) = mountingFeatures(dimension: dimension, properties: properties)
+        all.append(mounting)
+        let (pcbMounting, _) = pcbMountingFeatures(dimension: dimension, properties: properties)
+        all.append(pcbMounting)
 
         let topProbeTestPoints = probeTestPoints(mirrored: false, defaultDiameter: properties.defaultProbeHoleDiameter)
         let topLedTestPoints = testPoints(packageNamePrefix: "LED_TEST_POINT", mirrored: false, defaultDiameter: properties.defaultLedHoleDiameter)
