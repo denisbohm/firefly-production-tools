@@ -18,7 +18,172 @@ class Fixture {
         self.scriptPath = scriptPath
     }
 
-    func join(path: NSBezierPath) -> NSBezierPath {
+    struct Point3D {
+
+        let x: CGFloat
+        let y: CGFloat
+        let z: CGFloat
+
+        init(x: CGFloat, y: CGFloat, z: CGFloat) {
+            self.x = x
+            self.y = y
+            self.z = z
+        }
+
+        init(xy: NSPoint, z: CGFloat) {
+            self.x = xy.x
+            self.y = xy.y
+            self.z = z
+        }
+
+    }
+
+    class Path3D {
+
+        var points: [Point3D] = []
+
+    }
+
+    static func lastPoint(path: NSBezierPath) -> NSPoint {
+        var first: NSPoint? = nil
+        var last = NSPoint(x: 0, y: 0)
+        for i in 0 ..< path.elementCount {
+            var points: [NSPoint] = [NSPoint(x: 0, y: 0), NSPoint(x: 0, y: 0), NSPoint(x: 0, y: 0)]
+            let kind = path.element(at: i, associatedPoints: &points)
+            switch (kind) {
+            case .moveToBezierPathElement:
+                last = points[0]
+                first = last
+            case .lineToBezierPathElement:
+                last = points[0]
+            case .curveToBezierPathElement:
+                last = points[2]
+            case .closePathBezierPathElement:
+                if let first = first {
+                    last = first
+                }
+            }
+        }
+        return last
+    }
+
+    static func firstPoint(path: NSBezierPath) -> NSPoint {
+        for i in 0 ..< path.elementCount {
+            var points: [NSPoint] = [NSPoint(x: 0, y: 0), NSPoint(x: 0, y: 0), NSPoint(x: 0, y: 0)]
+            let kind = path.element(at: i, associatedPoints: &points)
+            switch (kind) {
+            case .moveToBezierPathElement:
+                return points[0]
+            default:
+                break
+            }
+        }
+        return NSPoint(x: 0, y: 0)
+    }
+
+    static func equal(point1: NSPoint, point2: NSPoint) -> Bool {
+        return (point1.x == point2.x) && (point1.y == point2.y)
+    }
+
+    static func distance(point1: NSPoint, point2: NSPoint) -> CGFloat {
+        let dx = point1.x - point2.x
+        let dy = point1.y - point2.y
+        return sqrt(dx * dx + dy * dy)
+    }
+
+    static func canCombine(path1: NSBezierPath, path2: NSBezierPath) -> Bool {
+        let last1 = Fixture.lastPoint(path: path1)
+        let first2 = Fixture.firstPoint(path: path2)
+        return Fixture.equal(point1: last1, point2: first2)
+    }
+
+    static func combine(path1: NSBezierPath, path2: NSBezierPath) -> NSBezierPath {
+        let newPath = NSBezierPath()
+        for i in 0 ..< path1.elementCount {
+            var points: [NSPoint] = [NSPoint(x: 0, y: 0), NSPoint(x: 0, y: 0), NSPoint(x: 0, y: 0)]
+            let kind = path1.element(at: i, associatedPoints: &points)
+            switch (kind) {
+            case .moveToBezierPathElement:
+                newPath.move(to: points[0])
+            case .lineToBezierPathElement:
+                newPath.line(to: points[0])
+            case .curveToBezierPathElement:
+                newPath.curve(to: points[2], controlPoint1: points[0], controlPoint2: points[1])
+            case .closePathBezierPathElement:
+                newPath.close()
+            }
+        }
+        for i in 0 ..< path2.elementCount {
+            var points: [NSPoint] = [NSPoint(x: 0, y: 0), NSPoint(x: 0, y: 0), NSPoint(x: 0, y: 0)]
+            let kind = path2.element(at: i, associatedPoints: &points)
+            switch (kind) {
+            case .moveToBezierPathElement:
+                if i == 0 {
+                    newPath.line(to: points[0])
+                } else {
+                    newPath.move(to: points[0])
+                }
+            case .lineToBezierPathElement:
+                newPath.line(to: points[0])
+            case .curveToBezierPathElement:
+                newPath.curve(to: points[2], controlPoint1: points[0], controlPoint2: points[1])
+            case .closePathBezierPathElement:
+                newPath.close()
+            }
+        }
+        return newPath
+    }
+
+    static func combine(paths: [NSBezierPath]) -> [NSBezierPath] {
+        let path1 = paths[0]
+        let path2 = paths[paths.count - 1]
+        if canCombine(path1: path1, path2: path2) {
+            var newPaths: [NSBezierPath] = []
+            let combined = combine(path1: path1, path2: path2)
+            newPaths.append(combined)
+            if paths.count > 2 {
+                for i in 1 ... paths.count - 2 {
+                    newPaths.append(paths[i])
+                }
+            }
+            return newPaths
+        } else
+        if canCombine(path1: path2, path2: path1) {
+            var newPaths: [NSBezierPath] = []
+            let combined = combine(path1: path2, path2: path1)
+            for i in 1 ... paths.count - 2 {
+                newPaths.append(paths[i])
+            }
+            newPaths.append(combined)
+            return newPaths
+        } else {
+            return paths
+        }
+    }
+
+    static func sortByX(paths: [NSBezierPath]) -> [NSBezierPath] {
+        return paths.sorted() {
+            let p0 = firstPoint(path: $0)
+            let p1 = firstPoint(path: $1)
+            return p0.x < p1.x
+        }
+    }
+
+    static func orderByY(paths: [NSBezierPath]) -> [NSBezierPath] {
+        var sortedPaths: [NSBezierPath] = []
+        for path in paths {
+            let first = firstPoint(path: path)
+            let last = lastPoint(path: path)
+            var sortedPath = path
+            if last.y < first.y {
+                sortedPath = path.reversed
+            }
+            sortedPaths.append(sortedPath)
+        }
+        return sortedPaths
+    }
+
+    static func join(path: NSBezierPath) -> NSBezierPath {
         let epsilon: CGFloat = 0.001;
         
         var last = NSPoint(x: 0.123456, y: 0.123456)
@@ -46,7 +211,185 @@ class Fixture {
                     newPath.close()
             }
         }
-        return newPath;
+        return newPath
+    }
+
+    static func intersection(p0_x: CGFloat, p0_y: CGFloat, p1_x: CGFloat, p1_y: CGFloat, p2_x: CGFloat, p2_y: CGFloat, p3_x: CGFloat, p3_y: CGFloat) -> NSPoint? {
+        let s1_x = p1_x - p0_x
+        let s1_y = p1_y - p0_y
+        let s2_x = p3_x - p2_x
+        let s2_y = p3_y - p2_y
+        let s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y)
+        let t = ( s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y)
+        if (s >= 0) && (s <= 1) && (t >= 0) && (t <= 1) {
+            let x = p0_x + (t * s1_x)
+            let y = p0_y + (t * s1_y)
+            return NSPoint(x: x, y: y)
+        }
+        return nil
+    }
+
+    static func intersection(p0: NSPoint, p1: NSPoint, x: CGFloat) -> NSPoint? {
+        let big: CGFloat = 1e20
+        return intersection(p0_x: p0.x, p0_y: p0.y, p1_x: p1.x, p1_y: p1.y, p2_x: x, p2_y: -big, p3_x: x, p3_y: big)
+    }
+
+    static func slice(p0: CGPoint, p1: CGPoint, x0: CGFloat, x1: CGFloat) -> NSBezierPath {
+        let newPath = NSBezierPath()
+        if (p1.x <= x0) || (p0.x >= x1) {
+            // line is completely outside slice area
+            newPath.move(to: p0)
+            newPath.line(to: p1)
+        } else
+        if (x0 <= p0.x) && (p1.x <= x1) {
+            // line is completely inside slice area
+        } else {
+            // only handle horizontal line splitting
+            if (p0.x < x0) && (p1.x > x0) && (p1.x <= x1) {
+                // line only crosses x0
+                // split line at x0. keep left segment
+                if let p = intersection(p0: p0, p1: p1, x: x0) {
+                    newPath.move(to: p0)
+                    newPath.line(to: p)
+                } else {
+                    NSLog("should not happen")
+                }
+            } else
+            if (p0.x < x0) && (p1.x > x1) {
+                // line crosses both x0 and x1
+                // split line at x0 and x1.  keep left and right segments
+                if
+                    let pa = intersection(p0: p0, p1: p1, x: x0),
+                    let pb = intersection(p0: p0, p1: p1, x: x1)
+                {
+                    newPath.move(to: p0)
+                    newPath.line(to: pa)
+                    newPath.move(to: pb)
+                    newPath.line(to: p1)
+                } else {
+                    NSLog("should not happen")
+                }
+            } else
+            if (x0 <= p0.x) && (p0.x < x1) && (x1 < p1.x) {
+                // line only crosses x1
+                // split line at x1.  keep right segment
+                if let p = intersection(p0: p0, p1: p1, x: x1) {
+                    newPath.move(to: p)
+                    newPath.line(to: p1)
+                } else {
+                    NSLog("should not happen")
+                }
+            } else {
+                NSLog("should not happen")
+            }
+        }
+        return newPath
+    }
+
+    static func slice(pa: CGPoint, pb: CGPoint, x0: CGFloat, x1: CGFloat) -> NSBezierPath {
+        if pa.x < pb.x {
+            return Fixture.slice(p0: pa, p1: pb, x0: x0, x1: x1)
+        } else {
+            let path = Fixture.slice(p0: pb, p1: pa, x0: x0, x1: x1)
+            var subpaths = Fixture.segments(path: path)
+            for i in 0 ..< subpaths.count {
+                subpaths[i] = subpaths[i].reversed
+            }
+            subpaths.reverse()
+            let reversed = NSBezierPath()
+            for subpath in subpaths {
+                reversed.append(subpath)
+            }
+            return reversed
+        }
+    }
+
+    static func slice(path: NSBezierPath, x0: CGFloat, x1: CGFloat) -> NSBezierPath {
+        var last = NSPoint(x: 0, y: 0)
+        let newPath = NSBezierPath()
+        for i in 0 ..< path.elementCount {
+            var points: [NSPoint] = [NSPoint(x: 0, y: 0), NSPoint(x: 0, y: 0), NSPoint(x: 0, y: 0)]
+            let kind = path.element(at: i, associatedPoints: &points)
+            switch (kind) {
+            case .moveToBezierPathElement:
+                last = points[0]
+            case .lineToBezierPathElement:
+                let path = slice(pa: last, pb: points[0], x0: x0, x1: x1)
+                if !path.isEmpty {
+                    newPath.append(path)
+                    last = lastPoint(path: path)
+                } else {
+                    last = points[0]
+                }
+            case .curveToBezierPathElement:
+                let p = points[2]
+                if (p.x < x0) || (p.x > x1) {
+                    newPath.curve(to: points[2], controlPoint1: points[0], controlPoint2: points[1])
+                    last = points[2]
+                }
+            case .closePathBezierPathElement:
+                break
+            }
+        }
+        return join(path: newPath)
+    }
+
+    static func segments(path: NSBezierPath) -> [NSBezierPath] {
+        var paths: [NSBezierPath] = []
+        var newPath = NSBezierPath()
+        for i in 0 ..< path.elementCount {
+            var points: [NSPoint] = [NSPoint(x: 0, y: 0), NSPoint(x: 0, y: 0), NSPoint(x: 0, y: 0)]
+            let kind = path.element(at: i, associatedPoints: &points)
+            switch (kind) {
+            case .moveToBezierPathElement:
+                if !newPath.isEmpty {
+                    paths.append(newPath)
+                    newPath = NSBezierPath()
+                }
+                newPath.move(to: points[0])
+            case .lineToBezierPathElement:
+                newPath.line(to: points[0])
+            case .curveToBezierPathElement:
+                newPath.curve(to: points[2], controlPoint1: points[0], controlPoint2: points[1])
+            case .closePathBezierPathElement:
+                newPath.close()
+                break
+            }
+        }
+        if !newPath.isEmpty {
+            paths.append(newPath)
+        }
+        return paths
+    }
+
+    // Take two concentric continuous curves and split off the left and right segments (removing the segments in the middle).  Return:
+    // path - the complete path made by joining the resulting left and right segments (as two subpaths)
+    // leftOuterPath - the left outer path with points from min y to max y
+    // leftInnerPath - the left inner path with points from min y to max y
+    // rightInnerPath - the right inner path with points from min y to max y
+    // rightOuterPath - the right outer path with points from min y to max y
+    func split(path1: NSBezierPath, path2: NSBezierPath, x0: CGFloat, x1: CGFloat) -> (path: NSBezierPath, leftOuterPath: NSBezierPath, leftInnerPath: NSBezierPath, rightInnerPath: NSBezierPath, rightOuterPath: NSBezierPath) {
+        let sliced1 = Fixture.slice(path: path1, x0: x0, x1: x1)
+        let segments1 = Fixture.segments(path: Fixture.join(path: sliced1))
+        let segs1 = Fixture.combine(paths: segments1)
+        let ordered1 = Fixture.orderByY(paths: segs1)
+        let sorted1 = Fixture.sortByX(paths: ordered1)
+        let sliced2 = Fixture.slice(path: path2, x0: x0, x1: x1)
+        let segments2 = Fixture.segments(path: Fixture.join(path: sliced2))
+        let segs2 = Fixture.combine(paths: segments2)
+        let ordered2 = Fixture.orderByY(paths: segs2)
+        let sorted2 = Fixture.sortByX(paths: ordered2)
+        let final = NSBezierPath()
+        for i in 0 ..< sorted1.count {
+            let a = sorted1[i].reversed
+            let b = sorted2[i]
+            let b0 = Fixture.firstPoint(path: b)
+            a.line(to: b0)
+            let path = Fixture.combine(paths: [a, b])[0]
+            path.close()
+            final.append(path)
+        }
+        return (path: final, leftOuterPath: sorted1[0], leftInnerPath: sorted2[0], rightInnerPath: sorted2[1], rightOuterPath: sorted1[1])
     }
 
     func bezierPathForWires(wires: [Board.Wire]) -> NSBezierPath {
@@ -86,7 +429,7 @@ class Fixture {
                 break;
             }
         }
-        return join(path: path)
+        return Fixture.join(path: path)
     }
 
     func wiresForLayer(layer: Board.Layer) -> [Board.Wire] {
@@ -291,25 +634,40 @@ class Fixture {
         return points
     }
 
+    func rhino(path: Path3D, name: String) -> String {
+        var n = 0
+        var lines = "curves = []\n"
+        for i in 0 ..< path.points.count {
+            let p0 = path.points[i]
+            let p1 = path.points[(i + 1) % path.points.count]
+            lines += String(format: "curves.append(rs.AddLine((%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f)))\n", p0.x, p0.y, p0.z, p1.x, p1.y, p1.z)
+            n += 1
+        }
+        if n < 2 {
+            lines += "\(name) = curves\n"
+        } else {
+            lines += "\(name) = rs.JoinCurves(curves, True)\n"
+        }
+        return lines
+    }
+
     func rhino3D(path: NSBezierPath, z: Board.PhysicalUnit, name: String) -> String {
+        var n = 0
         var lines = "curves = []\n"
         var c: NSPoint = NSPoint(x: 0, y: 0)
         var origin: NSPoint = NSPoint(x: 0, y: 0)
-        var hasOrigin: Bool = false
         for i in 0 ..< path.elementCount {
             var points: [NSPoint] = [NSPoint(x: 0, y: 0), NSPoint(x: 0, y: 0), NSPoint(x: 0, y: 0)]
             let kind = path.element(at: i, associatedPoints: &points)
             switch (kind) {
                 case .moveToBezierPathElement:
                     c = points[0]
-                    if !hasOrigin {
-                        hasOrigin = true
-                        origin = c
-                    }
+                    origin = c
                 case .lineToBezierPathElement:
                     let p = points[0]
                     if c != p {
                         lines += String(format: "curves.append(rs.AddLine((%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f)))\n", c.x, c.y, z, p.x, p.y, z)
+                        n += 1
                     }
                     c = p
                 case .curveToBezierPathElement:
@@ -334,18 +692,24 @@ class Fixture {
                     
                     lines += "curve = rs.AddNurbsCurve(cvs, knots, 3)\n"
                     lines += "curves.append(curve)\n"
+                    n += 1
                     
                     c = p3
                 case .closePathBezierPathElement:
                     if c != origin {
                         let p = origin
                         lines += String(format: "curves.append(rs.AddLine((%0.3f, %0.3f, %0.3f), (%0.3f, %0.3f, %0.3f)))\n", c.x, c.y, z, p.x, p.y, z)
+                        n += 1
                         c = p
                     }
                     break
             }
         }
-        lines += "\(name) = rs.JoinCurves(curves, True)\n"
+        if n < 2 {
+            lines += "\(name) = curves\n"
+        } else {
+            lines += "\(name) = rs.JoinCurves(curves, True)\n"
+        }
         return lines
     }
 
@@ -451,7 +815,16 @@ class Fixture {
         display.append(path)
         return lines
     }
-    
+
+    func core(path: NSBezierPath, surface0: String, z0: Board.PhysicalUnit, z1: Board.PhysicalUnit, display: inout NSBezierPath) -> String {
+        var lines = rhino3D(path: path, z: z1, name: "curve")
+        lines += "rs.AddPlanarSrf([curve])\n"
+        lines += extrude(curve: "curve", asSurface: "cutout", fromZ: z1, toZ: z0)
+        lines += cut(surface: "cutout", fromSurface: surface0)
+        display.append(path)
+        return lines
+    }
+
     func addPosts(testPoints: [TestPoint], surface0: String, z0: Board.PhysicalUnit, z1: Board.PhysicalUnit, display: inout NSBezierPath) -> String {
         var lines = "posts = []\n"
         for testPoint in testPoints {
@@ -541,6 +914,7 @@ class Fixture {
         let pcbMountingScrewOffsetX: Board.PhysicalUnit = 28
         let pcbMountingScrewOffsetY: Board.PhysicalUnit = 18.5
         let pcbHeader = NSBezierPath(rect: NSRect(x: -(36.0 + 9.0 / 2.0), y: -(0.0 + 38.0 / 2.0), width: 9.0, height: 38.0))
+        let pcbHeaderClearance: Board.PhysicalUnit = 2.0
 
         let defaultSupportPostDiameter: Board.PhysicalUnit = 2.0
         let defaultLedHoleDiameter: Board.PhysicalUnit = 3.25
@@ -645,7 +1019,7 @@ class Fixture {
         lines += cutProbeHoles(testPoints: pcbHoles, surface0: "out2", z0: tpm, surface1: "out1", z1: tpo, display: &display)
 
         // cut out fixture pcba clearance openings
-        lines += cut(path: properties.pcbHeader, surface0: "out2", z0: tpm, surface1: "out1", z1: tpo, display: &display)
+        lines += core(path: properties.pcbHeader, surface0: "out1", z0: tpo, z1: tpo - properties.pcbHeaderClearance, display: &display)
 
         NSLog(String(format: "test fixture %@ plastic:\n%@", "top", lines))
         let fileName = derivedFileName(postfix: "plate.py", bottom: false)
@@ -672,28 +1046,119 @@ class Fixture {
         let bounds = clipper.path(dimension, offset: properties.wallThickness + properties.pcbOutlineTolerance)
         let outline = clipper.path(dimension, offset: properties.pcbOutlineTolerance)
         let ledge = clipper.path(dimension, offset: -(properties.ledgeThickness - properties.pcbOutlineTolerance))
+        let boundsToOutline = split(path1: bounds, path2: outline, x0: 14.0, x1: 28.0)
+        let outlineToLedge = split(path1: outline, path2: ledge, x0: 14.0, x1: 28.0)
+        let boundsToLedge = split(path1: bounds, path2: ledge, x0: 14.0, x1: 28.0)
+
+        let boundsToOutlineCut = NSBezierPath()
+        boundsToOutlineCut.append(boundsToOutline.leftOuterPath)
+        boundsToOutlineCut.line(to: Fixture.lastPoint(path: boundsToOutline.leftInnerPath))
+        boundsToOutlineCut.line(to: Fixture.lastPoint(path: boundsToOutline.rightInnerPath))
+        boundsToOutlineCut.line(to: Fixture.lastPoint(path: boundsToOutline.rightOuterPath))
+        boundsToOutlineCut.append(boundsToOutline.rightOuterPath.reversed)
+        boundsToOutlineCut.line(to: Fixture.firstPoint(path: boundsToOutline.rightInnerPath))
+        boundsToOutlineCut.line(to: Fixture.firstPoint(path: boundsToOutline.leftInnerPath))
+        boundsToOutlineCut.line(to: Fixture.firstPoint(path: boundsToOutline.leftOuterPath))
+
+        let outlineBottom = NSBezierPath()
+        outlineBottom.move(to: Fixture.firstPoint(path: boundsToOutline.leftInnerPath))
+        outlineBottom.line(to: Fixture.firstPoint(path: boundsToOutline.rightInnerPath))
+        let outlineTop = NSBezierPath()
+        outlineTop.move(to: Fixture.lastPoint(path: boundsToOutline.leftInnerPath))
+        outlineTop.line(to: Fixture.lastPoint(path: boundsToOutline.rightInnerPath))
+
+        let outlineToLedgeFill = NSBezierPath()
+        outlineToLedgeFill.append(outlineToLedge.leftInnerPath)
+        outlineToLedgeFill.line(to: Fixture.lastPoint(path: outlineToLedge.leftOuterPath))
+        outlineToLedgeFill.line(to: Fixture.lastPoint(path: outlineToLedge.rightOuterPath))
+        outlineToLedgeFill.line(to: Fixture.lastPoint(path: outlineToLedge.rightInnerPath))
+        outlineToLedgeFill.append(outlineToLedge.rightInnerPath.reversed)
+        outlineToLedgeFill.line(to: Fixture.firstPoint(path: outlineToLedge.rightOuterPath))
+        outlineToLedgeFill.line(to: Fixture.firstPoint(path: outlineToLedge.leftOuterPath))
+        outlineToLedgeFill.line(to: Fixture.firstPoint(path: outlineToLedge.leftInnerPath))
+
+        let bottomLeftSide = Path3D()
+        bottomLeftSide.points.append(Point3D(xy: Fixture.firstPoint(path: boundsToOutline.leftOuterPath), z: bpm))
+        bottomLeftSide.points.append(Point3D(xy: Fixture.firstPoint(path: boundsToOutline.leftOuterPath), z: bpi))
+        bottomLeftSide.points.append(Point3D(xy: Fixture.firstPoint(path: boundsToOutline.leftInnerPath), z: bpi))
+        bottomLeftSide.points.append(Point3D(xy: Fixture.firstPoint(path: boundsToOutline.leftInnerPath), z: bps))
+        bottomLeftSide.points.append(Point3D(xy: Fixture.firstPoint(path: outlineToLedge.leftInnerPath), z: bps))
+        bottomLeftSide.points.append(Point3D(xy: Fixture.firstPoint(path: outlineToLedge.leftInnerPath), z: bpn))
+        bottomLeftSide.points.append(Point3D(xy: Fixture.firstPoint(path: boundsToOutline.leftInnerPath), z: bpn))
+        bottomLeftSide.points.append(Point3D(xy: Fixture.firstPoint(path: boundsToOutline.leftInnerPath), z: bpm))
+
+        let bottomRightSide = Path3D()
+        bottomRightSide.points.append(Point3D(xy: Fixture.firstPoint(path: boundsToOutline.rightOuterPath), z: bpm))
+        bottomRightSide.points.append(Point3D(xy: Fixture.firstPoint(path: boundsToOutline.rightOuterPath), z: bpi))
+        bottomRightSide.points.append(Point3D(xy: Fixture.firstPoint(path: boundsToOutline.rightInnerPath), z: bpi))
+        bottomRightSide.points.append(Point3D(xy: Fixture.firstPoint(path: boundsToOutline.rightInnerPath), z: bps))
+        bottomRightSide.points.append(Point3D(xy: Fixture.firstPoint(path: outlineToLedge.rightInnerPath), z: bps))
+        bottomRightSide.points.append(Point3D(xy: Fixture.firstPoint(path: outlineToLedge.rightInnerPath), z: bpn))
+        bottomRightSide.points.append(Point3D(xy: Fixture.firstPoint(path: boundsToOutline.rightInnerPath), z: bpn))
+        bottomRightSide.points.append(Point3D(xy: Fixture.firstPoint(path: boundsToOutline.rightInnerPath), z: bpm))
+
+        let topLeftSide = Path3D()
+        topLeftSide.points.append(Point3D(xy: Fixture.lastPoint(path: boundsToOutline.leftOuterPath), z: bpm))
+        topLeftSide.points.append(Point3D(xy: Fixture.lastPoint(path: boundsToOutline.leftOuterPath), z: bpi))
+        topLeftSide.points.append(Point3D(xy: Fixture.lastPoint(path: boundsToOutline.leftInnerPath), z: bpi))
+        topLeftSide.points.append(Point3D(xy: Fixture.lastPoint(path: boundsToOutline.leftInnerPath), z: bps))
+        topLeftSide.points.append(Point3D(xy: Fixture.lastPoint(path: outlineToLedge.leftInnerPath), z: bps))
+        topLeftSide.points.append(Point3D(xy: Fixture.lastPoint(path: outlineToLedge.leftInnerPath), z: bpn))
+        topLeftSide.points.append(Point3D(xy: Fixture.lastPoint(path: boundsToOutline.leftInnerPath), z: bpn))
+        topLeftSide.points.append(Point3D(xy: Fixture.lastPoint(path: boundsToOutline.leftInnerPath), z: bpm))
+
+        let topRightSide = Path3D()
+        topRightSide.points.append(Point3D(xy: Fixture.lastPoint(path: boundsToOutline.rightOuterPath), z: bpm))
+        topRightSide.points.append(Point3D(xy: Fixture.lastPoint(path: boundsToOutline.rightOuterPath), z: bpi))
+        topRightSide.points.append(Point3D(xy: Fixture.lastPoint(path: boundsToOutline.rightInnerPath), z: bpi))
+        topRightSide.points.append(Point3D(xy: Fixture.lastPoint(path: boundsToOutline.rightInnerPath), z: bps))
+        topRightSide.points.append(Point3D(xy: Fixture.lastPoint(path: outlineToLedge.rightInnerPath), z: bps))
+        topRightSide.points.append(Point3D(xy: Fixture.lastPoint(path: outlineToLedge.rightInnerPath), z: bpn))
+        topRightSide.points.append(Point3D(xy: Fixture.lastPoint(path: boundsToOutline.rightInnerPath), z: bpn))
+        topRightSide.points.append(Point3D(xy: Fixture.lastPoint(path: boundsToOutline.rightInnerPath), z: bpm))
 
         let (mounting, holes) = mountingFeatures(dimension: dimension, properties: properties)
 
         // main body
         lines += rhino3D(path: mounting, z: bpm, name: "mounting")
         lines += rhino3D(path: mounting, z: bpo, name: "mounting2")
-        lines += rhino3D(path: bounds, z: bpi, name: "bounds")
-        lines += rhino3D(path: bounds, z: bpm, name: "bounds2")
-        lines += rhino3D(path: outline, z: bpi, name: "outline")
-        lines += rhino3D(path: outline, z: bps, name: "outline2")
-        lines += rhino3D(path: ledge, z: bps, name: "ledge")
-        lines += rhino3D(path: ledge, z: bpn, name: "ledge2")
+        lines += rhino3D(path: boundsToOutline.path, z: bpi, name: "boundsToOutline")
+        lines += rhino3D(path: boundsToOutlineCut, z: bpm, name: "boundsToOutlineCut")
+        lines += rhino3D(path: boundsToOutline.leftOuterPath, z: bpm, name: "boundsLeft")
+        lines += rhino3D(path: boundsToOutline.rightOuterPath, z: bpm, name: "boundsRight")
+        lines += rhino3D(path: outlineToLedgeFill, z: bpn, name: "outlineToLedgeFill")
+        lines += rhino3D(path: outlineToLedge.leftOuterPath, z: bps, name: "outlineLeft")
+        lines += rhino3D(path: outlineToLedge.rightOuterPath, z: bps, name: "outlineRight")
+        lines += rhino3D(path: outlineToLedge.path, z: bps, name: "outlineToLedge")
+        lines += rhino3D(path: outlineToLedge.leftInnerPath, z: bpn, name: "ledgeLeft")
+        lines += rhino3D(path: outlineToLedge.rightInnerPath, z: bpn, name: "ledgeRight")
+        lines += rhino3D(path: outlineToLedge.leftOuterPath, z: bps, name: "outlineLeft")
+        lines += rhino3D(path: outlineToLedge.rightOuterPath, z: bps, name: "outlineRight")
+        lines += rhino3D(path: outlineBottom, z: bpm, name: "outlineBottom")
+        lines += rhino3D(path: outlineTop, z: bpm, name: "outlineTop")
+        lines += rhino(path: bottomLeftSide, name: "bottomLeftSide")
+        lines += rhino(path: bottomRightSide, name: "bottomRightSide")
+        lines += rhino(path: topLeftSide, name: "topLeftSide")
+        lines += rhino(path: topRightSide, name: "topRightSide")
         //
         lines += "out1 = rs.AddPlanarSrf([mounting2])\n"
         lines += extrude(curve: "mounting", asSurface: "mountingWall", fromZ: bpm, toZ: bpo)
-        lines += "out2 = rs.AddPlanarSrf([mounting, bounds2])\n"
-        lines += extrude(curve: "bounds", asSurface: "boundsWall", fromZ: bpi, toZ: bpm)
-        lines += "rs.AddPlanarSrf([bounds, outline])\n"
-        lines += extrude(curve: "outline", asSurface: "outlineWall", fromZ: bpi, toZ: bps)
-        lines += "rs.AddPlanarSrf([outline2, ledge])\n"
-        lines += extrude(curve: "ledge", asSurface: "ledgeWall", fromZ: bps, toZ: bpn)
-        lines += "out0 = rs.AddPlanarSrf([ledge2])\n"
+        lines += "out2 = rs.AddPlanarSrf([mounting, boundsToOutlineCut])\n"
+        lines += "out0 = rs.AddPlanarSrf([outlineToLedgeFill])\n"
+        lines += "rs.AddPlanarSrf(outlineToLedge)\n"
+        lines += "rs.AddPlanarSrf(boundsToOutline)\n"
+        lines += extrude(curve: "ledgeLeft", asSurface: "ledgeLeftWall", fromZ: bpn, toZ: bps)
+        lines += extrude(curve: "ledgeRight", asSurface: "ledgeRightWall", fromZ: bpn, toZ: bps)
+        lines += extrude(curve: "outlineLeft", asSurface: "outlineLeftWall", fromZ: bps, toZ: bpi)
+        lines += extrude(curve: "outlineRight", asSurface: "outlineRightWall", fromZ: bps, toZ: bpi)
+        lines += extrude(curve: "boundsLeft", asSurface: "boundsLeftWall", fromZ: bpm, toZ: bpi)
+        lines += extrude(curve: "boundsRight", asSurface: "boundsRightWall", fromZ: bpm, toZ: bpi)
+        lines += extrude(curve: "outlineBottom", asSurface: "outlineBottomWall", fromZ: bpm, toZ: bpn)
+        lines += extrude(curve: "outlineTop", asSurface: "outlineTopWall", fromZ: bpm, toZ: bpn)
+        lines += "rs.AddPlanarSrf(bottomLeftSide)\n"
+        lines += "rs.AddPlanarSrf(bottomRightSide)\n"
+        lines += "rs.AddPlanarSrf(topLeftSide)\n"
+        lines += "rs.AddPlanarSrf(topRightSide)\n"
 
         // cut out test point openings
         lines += cutProbeHoles(testPoints: probeTestPoints, surface0: "out0", z0: bpn, surface1: "out1", z1: bpo, display: &display)
@@ -716,7 +1181,7 @@ class Fixture {
         lines += cutProbeHoles(testPoints: pcbHoles, surface0: "out2", z0: bpm, surface1: "out1", z1: bpo, display: &display)
 
         // cut out fixture pcba clearance openings
-        lines += cut(path: properties.pcbHeader, surface0: "out2", z0: bpm, surface1: "out1", z1: bpo, display: &display)
+        lines += core(path: properties.pcbHeader, surface0: "out1", z0: bpo, z1: bpo + properties.pcbHeaderClearance, display: &display)
 
         NSLog(String(format: "test fixture %@ plastic:\n%@", "bottom", lines))
         let fileName = derivedFileName(postfix: "plate.py", bottom: true)
