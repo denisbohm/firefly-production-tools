@@ -20,6 +20,7 @@
 		9275D9821E2447E500BCE1FD /* Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9275D9811E2447E500BCE1FD /* Fixture.swift */; };
 		9275D9841E24498300BCE1FD /* Eagle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9275D9831E24498300BCE1FD /* Eagle.swift */; };
 		92C350BE1E254CC6000A1D61 /* BoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C350BD1E254CC6000A1D61 /* BoardViewController.swift */; };
+		92F5FB961E4184B10034ED04 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F5FB951E4184B10034ED04 /* Geometry.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		9275D9811E2447E500BCE1FD /* Fixture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fixture.swift; sourceTree = "<group>"; };
 		9275D9831E24498300BCE1FD /* Eagle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Eagle.swift; sourceTree = "<group>"; };
 		92C350BD1E254CC6000A1D61 /* BoardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardViewController.swift; sourceTree = "<group>"; };
+		92F5FB951E4184B10034ED04 /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +125,7 @@
 		9275D92F1E2415A300BCE1FD /* Firefly Fixture */ = {
 			isa = PBXGroup;
 			children = (
+				92F5FB951E4184B10034ED04 /* Geometry.swift */,
 				9275D9811E2447E500BCE1FD /* Fixture.swift */,
 				9275D9361E2415A400BCE1FD /* Main.storyboard */,
 				92C350BD1E254CC6000A1D61 /* BoardViewController.swift */,
@@ -311,6 +314,7 @@
 				9275D9801E2434F900BCE1FD /* Rhino.swift in Sources */,
 				9275D97E1E242C6200BCE1FD /* BoardView.swift in Sources */,
 				9275D97C1E241D2900BCE1FD /* Board.swift in Sources */,
+				92F5FB961E4184B10034ED04 /* Geometry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -123,6 +123,30 @@ class Rhino {
         }
     }
 
+    func curves(wires: [Board.Wire], z: Board.PhysicalUnit) -> String {
+        var lines = ""
+        for wire in wires {
+            let x1 = wire.x1
+            let y1 = wire.y1
+            let x2 = wire.x2
+            let y2 = wire.y2
+            //            let width = wire.width
+            let curve = wire.curve
+            if curve == 0 {
+                lines += "curves.append(rs.AddLine((\(x1), \(y1), \(z)), (\(x2), \(y2), \(z))))\n"
+            } else {
+                let c = Board.Utilities.getCenterOfCircle(x1: x1, y1: y1, x2: x2, y2: y2, angle: curve)
+                let radius = sqrt((x1 - c.x) * (x1 - c.x) + (y1 - c.y) * (y1 - c.y));
+                let startAngle = atan2(y1 - c.y, x1 - c.x);
+                let angle = startAngle + curve * Board.PhysicalUnit.pi / (180 * 2.0);
+                let xc = c.x + cos(angle) * radius;
+                let yc = c.y + sin(angle) * radius;
+                lines += "curves.append(rs.AddArc3Pt((\(x1), \(y1), \(z)), (\(x2), \(y2), \(z)), (\(xc), \(yc), \(z))))\n"
+            }
+        }
+        return lines
+    }
+
     func convert() {
         let container = board.container
         transform = AffineTransform()
@@ -155,28 +179,7 @@ class Rhino {
         }
         
         lines += "curves = []\n"
-        for wire in container.wires {
-            if wire.layer != 20 {
-                continue
-            }
-            let x1 = wire.x1
-            let y1 = wire.y1
-            let x2 = wire.x2
-            let y2 = wire.y2
-//            let width = wire.width
-            let curve = wire.curve
-            if curve == 0 {
-                lines += "curves.append(rs.AddLine((\(x1), \(y1), 0), (\(x2), \(y2), 0)))\n"
-            } else {
-                let c = Board.Utilities.getCenterOfCircle(x1: x1, y1: y1, x2: x2, y2: y2, angle: curve)
-                let radius = sqrt((x1 - c.x) * (x1 - c.x) + (y1 - c.y) * (y1 - c.y));
-                let startAngle = atan2(y1 - c.y, x1 - c.x);
-                let angle = startAngle + curve * Board.PhysicalUnit.pi / (180 * 2.0);
-                let xc = c.x + cos(angle) * radius;
-                let yc = c.y + sin(angle) * radius;
-                lines += "curves.append(rs.AddArc3Pt((\(x1), \(y1), 0), (\(x2), \(y2), 0), (\(xc), \(yc), 0)))\n"
-            }
-        }
+        lines += curves(wires: board.wires(layer: 20 /* dimension */), z: 0)
         for hole in container.holes {
             let x = hole.x
             let y = hole.y

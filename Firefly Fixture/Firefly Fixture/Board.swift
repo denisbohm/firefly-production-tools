@@ -226,4 +226,14 @@ class Board {
     var container: Container = Container()
     var thickness: PhysicalUnit = 0.4
 
+    func wires(layer: Board.Layer) -> [Board.Wire] {
+        var wires: [Board.Wire] = []
+        for element in container.wires {
+            if element.layer == layer {
+                wires.append(element)
+            }
+        }
+        return wires
+    }
+
 }
