@@ -154,7 +154,8 @@ class Rhino {
         lines += "boardThickness = \(board.thickness)\n\n"
         
         convert(container: container)
-        
+
+        var holeLines = ""
         for instance in container.instances {
             guard let package = board.packages[instance.package] else {
                 continue
@@ -173,7 +174,14 @@ class Rhino {
             
             mirror = instance.mirror
             convert(container: package.container)
-            
+            for hole in package.container.holes {
+                let p = transform.transform(NSPoint(x: hole.x, y: hole.y))
+                let x = p.x
+                let y = p.y
+                let r = hole.drill / 2.0
+                holeLines += "curves.append(rs.AddCircle3Pt((\(x - r), \(y), 0), (\(x + r), \(y), 0), (\(x), \(y + r), 0)))\n"
+            }
+
             transform.invert()
             NSAffineTransform(transform: transform).concat()
         }
@@ -186,6 +194,7 @@ class Rhino {
             let r = hole.drill / 2.0
             lines += "curves.append(rs.AddCircle3Pt((\(x - r), \(y), 0), (\(x + r), \(y), 0), (\(x), \(y + r), 0)))\n"
         }
+        lines += holeLines
         lines += "PlacePCB(curves)\n"
     }
 

@@ -464,10 +464,14 @@ class Fixture {
     // distance from PCBA to top of plastic: 4.1 + 0.15 + 0.7 = 4.95 mm - use 4.9 mm
     // thickness of plastic to clear components: 4.9 - 1.5 = 3.4 mm
     // locating pins: MISUMI JPRBPB6-8 8mm
-    // fixture PCB mounting screws: M2 8mm (1.5mm drive) McMaster-Carr 91290A015
-    // fixture mounting screws: M3 20mm (2mm drive) McMaster-Carr 93070A076
+    // fixture PCB mounting screws: M2 8mm (1.5mm drive) McMaster-Carr 91290A015 & 90591A265 & 91225A111
+    // fixture mounting screws: M3 20mm (2mm drive) McMaster-Carr 93070A076 & 90591A250
+    // fixture hinge and front latch hardware kit: SEMCO ASM-1201-M $185.00
+    // 12” x 8” of 3/8” thick FR4 (~$25)
+    // 12” x 8” of 1/2” thick clear Polycarbonate (~$15)
+    // 80mm x 80mm x 6mm Nylon (~$2)
     class Properties {
-        let pcbThickness: Board.PhysicalUnit = 0.4
+        var pcbThickness: Board.PhysicalUnit = 0.4
         let pcbTopComponentClearance: Board.PhysicalUnit = 1.5
         let pcbBottomComponentClearance: Board.PhysicalUnit = 1.0 // no components - just leave a little space for solder blobs
         let probeSupportThickness: Board.PhysicalUnit = 4.7 - 0.64 // ideal thickness based on matching the probe outer sleeve length
@@ -867,7 +871,8 @@ class Fixture {
         // fixture display path
         var all = NSBezierPath()
         
-        let properties = Properties()
+        var properties = Properties()
+        properties.pcbThickness = board.thickness
         let dimension = Geometry.bezierPathForWires(wires: board.wires(layer: 20))
         let extents = dimension.bounds
         let dx = extents.midX

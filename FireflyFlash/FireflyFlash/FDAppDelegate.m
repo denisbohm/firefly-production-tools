@@ -95,7 +95,7 @@
     _swdMonitor = [[FDUSBMonitor alloc] init];
     _swdMonitor.logger.consumer = self;
     _swdMonitor.vendor = 0x15ba;
-    _swdMonitor.product = 0x002a;
+    _swdMonitor.product = 0x002a; // 0x002a - ARM-USB-TINY-H, 0x002b - ARM-USB-OCD-H
     _swdMonitor.delegate = self;
     _swdTableViewDataSource = [[FDUSBTableViewDataSource alloc] init];
     _swdTableView.dataSource = _swdTableViewDataSource;

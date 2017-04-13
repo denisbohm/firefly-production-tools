@@ -1,0 +1,37 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "748AFA8E6955F8400637FBF13A3E8767AEFB4A06",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "5A131E55697F8004CAC31E4EEC549228502767EB" : 0,
+    "2D79A0CD6CB1AB4113837FDF72EF5F3C0409E490" : 0,
+    "748AFA8E6955F8400637FBF13A3E8767AEFB4A06" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "A1903090-240C-4EF6-8CBF-32C3A766C2AF",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "5A131E55697F8004CAC31E4EEC549228502767EB" : "firefly-ice-api\/",
+    "2D79A0CD6CB1AB4113837FDF72EF5F3C0409E490" : "firefly-ice-firmware\/",
+    "748AFA8E6955F8400637FBF13A3E8767AEFB4A06" : "firefly-production-tools\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "FireflyCrypto",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "FireflyCrypto\/FireflyCrypto.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/denisbohm\/firefly-ice-firmware.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2D79A0CD6CB1AB4113837FDF72EF5F3C0409E490"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/denisbohm\/firefly-ice-api.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "5A131E55697F8004CAC31E4EEC549228502767EB"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/denisbohm\/firefly-production-tools.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "748AFA8E6955F8400637FBF13A3E8767AEFB4A06"
+    }
+  ]
+}

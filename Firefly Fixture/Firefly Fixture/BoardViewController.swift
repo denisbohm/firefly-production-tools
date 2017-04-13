@@ -18,7 +18,7 @@ class BoardViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        boardPathControl?.url = URL(fileURLWithPath: "/Users/denis/sandbox/lumo/hardware/LUMObackMod.brd")
+        boardPathControl?.url = URL(fileURLWithPath: "/Users/denis/sandbox/90meter/reader/reader.brd")
     }
 
     func rhino(board: Board, scriptPath: String) {

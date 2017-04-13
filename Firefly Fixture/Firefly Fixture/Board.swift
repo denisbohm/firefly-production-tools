@@ -224,7 +224,7 @@ class Board {
     var path: String = ""
     var packages: [String: Package] = [:]
     var container: Container = Container()
-    var thickness: PhysicalUnit = 0.4
+    var thickness: PhysicalUnit = 0.8
 
     func wires(layer: Board.Layer) -> [Board.Wire] {
         var wires: [Board.Wire] = []

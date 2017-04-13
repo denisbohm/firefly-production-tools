@@ -152,8 +152,9 @@ class Eagle {
         instance.package = try getAttribute(element: element, name: "package")
         for attributeElement in try getElements(element: element, query: "attribute") {
             let name: String = try getAttribute(element: attributeElement, name: "name")
-            let value: String = try getAttribute(element: attributeElement, name: "value")
-            instance.attributes[name] = value;
+            if let value: String = try getOptionalAttribute(element: attributeElement, name: "value") {
+                instance.attributes[name] = value
+            }
         }
         container.instances.append(instance)
     }
