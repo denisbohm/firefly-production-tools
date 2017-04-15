@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "748AFA8E6955F8400637FBF13A3E8767AEFB4A06",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "702BB3384E0CA33FCAD7B5BEBED47F36A3748B8D" : 9223372036854775807,
+    "748AFA8E6955F8400637FBF13A3E8767AEFB4A06" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "3E8DA97C-9C24-43FA-90A8-E62A40845089",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "702BB3384E0CA33FCAD7B5BEBED47F36A3748B8D" : "firefly-instruments-api\/",
+    "748AFA8E6955F8400637FBF13A3E8767AEFB4A06" : "firefly-production-tools\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "FireflyFirmwareCrypto",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "FireflyFirmwareCrypto\/FireflyFirmwareCrypto.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/denisbohm\/firefly-instruments-api.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "702BB3384E0CA33FCAD7B5BEBED47F36A3748B8D"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/denisbohm\/firefly-production-tools.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "748AFA8E6955F8400637FBF13A3E8767AEFB4A06"
+    }
+  ]
+}

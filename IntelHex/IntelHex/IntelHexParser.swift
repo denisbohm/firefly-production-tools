@@ -17,11 +17,21 @@ open class IntelHexParser: NSObject {
         case InvalidChecksum
     }
 
-    static let asciiColon = UTF8.CodeUnit(0x3a) // :
-    static let ascii0 = UTF8.CodeUnit(0x30) // 0
-    static let ascii9 = UTF8.CodeUnit(0x39) // 9
-    static let asciiA = UTF8.CodeUnit(0x41) // A
-    static let asciiF = UTF8.CodeUnit(0x46) // F
+    public static let asciiColon = UTF8.CodeUnit(0x3a) // :
+    public static let ascii0 = UTF8.CodeUnit(0x30) // 0
+    public static let ascii9 = UTF8.CodeUnit(0x39) // 9
+    public static let asciiA = UTF8.CodeUnit(0x41) // A
+    public static let asciiF = UTF8.CodeUnit(0x46) // F
+
+    public static func parseHex(character: UTF8.CodeUnit) throws -> Int {
+        if (ascii0 <= character) && (character <= ascii9) {
+            return Int(character - ascii0)
+        }
+        if (asciiA <= character) && (character <= asciiF) {
+            return 10 + Int(character - asciiA)
+        }
+        throw LocalError.InvalidNibble
+    }
 
     open class RecordParser: NSObject {
 
@@ -58,13 +68,7 @@ open class IntelHexParser: NSObject {
             }
             let character = characters[index]
             index += 1
-            if (ascii0 <= character) && (character <= ascii9) {
-                return Int(character - ascii0)
-            }
-            if (asciiA <= character) && (character <= asciiF) {
-                return 10 + Int(character - asciiA)
-            }
-            throw LocalError.InvalidNibble
+            return try IntelHexParser.parseHex(character: character)
         }
 
         open func parseUInt8() throws -> UInt8 {

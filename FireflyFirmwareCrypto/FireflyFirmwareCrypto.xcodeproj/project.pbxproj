@@ -1,0 +1,578 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		920E1FAA1EA1DE81008F5589 /* FirmwareCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920E1FA91EA1DE81008F5589 /* FirmwareCrypto.swift */; };
+		920E1FAB1EA1DEA6008F5589 /* FirmwareCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920E1FA91EA1DE81008F5589 /* FirmwareCrypto.swift */; };
+		9282E4F21EA1D91500F75CDE /* FireflyFirmwareCryptoFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9282E4E91EA1D91500F75CDE /* FireflyFirmwareCryptoFramework.framework */; };
+		9282E4F71EA1D91600F75CDE /* FireflyFirmwareCryptoFrameworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9282E4F61EA1D91600F75CDE /* FireflyFirmwareCryptoFrameworkTests.swift */; };
+		9282E4F91EA1D91600F75CDE /* FireflyFirmwareCryptoFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 9282E4EB1EA1D91500F75CDE /* FireflyFirmwareCryptoFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9282E5001EA1D9A200F75CDE /* Crypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 929FEB781EA079E900DE634F /* Crypto.m */; };
+		9282E5011EA1D9A700F75CDE /* IntelHexParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929FEB721EA067ED00DE634F /* IntelHexParser.swift */; };
+		9282E5021EA1D9AB00F75CDE /* IntelHexFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929FEB711EA067ED00DE634F /* IntelHexFormatter.swift */; };
+		9282E5031EA1D9AE00F75CDE /* IntelHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929FEB701EA067ED00DE634F /* IntelHex.swift */; };
+		9282E5041EA1D9B100F75CDE /* Binary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929FEB7A1EA0824700DE634F /* Binary.swift */; };
+		9282E5051EA1D9B400F75CDE /* fd_ieee754.c in Sources */ = {isa = PBXBuildFile; fileRef = 929FEB7C1EA0828000DE634F /* fd_ieee754.c */; };
+		9282E5061EA1DAB200F75CDE /* fd_ieee754.h in Headers */ = {isa = PBXBuildFile; fileRef = 929FEB7D1EA0828000DE634F /* fd_ieee754.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9282E5071EA1DAB200F75CDE /* Crypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 929FEB771EA079E900DE634F /* Crypto.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		929FEB6A1EA067C500DE634F /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929FEB691EA067C500DE634F /* main.swift */; };
+		929FEB731EA067ED00DE634F /* IntelHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929FEB701EA067ED00DE634F /* IntelHex.swift */; };
+		929FEB741EA067ED00DE634F /* IntelHexFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929FEB711EA067ED00DE634F /* IntelHexFormatter.swift */; };
+		929FEB751EA067ED00DE634F /* IntelHexParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929FEB721EA067ED00DE634F /* IntelHexParser.swift */; };
+		929FEB791EA079E900DE634F /* Crypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 929FEB781EA079E900DE634F /* Crypto.m */; };
+		929FEB7B1EA0824700DE634F /* Binary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929FEB7A1EA0824700DE634F /* Binary.swift */; };
+		929FEB7E1EA0828000DE634F /* fd_ieee754.c in Sources */ = {isa = PBXBuildFile; fileRef = 929FEB7C1EA0828000DE634F /* fd_ieee754.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9282E4F31EA1D91500F75CDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 929FEB5E1EA067C500DE634F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9282E4E81EA1D91500F75CDE;
+			remoteInfo = FireflyFirmwareCryptoFramework;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		929FEB641EA067C500DE634F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		920E1FA91EA1DE81008F5589 /* FirmwareCrypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirmwareCrypto.swift; sourceTree = "<group>"; };
+		9282E4E91EA1D91500F75CDE /* FireflyFirmwareCryptoFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FireflyFirmwareCryptoFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9282E4EB1EA1D91500F75CDE /* FireflyFirmwareCryptoFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FireflyFirmwareCryptoFramework.h; sourceTree = "<group>"; };
+		9282E4EC1EA1D91500F75CDE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9282E4F11EA1D91500F75CDE /* FireflyFirmwareCryptoFrameworkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FireflyFirmwareCryptoFrameworkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9282E4F61EA1D91600F75CDE /* FireflyFirmwareCryptoFrameworkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireflyFirmwareCryptoFrameworkTests.swift; sourceTree = "<group>"; };
+		9282E4F81EA1D91600F75CDE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		929FEB661EA067C500DE634F /* FireflyFirmwareCrypto */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FireflyFirmwareCrypto; sourceTree = BUILT_PRODUCTS_DIR; };
+		929FEB691EA067C500DE634F /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		929FEB701EA067ED00DE634F /* IntelHex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IntelHex.swift; path = ../../IntelHex/IntelHex/IntelHex.swift; sourceTree = "<group>"; };
+		929FEB711EA067ED00DE634F /* IntelHexFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IntelHexFormatter.swift; path = ../../IntelHex/IntelHex/IntelHexFormatter.swift; sourceTree = "<group>"; };
+		929FEB721EA067ED00DE634F /* IntelHexParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IntelHexParser.swift; path = ../../IntelHex/IntelHex/IntelHexParser.swift; sourceTree = "<group>"; };
+		929FEB761EA079E900DE634F /* FireflyFirmwareCrypto-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FireflyFirmwareCrypto-Bridging-Header.h"; sourceTree = "<group>"; };
+		929FEB771EA079E900DE634F /* Crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crypto.h; sourceTree = "<group>"; };
+		929FEB781EA079E900DE634F /* Crypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Crypto.m; sourceTree = "<group>"; };
+		929FEB7A1EA0824700DE634F /* Binary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Binary.swift; path = "../../../firefly-instruments-api/FireflyInstruments/FireflyInstruments/Binary.swift"; sourceTree = "<group>"; };
+		929FEB7C1EA0828000DE634F /* fd_ieee754.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fd_ieee754.c; path = "../../../firefly-instruments-api/FireflyInstruments/FireflyInstruments/fd_ieee754.c"; sourceTree = "<group>"; };
+		929FEB7D1EA0828000DE634F /* fd_ieee754.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fd_ieee754.h; path = "../../../firefly-instruments-api/FireflyInstruments/FireflyInstruments/fd_ieee754.h"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9282E4E51EA1D91500F75CDE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9282E4EE1EA1D91500F75CDE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9282E4F21EA1D91500F75CDE /* FireflyFirmwareCryptoFramework.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		929FEB631EA067C500DE634F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9282E4EA1EA1D91500F75CDE /* FireflyFirmwareCryptoFramework */ = {
+			isa = PBXGroup;
+			children = (
+				9282E4EB1EA1D91500F75CDE /* FireflyFirmwareCryptoFramework.h */,
+				9282E4EC1EA1D91500F75CDE /* Info.plist */,
+			);
+			path = FireflyFirmwareCryptoFramework;
+			sourceTree = "<group>";
+		};
+		9282E4F51EA1D91500F75CDE /* FireflyFirmwareCryptoFrameworkTests */ = {
+			isa = PBXGroup;
+			children = (
+				9282E4F61EA1D91600F75CDE /* FireflyFirmwareCryptoFrameworkTests.swift */,
+				9282E4F81EA1D91600F75CDE /* Info.plist */,
+			);
+			path = FireflyFirmwareCryptoFrameworkTests;
+			sourceTree = "<group>";
+		};
+		929FEB5D1EA067C500DE634F = {
+			isa = PBXGroup;
+			children = (
+				929FEB681EA067C500DE634F /* FireflyFirmwareCrypto */,
+				9282E4EA1EA1D91500F75CDE /* FireflyFirmwareCryptoFramework */,
+				9282E4F51EA1D91500F75CDE /* FireflyFirmwareCryptoFrameworkTests */,
+				929FEB671EA067C500DE634F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		929FEB671EA067C500DE634F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				929FEB661EA067C500DE634F /* FireflyFirmwareCrypto */,
+				9282E4E91EA1D91500F75CDE /* FireflyFirmwareCryptoFramework.framework */,
+				9282E4F11EA1D91500F75CDE /* FireflyFirmwareCryptoFrameworkTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		929FEB681EA067C500DE634F /* FireflyFirmwareCrypto */ = {
+			isa = PBXGroup;
+			children = (
+				929FEB761EA079E900DE634F /* FireflyFirmwareCrypto-Bridging-Header.h */,
+				929FEB7C1EA0828000DE634F /* fd_ieee754.c */,
+				929FEB7D1EA0828000DE634F /* fd_ieee754.h */,
+				929FEB7A1EA0824700DE634F /* Binary.swift */,
+				929FEB701EA067ED00DE634F /* IntelHex.swift */,
+				929FEB711EA067ED00DE634F /* IntelHexFormatter.swift */,
+				929FEB721EA067ED00DE634F /* IntelHexParser.swift */,
+				929FEB771EA079E900DE634F /* Crypto.h */,
+				929FEB781EA079E900DE634F /* Crypto.m */,
+				920E1FA91EA1DE81008F5589 /* FirmwareCrypto.swift */,
+				929FEB691EA067C500DE634F /* main.swift */,
+			);
+			path = FireflyFirmwareCrypto;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		9282E4E61EA1D91500F75CDE /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9282E4F91EA1D91600F75CDE /* FireflyFirmwareCryptoFramework.h in Headers */,
+				9282E5061EA1DAB200F75CDE /* fd_ieee754.h in Headers */,
+				9282E5071EA1DAB200F75CDE /* Crypto.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		9282E4E81EA1D91500F75CDE /* FireflyFirmwareCryptoFramework */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9282E4FA1EA1D91600F75CDE /* Build configuration list for PBXNativeTarget "FireflyFirmwareCryptoFramework" */;
+			buildPhases = (
+				9282E4E41EA1D91500F75CDE /* Sources */,
+				9282E4E51EA1D91500F75CDE /* Frameworks */,
+				9282E4E61EA1D91500F75CDE /* Headers */,
+				9282E4E71EA1D91500F75CDE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FireflyFirmwareCryptoFramework;
+			productName = FireflyFirmwareCryptoFramework;
+			productReference = 9282E4E91EA1D91500F75CDE /* FireflyFirmwareCryptoFramework.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		9282E4F01EA1D91500F75CDE /* FireflyFirmwareCryptoFrameworkTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9282E4FD1EA1D91600F75CDE /* Build configuration list for PBXNativeTarget "FireflyFirmwareCryptoFrameworkTests" */;
+			buildPhases = (
+				9282E4ED1EA1D91500F75CDE /* Sources */,
+				9282E4EE1EA1D91500F75CDE /* Frameworks */,
+				9282E4EF1EA1D91500F75CDE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9282E4F41EA1D91500F75CDE /* PBXTargetDependency */,
+			);
+			name = FireflyFirmwareCryptoFrameworkTests;
+			productName = FireflyFirmwareCryptoFrameworkTests;
+			productReference = 9282E4F11EA1D91500F75CDE /* FireflyFirmwareCryptoFrameworkTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		929FEB651EA067C500DE634F /* FireflyFirmwareCrypto */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 929FEB6D1EA067C500DE634F /* Build configuration list for PBXNativeTarget "FireflyFirmwareCrypto" */;
+			buildPhases = (
+				929FEB621EA067C500DE634F /* Sources */,
+				929FEB631EA067C500DE634F /* Frameworks */,
+				929FEB641EA067C500DE634F /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FireflyFirmwareCrypto;
+			productName = FireflyFirmwareCrypto;
+			productReference = 929FEB661EA067C500DE634F /* FireflyFirmwareCrypto */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		929FEB5E1EA067C500DE634F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0830;
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = "Firefly Design";
+				TargetAttributes = {
+					9282E4E81EA1D91500F75CDE = {
+						CreatedOnToolsVersion = 8.3.1;
+						DevelopmentTeam = TVNL896ZKT;
+						ProvisioningStyle = Automatic;
+					};
+					9282E4F01EA1D91500F75CDE = {
+						CreatedOnToolsVersion = 8.3.1;
+						DevelopmentTeam = TVNL896ZKT;
+						ProvisioningStyle = Automatic;
+					};
+					929FEB651EA067C500DE634F = {
+						CreatedOnToolsVersion = 8.3.1;
+						DevelopmentTeam = TVNL896ZKT;
+						LastSwiftMigration = 0830;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 929FEB611EA067C500DE634F /* Build configuration list for PBXProject "FireflyFirmwareCrypto" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 929FEB5D1EA067C500DE634F;
+			productRefGroup = 929FEB671EA067C500DE634F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				929FEB651EA067C500DE634F /* FireflyFirmwareCrypto */,
+				9282E4E81EA1D91500F75CDE /* FireflyFirmwareCryptoFramework */,
+				9282E4F01EA1D91500F75CDE /* FireflyFirmwareCryptoFrameworkTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9282E4E71EA1D91500F75CDE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9282E4EF1EA1D91500F75CDE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9282E4E41EA1D91500F75CDE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9282E5001EA1D9A200F75CDE /* Crypto.m in Sources */,
+				9282E5011EA1D9A700F75CDE /* IntelHexParser.swift in Sources */,
+				9282E5031EA1D9AE00F75CDE /* IntelHex.swift in Sources */,
+				9282E5041EA1D9B100F75CDE /* Binary.swift in Sources */,
+				920E1FAB1EA1DEA6008F5589 /* FirmwareCrypto.swift in Sources */,
+				9282E5051EA1D9B400F75CDE /* fd_ieee754.c in Sources */,
+				9282E5021EA1D9AB00F75CDE /* IntelHexFormatter.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9282E4ED1EA1D91500F75CDE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9282E4F71EA1D91600F75CDE /* FireflyFirmwareCryptoFrameworkTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		929FEB621EA067C500DE634F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				929FEB7E1EA0828000DE634F /* fd_ieee754.c in Sources */,
+				929FEB791EA079E900DE634F /* Crypto.m in Sources */,
+				929FEB731EA067ED00DE634F /* IntelHex.swift in Sources */,
+				929FEB751EA067ED00DE634F /* IntelHexParser.swift in Sources */,
+				929FEB6A1EA067C500DE634F /* main.swift in Sources */,
+				920E1FAA1EA1DE81008F5589 /* FirmwareCrypto.swift in Sources */,
+				929FEB7B1EA0824700DE634F /* Binary.swift in Sources */,
+				929FEB741EA067ED00DE634F /* IntelHexFormatter.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9282E4F41EA1D91500F75CDE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9282E4E81EA1D91500F75CDE /* FireflyFirmwareCryptoFramework */;
+			targetProxy = 9282E4F31EA1D91500F75CDE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		9282E4FB1EA1D91600F75CDE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = TVNL896ZKT;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = FireflyFirmwareCryptoFramework/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.fireflydesign.FireflyFirmwareCryptoFramework;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_VERSION = 3.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		9282E4FC1EA1D91600F75CDE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = TVNL896ZKT;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = FireflyFirmwareCryptoFramework/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.fireflydesign.FireflyFirmwareCryptoFramework;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		9282E4FE1EA1D91600F75CDE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = TVNL896ZKT;
+				INFOPLIST_FILE = FireflyFirmwareCryptoFrameworkTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.fireflydesign.FireflyFirmwareCryptoFrameworkTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		9282E4FF1EA1D91600F75CDE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = TVNL896ZKT;
+				INFOPLIST_FILE = FireflyFirmwareCryptoFrameworkTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.fireflydesign.FireflyFirmwareCryptoFrameworkTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		929FEB6B1EA067C500DE634F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		929FEB6C1EA067C500DE634F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		929FEB6E1EA067C500DE634F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				DEVELOPMENT_TEAM = TVNL896ZKT;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "FireflyFirmwareCrypto/FireflyFirmwareCrypto-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		929FEB6F1EA067C500DE634F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				DEVELOPMENT_TEAM = TVNL896ZKT;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "FireflyFirmwareCrypto/FireflyFirmwareCrypto-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9282E4FA1EA1D91600F75CDE /* Build configuration list for PBXNativeTarget "FireflyFirmwareCryptoFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9282E4FB1EA1D91600F75CDE /* Debug */,
+				9282E4FC1EA1D91600F75CDE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9282E4FD1EA1D91600F75CDE /* Build configuration list for PBXNativeTarget "FireflyFirmwareCryptoFrameworkTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9282E4FE1EA1D91600F75CDE /* Debug */,
+				9282E4FF1EA1D91600F75CDE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		929FEB611EA067C500DE634F /* Build configuration list for PBXProject "FireflyFirmwareCrypto" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				929FEB6B1EA067C500DE634F /* Debug */,
+				929FEB6C1EA067C500DE634F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		929FEB6D1EA067C500DE634F /* Build configuration list for PBXNativeTarget "FireflyFirmwareCrypto" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				929FEB6E1EA067C500DE634F /* Debug */,
+				929FEB6F1EA067C500DE634F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 929FEB5E1EA067C500DE634F /* Project object */;
+}

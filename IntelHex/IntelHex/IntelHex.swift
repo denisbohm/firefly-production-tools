@@ -35,6 +35,29 @@ open class IntelHex: NSObject {
         self.records = records
     }
 
+    public init(data: Data, address: UInt32, recordByteCount: Int = 32) {
+        records = []
+        var lastExtendedLinearAddress: UInt16 = 0
+        var offset = 0
+        while offset < data.count {
+            let extendedLinearAddress = UInt16((address + UInt32(offset)) >> 16)
+
+            if extendedLinearAddress != lastExtendedLinearAddress {
+                let binary = Binary(byteOrder: .littleEndian)
+                binary.write(extendedLinearAddress)
+                records.append(Record(addressOffset: 0, recordType: .extendedLinearAddress, data: binary.data))
+                lastExtendedLinearAddress = extendedLinearAddress
+            }
+
+            var count = data.count - offset
+            if count > recordByteCount {
+                count = recordByteCount
+            }
+            records.append(Record(addressOffset: UInt16((Int(address) + offset) & 0xffff), recordType: .data, data: data.subdata(in: offset ..< (offset + count))))
+            offset += count
+        }
+    }
+
     open func traverseDataRecordsWithAddress(closure: (_ address: UInt32, _ record: Record) -> Void) {
         var extendedAddress: UInt32 = 0
         traversal:

@@ -104,8 +104,18 @@
     [_parts sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         FDPart *a = obj1;
         FDPart *b = obj2;
-        if ((a.namePrefix == nil) || (b.namePrefix == nil)) {
+        if ((a.namePrefix == nil) && (b.namePrefix == nil)) {
             return [a.name compare:b.name];
+        }
+        if (a.namePrefix == nil) {
+            return NSOrderedDescending;
+        }
+        if (b.namePrefix == nil) {
+            return NSOrderedAscending;
+        }
+        NSComparisonResult result = [a.namePrefix compare:b.namePrefix];
+        if (result != NSOrderedSame) {
+            return result;
         }
         if (a.nameNumber < b.nameNumber) {
             return NSOrderedAscending;
