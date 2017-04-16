@@ -20,6 +20,8 @@
 		9282E5051EA1D9B400F75CDE /* fd_ieee754.c in Sources */ = {isa = PBXBuildFile; fileRef = 929FEB7C1EA0828000DE634F /* fd_ieee754.c */; };
 		9282E5061EA1DAB200F75CDE /* fd_ieee754.h in Headers */ = {isa = PBXBuildFile; fileRef = 929FEB7D1EA0828000DE634F /* fd_ieee754.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9282E5071EA1DAB200F75CDE /* Crypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 929FEB771EA079E900DE634F /* Crypto.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		92920A5D1EA2EB5500F10B8C /* FirmwareCryptoCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92920A5C1EA2EB5500F10B8C /* FirmwareCryptoCommand.swift */; };
+		92920A5E1EA2EB9100F10B8C /* FirmwareCryptoCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92920A5C1EA2EB5500F10B8C /* FirmwareCryptoCommand.swift */; };
 		929FEB6A1EA067C500DE634F /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929FEB691EA067C500DE634F /* main.swift */; };
 		929FEB731EA067ED00DE634F /* IntelHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929FEB701EA067ED00DE634F /* IntelHex.swift */; };
 		929FEB741EA067ED00DE634F /* IntelHexFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929FEB711EA067ED00DE634F /* IntelHexFormatter.swift */; };
@@ -59,6 +61,7 @@
 		9282E4F11EA1D91500F75CDE /* FireflyFirmwareCryptoFrameworkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FireflyFirmwareCryptoFrameworkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9282E4F61EA1D91600F75CDE /* FireflyFirmwareCryptoFrameworkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireflyFirmwareCryptoFrameworkTests.swift; sourceTree = "<group>"; };
 		9282E4F81EA1D91600F75CDE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		92920A5C1EA2EB5500F10B8C /* FirmwareCryptoCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirmwareCryptoCommand.swift; sourceTree = "<group>"; };
 		929FEB661EA067C500DE634F /* FireflyFirmwareCrypto */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FireflyFirmwareCrypto; sourceTree = BUILT_PRODUCTS_DIR; };
 		929FEB691EA067C500DE634F /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		929FEB701EA067ED00DE634F /* IntelHex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IntelHex.swift; path = ../../IntelHex/IntelHex/IntelHex.swift; sourceTree = "<group>"; };
@@ -149,6 +152,7 @@
 				929FEB771EA079E900DE634F /* Crypto.h */,
 				929FEB781EA079E900DE634F /* Crypto.m */,
 				920E1FA91EA1DE81008F5589 /* FirmwareCrypto.swift */,
+				92920A5C1EA2EB5500F10B8C /* FirmwareCryptoCommand.swift */,
 				929FEB691EA067C500DE634F /* main.swift */,
 			);
 			path = FireflyFirmwareCrypto;
@@ -295,6 +299,7 @@
 				9282E5001EA1D9A200F75CDE /* Crypto.m in Sources */,
 				9282E5011EA1D9A700F75CDE /* IntelHexParser.swift in Sources */,
 				9282E5031EA1D9AE00F75CDE /* IntelHex.swift in Sources */,
+				92920A5E1EA2EB9100F10B8C /* FirmwareCryptoCommand.swift in Sources */,
 				9282E5041EA1D9B100F75CDE /* Binary.swift in Sources */,
 				920E1FAB1EA1DEA6008F5589 /* FirmwareCrypto.swift in Sources */,
 				9282E5051EA1D9B400F75CDE /* fd_ieee754.c in Sources */,
@@ -314,6 +319,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92920A5D1EA2EB5500F10B8C /* FirmwareCryptoCommand.swift in Sources */,
 				929FEB7E1EA0828000DE634F /* fd_ieee754.c in Sources */,
 				929FEB791EA079E900DE634F /* Crypto.m in Sources */,
 				929FEB731EA067ED00DE634F /* IntelHex.swift in Sources */,

@@ -22,6 +22,8 @@ open class IntelHexParser: NSObject {
     public static let ascii9 = UTF8.CodeUnit(0x39) // 9
     public static let asciiA = UTF8.CodeUnit(0x41) // A
     public static let asciiF = UTF8.CodeUnit(0x46) // F
+    public static let asciiLowercaseA = UTF8.CodeUnit(0x61) // a
+    public static let asciiLowercaseF = UTF8.CodeUnit(0x66) // f
 
     public static func parseHex(character: UTF8.CodeUnit) throws -> Int {
         if (ascii0 <= character) && (character <= ascii9) {
@@ -29,6 +31,9 @@ open class IntelHexParser: NSObject {
         }
         if (asciiA <= character) && (character <= asciiF) {
             return 10 + Int(character - asciiA)
+        }
+        if (asciiLowercaseA <= character) && (character <= asciiLowercaseF) {
+            return 10 + Int(character - asciiLowercaseA)
         }
         throw LocalError.InvalidNibble
     }
