@@ -11,6 +11,7 @@ import Cocoa
 open class FirmwareCrypto: NSObject {
 
     public enum LocalError: Error {
+        case invalidComment
         case invalidFirmware
     }
 
@@ -29,6 +30,9 @@ open class FirmwareCrypto: NSObject {
 
     public struct Metadata {
 
+        public static let currentFormat: UInt32 = (0x46 << 24) | (0x57 << 16) | (0x55 << 8) | 0x50
+
+        public let format: UInt32
         public let flags: UInt32
         public let version: Version
         public let address: UInt32
@@ -36,10 +40,12 @@ open class FirmwareCrypto: NSObject {
         public let initializationVector: Data
         public let encryptedHash: Data
         public let uncryptedHash: Data
+        public let comment: String
 
         public let data: Data
 
-        public init(flags: UInt32, version: Version, address: UInt32, length: UInt32, initializationVector: Data, encryptedHash: Data, uncryptedHash: Data) {
+        public init(format: UInt32, flags: UInt32, version: Version, address: UInt32, length: UInt32, initializationVector: Data, encryptedHash: Data, uncryptedHash: Data, comment: String) throws {
+            self.format = format
             self.flags = flags
             self.version = version
             self.address = address
@@ -47,8 +53,10 @@ open class FirmwareCrypto: NSObject {
             self.initializationVector = initializationVector
             self.encryptedHash = encryptedHash
             self.uncryptedHash = uncryptedHash
+            self.comment = comment
 
             let binary = Binary(byteOrder: .littleEndian)
+            binary.write(format)
             binary.write(flags)
             binary.write(version.major)
             binary.write(version.minor)
@@ -59,6 +67,11 @@ open class FirmwareCrypto: NSObject {
             binary.write(initializationVector)
             binary.write(encryptedHash)
             binary.write(uncryptedHash)
+            guard let commentData = comment.data(using: .utf8) else {
+                throw LocalError.invalidComment
+            }
+            binary.write(UInt32(commentData.count))
+            binary.write(commentData)
             data = binary.data
         }
 
@@ -66,6 +79,7 @@ open class FirmwareCrypto: NSObject {
             self.data = data
 
             let binary = Binary(data: data, byteOrder: .littleEndian)
+            self.format = try binary.read()
             self.flags = try binary.read()
             let major: UInt32 = try binary.read()
             let minor: UInt32 = try binary.read()
@@ -77,17 +91,24 @@ open class FirmwareCrypto: NSObject {
             self.initializationVector = try binary.read(length: 16)
             self.encryptedHash = try binary.read(length: 20)
             self.uncryptedHash = try binary.read(length: 20)
+            let commentDataCount: UInt32 = try binary.read()
+            let commentData: Data = try binary.read(length: Int(commentDataCount))
+            guard let comment = String(data: commentData, encoding: .utf8) else {
+                throw LocalError.invalidComment
+            }
+            self.comment = comment
         }
 
         public func isEqualTo(metadata: Metadata) -> Bool {
             return
+                format == metadata.format &&
                 flags == metadata.flags &&
-                    version == metadata.version &&
-                    address == metadata.address &&
-                    length == metadata.length &&
-                    initializationVector == metadata.initializationVector &&
-                    encryptedHash == metadata.encryptedHash &&
-                    uncryptedHash == metadata.uncryptedHash
+                version == metadata.version &&
+                address == metadata.address &&
+                length == metadata.length &&
+                initializationVector == metadata.initializationVector &&
+                encryptedHash == metadata.encryptedHash &&
+                uncryptedHash == metadata.uncryptedHash
         }
 
     }
@@ -103,14 +124,14 @@ open class FirmwareCrypto: NSObject {
         return paddedData
     }
 
-    public static func encrypt(firmware: String, key: Data, version: Version) throws -> Data {
+    public static func encrypt(firmware: String, key: Data, version: Version, comment: String) throws -> Data {
         let intelHex = try IntelHexParser.parse(content: firmware)
         let (addressBounds: (min: min, max: max), data: data) = try intelHex.combineData()
         let paddedData = try FirmwareCrypto.pad(data: data, blockSize: 16);
         let initializationVector = try Crypto.random(16)
         let encryptedData = try Crypto.encrypt(paddedData, key: key, initializationVector: initializationVector)
 
-        let metadata = Metadata(flags: 0, version: version, address: min, length: max - min, initializationVector: initializationVector, encryptedHash: Crypto.sha1(encryptedData), uncryptedHash: Crypto.sha1(data))
+        let metadata = try Metadata(format: Metadata.currentFormat, flags: 0, version: version, address: min, length: max - min, initializationVector: initializationVector, encryptedHash: Crypto.sha1(encryptedData), uncryptedHash: Crypto.sha1(data), comment: comment)
 
         var uncryptedMetadata = Data()
         uncryptedMetadata.append(metadata.data)

@@ -40,7 +40,15 @@ open class FirmwareCryptoCommand: NSObject {
 
         return string
     }
+    
+    open func parseString(iterator: inout IndexingIterator<[String]>) throws -> String {
+        guard let string = iterator.next() else {
+            throw LocalError.missingArgument
+        }
 
+        return string
+    }
+    
     open func parseHex(iterator: inout IndexingIterator<[String]>, count: Int) throws -> Data {
         guard let string = iterator.next() else {
             throw LocalError.missingArgument
@@ -69,6 +77,7 @@ open class FirmwareCryptoCommand: NSObject {
         print("  -encrypted-firmware <output encrypted firmware file (binary)>")
         print("  -key <encryption key (16 hex bytes>")
         print("  -version <major (UInt32)> <minor (UInt32)> <revision (UInt32)> <commit (20 hex bytes)>")
+        print("  -comment <comment (String)>")
         print("  -decrypt (decrypt instead of the default which is encrypt)")
         print("  -? -usage -help (print this help text)")
         print()
@@ -78,6 +87,7 @@ open class FirmwareCryptoCommand: NSObject {
         print("  encrypted firmware data binary block (variable size)")
         print()
         print("metadata binary is little endian:")
+        print("  format: UInt32")
         print("  flags: UInt32")
         print("  version major: UInt32")
         print("  version minor: UInt32")
@@ -88,11 +98,12 @@ open class FirmwareCryptoCommand: NSObject {
         print("  initialization vector: UInt8[16]")
         print("  encrypted firmware data SHA1: UInt8[20]")
         print("  unencrypted firmware data SHA1: UInt8[20]")
+        print("  comment: String")
     }
 
-    open func encrypt(firmwarePath: String, encryptedFirmwarePath: String, key: Data, version: FirmwareCrypto.Version) throws {
+    open func encrypt(firmwarePath: String, encryptedFirmwarePath: String, key: Data, version: FirmwareCrypto.Version, comment: String) throws {
         let firmware = try String(contentsOfFile: firmwarePath, encoding: String.Encoding.utf8)
-        let binary = try FirmwareCrypto.encrypt(firmware: firmware, key: key, version: version)
+        let binary = try FirmwareCrypto.encrypt(firmware: firmware, key: key, version: version, comment: comment)
         try binary.write(to: URL(fileURLWithPath: encryptedFirmwarePath))
     }
 
@@ -120,6 +131,7 @@ open class FirmwareCryptoCommand: NSObject {
         var encryptedFirmwarePath = "encrypted-firmware.bin"
         var key = Data(bytes: [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0xef])
         var version = FirmwareCrypto.Version(major: 0, minor: 0, revision: 0, commit: Data(Array<UInt8>(repeating: 0x00, count: 20)))
+        var comment = "firefly firmware update"
 
         var iterator = arguments.makeIterator()
         let _ = iterator.next() // skip command path
@@ -133,6 +145,8 @@ open class FirmwareCryptoCommand: NSObject {
                 key = try parseHex(iterator: &iterator, count: 16)
             case "-version":
                 version = try parseVersion(iterator: &iterator)
+            case "-comment":
+                comment = try parseString(iterator: &iterator)
             case "-decrypt":
                 try decrypt(firmwarePath: firmwarePath, encryptedFirmwarePath: encryptedFirmwarePath, key: key)
                 return
@@ -144,7 +158,7 @@ open class FirmwareCryptoCommand: NSObject {
             }
         }
 
-        try encrypt(firmwarePath: firmwarePath, encryptedFirmwarePath: encryptedFirmwarePath, key: key, version: version)
+        try encrypt(firmwarePath: firmwarePath, encryptedFirmwarePath: encryptedFirmwarePath, key: key, version: version, comment: comment)
     }
 
     open func main(arguments: [String]) -> Int32 {
