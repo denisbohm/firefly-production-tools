@@ -28,9 +28,11 @@ open class FirmwareCrypto: NSObject {
 
     }
 
+    public static let metadataBlockSize = 1024
+
     public struct Metadata {
 
-        public static let currentFormat: UInt32 = (0x46 << 24) | (0x57 << 16) | (0x55 << 8) | 0x50
+        public static let currentFormat: UInt32 = 0x46 | (0x57 << 8) | (0x55 << 16) | (0x50 << 24)
 
         public let format: UInt32
         public let flags: UInt32
@@ -72,6 +74,9 @@ open class FirmwareCrypto: NSObject {
             }
             binary.write(UInt32(commentData.count))
             binary.write(commentData)
+            if binary.length > FirmwareCrypto.metadataBlockSize {
+                throw LocalError.invalidComment
+            }
             data = binary.data
         }
 
@@ -108,12 +113,11 @@ open class FirmwareCrypto: NSObject {
                 length == metadata.length &&
                 initializationVector == metadata.initializationVector &&
                 encryptedHash == metadata.encryptedHash &&
-                uncryptedHash == metadata.uncryptedHash
+                uncryptedHash == metadata.uncryptedHash &&
+                comment == metadata.comment
         }
 
     }
-
-    public static let metadataBlockSize = 1024
 
     public static func pad(data: Data, blockSize: Int) throws -> Data {
         if (data.count % blockSize) == 0 {

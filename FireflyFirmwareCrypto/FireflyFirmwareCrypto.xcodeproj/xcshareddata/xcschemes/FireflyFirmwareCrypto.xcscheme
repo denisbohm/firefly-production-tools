@@ -67,7 +67,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "debug.hex"
+            argument = "$PROJECT_DIR/FireflyFirmwareCryptoFrameworkTests/debug.hex"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -75,7 +75,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "encrypted-debug.bin"
+            argument = "/tmp/encrypted-debug.bin"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -83,7 +83,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "0f0e0d0c0b0a09080706050403020100"
+            argument = "000102030405060708090a0b0c0d0e0f"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -103,7 +103,19 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "131211100f0e0d0c0b0a09080706050403020100"
+            argument = "000102030405060708090a0b0c0d0e0f10111213"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-comment"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "&quot;testing... 1... 2... 3...&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-decode"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

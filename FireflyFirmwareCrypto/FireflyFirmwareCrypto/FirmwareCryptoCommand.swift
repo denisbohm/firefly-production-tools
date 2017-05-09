@@ -38,7 +38,15 @@ open class FirmwareCryptoCommand: NSObject {
             throw LocalError.missingArgument
         }
 
-        return string
+        let path = NSString(string: string).expandingTildeInPath
+        let url = URL(fileURLWithPath: path)
+        if let canonicalPath = (try? url.resourceValues(forKeys: [.canonicalPathKey]))?.canonicalPath {
+            return canonicalPath
+        }
+        if let fileSystemPath = (try? url.resourceValues(forKeys: [.pathKey]))?.path {
+            return fileSystemPath
+        }
+        return path
     }
     
     open func parseString(iterator: inout IndexingIterator<[String]>) throws -> String {
@@ -75,18 +83,19 @@ open class FirmwareCryptoCommand: NSObject {
         print("usage:")
         print("  -firmware <input firmware file (IntelHex)>")
         print("  -encrypted-firmware <output encrypted firmware file (binary)>")
-        print("  -key <encryption key (16 hex bytes>")
+        print("  -key <encryption key (16 hex bytes)>")
         print("  -version <major (UInt32)> <minor (UInt32)> <revision (UInt32)> <commit (20 hex bytes)>")
         print("  -comment <comment (String)>")
-        print("  -decrypt (decrypt instead of the default which is encrypt)")
+        print("  -decrypt (decrypt instead of the default action which is to encrypt)")
+        print("  -decode (decode instead of the default action which is to encrypt)")
         print("  -? -usage -help (print this help text)")
         print()
         print("encrypted firmware consists of three blocks:")
         print("  clear metadata binary block (1KB)")
         print("  encrypted metadata binary block (1KB)")
-        print("  encrypted firmware data binary block (variable size)")
+        print("  encrypted firmware data binary block")
         print()
-        print("metadata binary is little endian:")
+        print("metadata binary (little endian, padded to 1KB):")
         print("  format: UInt32")
         print("  flags: UInt32")
         print("  version major: UInt32")
@@ -98,7 +107,7 @@ open class FirmwareCryptoCommand: NSObject {
         print("  initialization vector: UInt8[16]")
         print("  encrypted firmware data SHA1: UInt8[20]")
         print("  unencrypted firmware data SHA1: UInt8[20]")
-        print("  comment: String")
+        print("  comment: String (UInt32 count, UTF8[count])")
     }
 
     open func encrypt(firmwarePath: String, encryptedFirmwarePath: String, key: Data, version: FirmwareCrypto.Version, comment: String) throws {
@@ -119,10 +128,23 @@ open class FirmwareCryptoCommand: NSObject {
             commit += String(format: "%02X", byte)
         }
         print("version \(version.major) \(version.minor) \(version.revision) \(commit)")
+        print("comment \(metadata.comment)")
+    }
+
+    open func decode(encryptedFirmwarePath: String, key: Data) throws {
+        let encryptedFirmware = try Data(contentsOf: URL(fileURLWithPath: encryptedFirmwarePath))
+        let (_, metadata) = try FirmwareCrypto.decrypt(encryptedFirmware: encryptedFirmware, key: key)
+        let version = metadata.version
+        var commit = ""
+        for byte in version.commit {
+            commit += String(format: "%02X", byte)
+        }
+        print("version \(version.major) \(version.minor) \(version.revision) \(commit)")
+        print("comment \(metadata.comment)")
     }
 
     open func run(arguments: [String]) throws {
-        if arguments.isEmpty {
+        if arguments.count <= 1 {
             printUsage()
             return
         }
@@ -149,6 +171,9 @@ open class FirmwareCryptoCommand: NSObject {
                 comment = try parseString(iterator: &iterator)
             case "-decrypt":
                 try decrypt(firmwarePath: firmwarePath, encryptedFirmwarePath: encryptedFirmwarePath, key: key)
+                return
+            case "-decode":
+                try decode(encryptedFirmwarePath: encryptedFirmwarePath, key: key)
                 return
             case "-?", "-usage", "-help":
                 printUsage()

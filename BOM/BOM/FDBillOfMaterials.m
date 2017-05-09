@@ -375,6 +375,15 @@
         }
         [item.parts addObject:part];
     }
+    for (FDItem *item in itemsByOrderingId.allValues) {
+        FDPart *firstPart = item.parts.firstObject;
+        NSString *value = firstPart.value;
+        for (FDPart *part in item.parts) {
+            if ((value != part.value) && ![value isCaseInsensitiveLike:part.value]) {
+                NSLog(@"same parts with different values: %@ %@ vs %@ %@", part.name, part.value, firstPart.name, firstPart.value);
+            }
+        }
+    }
     return itemsByOrderingId;
 }
 
