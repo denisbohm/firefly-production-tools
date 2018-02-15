@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Firefly Design LLC. All rights reserved.
 //
 
-#import <IOBluetooth/IOBluetooth.h>
+#import <CoreBluetooth/CoreBluetooth.h>
 
 @class FDIntelHex;
 @class FDPoolTableViewDataSource;

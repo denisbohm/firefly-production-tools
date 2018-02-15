@@ -189,7 +189,7 @@ class BoardView: NSView {
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
         NSColor.white.setFill()
-        NSRectFill(dirtyRect)
+        dirtyRect.fill()
         
         let xform = NSAffineTransform()
         if !fixturePath.isEmpty {

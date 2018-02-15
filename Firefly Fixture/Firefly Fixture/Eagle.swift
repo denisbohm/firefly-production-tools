@@ -84,11 +84,11 @@ class Eagle {
             if rot.hasPrefix("M") {
                 mirror = true
                 let index = rot.index(rot.startIndex, offsetBy: 2)
-                rotate = try parse(rot.substring(from: index))
+                rotate = try parse(String(rot[index...]))
             } else {
                 mirror = false
                 let index = rot.index(rot.startIndex, offsetBy: 1)
-                rotate = try parse(rot.substring(from: index))
+                rotate = try parse(String(rot[index...]))
             }
         }
     }
@@ -256,7 +256,7 @@ class Eagle {
         guard let xml = try? NSString(contentsOfFile: path, encoding: String.Encoding.utf8.rawValue) as String else {
             throw LocalError.fileNotFound(path)
         }
-        guard let document = try? XMLDocument(xmlString: xml, options: 0) else {
+        guard let document = try? XMLDocument(xmlString: xml, options: XMLNode.Options(rawValue: 0)) else {
             throw LocalError.invalidDocument
         }
         let board = Board()

@@ -42,7 +42,7 @@ class Fixture {
             if let range = name.range(of: "-", options: [], range: nil, locale: nil) {
                 let lower = name.index(range.upperBound, offsetBy: 0)
                 let upper = name.index(name.endIndex, offsetBy: -2)
-                let token = name.substring(with: lower ..< upper)
+                let token = name[lower ..< upper]
                 if let diameter = Float(token) {
                     return Board.PhysicalUnit(diameter)
                 }
@@ -67,7 +67,7 @@ class Fixture {
                 continue
             }
 
-            if (package.name == "TARGET-PIN-1MM") || (package.name == "TP08R") || (package.name == "TC2030-MCP-NL") {
+            if (package.name == "TARGET-PIN-1MM") || (package.name == "TP08R") || (package.name == "TP10R") || (package.name == "TC2030-MCP-NL") {
                 // NSLog(@"%@ %0.3f, %0.3f", package.name, instance.x, instance.y);
 
                 if instance.mirror != mirrored {
@@ -123,6 +123,17 @@ class Fixture {
 
     func holeTestPoints() -> [TestPoint] {
         var points: [TestPoint] = []
+
+        var index = 1
+        for hole in board.container.holes {
+            let testPoint = TestPoint()
+            testPoint.x = hole.x
+            testPoint.y = hole.y
+            testPoint.name = "hole\(index)"
+            testPoint.diameter = hole.drill
+            points.append(testPoint)
+            index += 1
+        }
 
         var transform = AffineTransform()
 
@@ -289,10 +300,10 @@ class Fixture {
     func eagle(bezierPath: NSBezierPath, mirror: Bool = false) -> String {
         let tx = CGFloat(0.0)
         let ty = CGFloat(0.0)
-        let flatness = NSBezierPath.defaultFlatness()
-        NSBezierPath.setDefaultFlatness(0.01)
+        let flatness = NSBezierPath.defaultFlatness
+        NSBezierPath.defaultFlatness = 0.01
         let path = Geometry.join(path: bezierPath.flattened)
-        NSBezierPath.setDefaultFlatness(flatness)
+        NSBezierPath.defaultFlatness = flatness
         var origin = NSPoint()
         var hasOrigin = false
         var lines = ""
@@ -472,8 +483,8 @@ class Fixture {
     // 80mm x 80mm x 6mm Nylon (~$2)
     class Properties {
         var pcbThickness: Board.PhysicalUnit = 0.4
-        let pcbTopComponentClearance: Board.PhysicalUnit = 1.5
-        let pcbBottomComponentClearance: Board.PhysicalUnit = 1.0 // no components - just leave a little space for solder blobs
+        let pcbTopComponentClearance: Board.PhysicalUnit = 1.0 // no components - just leave a little space for solder blobs
+        let pcbBottomComponentClearance: Board.PhysicalUnit = 2.0
         let probeSupportThickness: Board.PhysicalUnit = 4.7 - 0.64 // ideal thickness based on matching the probe outer sleeve length
         let probeHeight: Board.PhysicalUnit = 6.27 - 0.64
         let probeStroke: Board.PhysicalUnit = 0.7 // 0.0 to 1.4
@@ -627,8 +638,8 @@ class Fixture {
         let bounds = clipper.path(dimension, offset: properties.wallThickness + properties.pcbOutlineTolerance)
         let outline = clipper.path(dimension, offset: properties.pcbOutlineTolerance)
         let ledge = clipper.path(dimension, offset: -(properties.ledgeThickness - properties.pcbOutlineTolerance))
-        let boundsToOutline = Geometry.split(path1: bounds, path2: outline, x0: 14.0, x1: 28.0)
-        let outlineToLedge = Geometry.split(path1: outline, path2: ledge, x0: 14.0, x1: 28.0)
+        let boundsToOutline = Geometry.split(path1: bounds, path2: outline, x0: -5.0, x1: 5.0)
+        let outlineToLedge = Geometry.split(path1: outline, path2: ledge, x0: -5.0, x1: 5.0)
 
         let boundsToOutlineCut = NSBezierPath()
         boundsToOutlineCut.append(boundsToOutline.leftOuterPath)
@@ -871,7 +882,7 @@ class Fixture {
         // fixture display path
         var all = NSBezierPath()
         
-        var properties = Properties()
+        let properties = Properties()
         properties.pcbThickness = board.thickness
         let dimension = Geometry.bezierPathForWires(wires: board.wires(layer: 20))
         let extents = dimension.bounds

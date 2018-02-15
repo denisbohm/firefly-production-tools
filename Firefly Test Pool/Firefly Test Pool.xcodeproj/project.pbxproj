@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		923CAC5C1FE1834100BEBDF0 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 923CAC581FE1834100BEBDF0 /* CoreBluetooth.framework */; };
 		92DAF9211901713300F1A86B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DAF9201901713300F1A86B /* Cocoa.framework */; };
 		92DAF92B1901713300F1A86B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92DAF9291901713300F1A86B /* InfoPlist.strings */; };
 		92DAF92D1901713300F1A86B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 92DAF92C1901713300F1A86B /* main.m */; };
@@ -18,7 +19,6 @@
 		92DAF9411901713300F1A86B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DAF9201901713300F1A86B /* Cocoa.framework */; };
 		92DAF9491901713300F1A86B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92DAF9471901713300F1A86B /* InfoPlist.strings */; };
 		92DAF94B1901713300F1A86B /* Firefly_Test_PoolTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 92DAF94A1901713300F1A86B /* Firefly_Test_PoolTests.m */; };
-		92DAF9651901725600F1A86B /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DAF9641901725600F1A86B /* IOBluetooth.framework */; };
 		92DAF968190172B200F1A86B /* FDPoolTableViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 92DAF967190172B200F1A86B /* FDPoolTableViewDataSource.m */; };
 		92DBC1CA1901754D0071F52B /* FireflyDevice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DAF961190171A700F1A86B /* FireflyDevice.framework */; };
 		92DBC1CF190176060071F52B /* FDPoolManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 92DBC1CE190176060071F52B /* FDPoolManager.m */; };
@@ -85,6 +85,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		923CAC581FE1834100BEBDF0 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		92DAF91D1901713300F1A86B /* Firefly Test Pool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Firefly Test Pool.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		92DAF9201901713300F1A86B /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		92DAF9231901713300F1A86B /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -119,8 +120,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				923CAC5C1FE1834100BEBDF0 /* CoreBluetooth.framework in Frameworks */,
 				92DBC1CA1901754D0071F52B /* FireflyDevice.framework in Frameworks */,
-				92DAF9651901725600F1A86B /* IOBluetooth.framework in Frameworks */,
 				92DAF9211901713300F1A86B /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -160,6 +161,7 @@
 		92DAF91F1901713300F1A86B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				923CAC581FE1834100BEBDF0 /* CoreBluetooth.framework */,
 				92DAF9641901725600F1A86B /* IOBluetooth.framework */,
 				92DAF9201901713300F1A86B /* Cocoa.framework */,
 				92DAF93F1901713300F1A86B /* XCTest.framework */,

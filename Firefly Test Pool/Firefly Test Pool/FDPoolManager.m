@@ -261,8 +261,8 @@
     for (CBPeripheral *peripheral in peripherals) {
         [self onMainCentralManager:_centralManager didDiscoverPeripheral:peripheral advertisementData:@{CBAdvertisementDataServiceUUIDsKey:@[_service]} RSSI:peripheral.RSSI];
     }
-//    [_centralManager scanForPeripheralsWithServices:@[_service] options:@{CBCentralManagerScanOptionAllowDuplicatesKey: @YES}];
-    [_centralManager scanForPeripheralsWithServices:nil options:@{CBCentralManagerScanOptionAllowDuplicatesKey: @YES}];
+    [_centralManager scanForPeripheralsWithServices:@[_service] options:@{CBCentralManagerScanOptionAllowDuplicatesKey: @YES}];
+//    [_centralManager scanForPeripheralsWithServices:nil options:@{CBCentralManagerScanOptionAllowDuplicatesKey: @YES}];
 }
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central
