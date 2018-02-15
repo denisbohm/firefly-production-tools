@@ -157,6 +157,7 @@ NSInteger getInteger(id value)
     NSMutableString *partFilename = [NSMutableString stringWithString:manufacturerPartNumber];
     [partFilename replaceOccurrencesOfString:@"/" withString:@"_" options:0 range:NSMakeRange(0, [partFilename length])];
     [partFilename replaceOccurrencesOfString:@":" withString:@"_" options:0 range:NSMakeRange(0, [partFilename length])];
+    [partFilename replaceOccurrencesOfString:@" " withString:@"_" options:0 range:NSMakeRange(0, [partFilename length])];
     NSString *partPath = [partsPath stringByAppendingPathComponent:partFilename];
     if (![fileManager fileExistsAtPath:partPath]) {
         NSString *queries;

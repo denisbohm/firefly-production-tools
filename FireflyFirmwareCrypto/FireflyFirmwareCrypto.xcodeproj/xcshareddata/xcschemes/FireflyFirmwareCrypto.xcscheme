@@ -75,7 +75,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "/tmp/encrypted-debug.bin"
+            argument = "/Users/denis/sandbox/echo/fw_lib/fw_update/band_application.bin"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -83,7 +83,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "000102030405060708090a0b0c0d0e0f"
+            argument = "19218a76ba4fdf9d29f302df1986bef0"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
