@@ -18,7 +18,7 @@ class BoardViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        boardPathControl?.url = URL(fileURLWithPath: "/Users/denis/Documents/Eagle/scratch/Atlas/Wristband3.brd")
+        boardPathControl?.url = URL(fileURLWithPath: "/Users/denis/sandbox/atlas/atlas-wristband3-mechanical/fixture/Eagle/Wristband3.brd")
     }
 
     func rhino(board: Board, scriptPath: String) {
@@ -52,12 +52,12 @@ class BoardViewController: NSViewController {
         }
         let topPath = "\(board.path)/\(board.name)_top_plate.brd"
         if let topBoard = try? Eagle.load(path: topPath) {
-            topBoard.thickness = 0.8
+            topBoard.thickness = 1.6
             rhino(board: topBoard, scriptPath: scriptPath)
         }
         let bottomPath = "\(board.path)/\(board.name)_bottom_plate.brd"
         if let bottomBoard = try? Eagle.load(path: bottomPath) {
-            bottomBoard.thickness = 0.8
+            bottomBoard.thickness = 1.6
             rhino(board: bottomBoard, scriptPath: scriptPath)
         }
 

@@ -865,6 +865,9 @@ class Fixture {
             let x = testPoint.x + dx
             let y = testPoint.y + dy
             lines += String(format: "move '%@' (%f %f);\n", testPoint.name, bottom ? -x : x, y)
+            if !bottom {
+                lines += String(format: "mirror '%@';\n", testPoint.name)
+            }
         }
 
         for testPoint in ledTestPoints {

@@ -22,6 +22,7 @@
 - (void)indicatePool;
 - (void)refreshPool;
 - (void)updatePool:(FDIntelHex *)firmware;
+- (void)erasePool;
 - (void)resetPool;
 - (void)setTimePool;
 - (void)storagePool;

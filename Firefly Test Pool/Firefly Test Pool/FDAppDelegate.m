@@ -178,6 +178,11 @@
     [_poolManager updatePool:[self getFirmware]];
 }
 
+- (IBAction)erasePool:(id)sender
+{
+    [_poolManager erasePool];
+}
+
 - (IBAction)resetPool:(id)sender
 {
     [_poolManager resetPool];

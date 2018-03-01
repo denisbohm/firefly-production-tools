@@ -248,6 +248,13 @@
     }];
 }
 
+- (void)erasePool
+{
+    [self executeBlockOnSelectedOpen:^void(FDFireflyIce *fireflyIce, FDFireflyIceChannelBLE *channel) {
+        [fireflyIce.coder sendProvision:channel dictionary:[NSDictionary dictionary] options:FD_CONTROL_PROVISION_OPTION_SENSING_ERASE | FD_CONTROL_PROVISION_OPTION_RESET];
+    }];
+}
+
 - (void)storagePool
 {
     [self executeBlockOnSelectedOpen:^void(FDFireflyIce *fireflyIce, FDFireflyIceChannelBLE *channel) {
