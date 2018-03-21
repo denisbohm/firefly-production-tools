@@ -42,6 +42,21 @@ class ViewController: NSViewController {
             NSLog("error: \(error)")
         }
     }
+    
+    @IBAction func update(_ sender: Any) {
+        if let conversion = try? fixture.voltageInstrument?.convert() {
+            mainVoltageTextField.stringValue = String(format: "%0.1f V", conversion!.voltage)
+        }
+        if let conversion = try? fixture.auxiliaryVoltageInstrument?.convert() {
+            auxiliaryVoltageTextField.stringValue = String(format: "%0.1f V", conversion!.voltage)
+        }
+        if let conversion = try? fixture.usbCurrentInstrument?.convert() {
+            usbCurrentTextField.stringValue = String(format: "%0.1f mA", conversion!.current * 1000.0)
+        }
+        if let conversion = try? fixture.batteryInstrument?.convert() {
+            batterySimulatorCurrentTextField.stringValue = String(format: "%0.1f mA", conversion!.current * 1000.0)
+        }
+    }
 
     override var representedObject: Any? {
         didSet {
@@ -102,9 +117,11 @@ class ViewController: NSViewController {
     
     @IBAction func swd1Identify(_ sender: Any) {
         NSLog("SWD 1 identify")
-        let serialWireDebug = FDSerialWireDebug()
-        serialWireDebug.serialWire = fixture.serialWireInstrument!
         do {
+            try fixture.serialWireInstrument?.setEnabled(true)
+            
+            let serialWireDebug = FDSerialWireDebug()
+            serialWireDebug.serialWire = fixture.serialWireInstrument!
             let serialWire = serialWireDebug.serialWire!
             serialWire.setReset(true)
             try serialWire.write()
@@ -130,7 +147,7 @@ class ViewController: NSViewController {
             try serialWireDebug.initializeAccessPort()
             var cpuID: UInt32 = 0
             try serialWireDebug.readCPUID(&cpuID)
-            NSLog(FDSerialWireDebug.cpuIDDescription(cpuID))
+            swd1TextField.stringValue = FDSerialWireDebug.cpuIDDescription(cpuID)
         } catch {
             NSLog("error \(error)")
         }
