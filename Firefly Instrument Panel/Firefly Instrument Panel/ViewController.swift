@@ -10,7 +10,7 @@ import Cocoa
 import ARMSerialWireDebug
 import FireflyInstruments
 
-class ViewController: NSViewController {
+class ViewController: NSViewController, Presenter {
 
     @IBOutlet var buttonRelaySegmentedControl: NSSegmentedControl!
     @IBOutlet var usbPowerRelaySegmentedControl: NSSegmentedControl!
@@ -28,8 +28,10 @@ class ViewController: NSViewController {
     @IBOutlet var batterySimulatorEnableSegmentedControl: NSSegmentedControl!
     @IBOutlet var swd1TextField: NSTextField!
     @IBOutlet var swd2TextField: NSTextField!
+    @IBOutlet var messageTextView: NSTextView!
     
     let fixture = Fixture()
+    var runner: Runner? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -117,44 +119,40 @@ class ViewController: NSViewController {
     
     @IBAction func swd1Identify(_ sender: Any) {
         NSLog("SWD 1 identify")
-        do {
-            try fixture.serialWireInstrument?.setEnabled(true)
-            
-            let serialWireDebug = FDSerialWireDebug()
-            serialWireDebug.serialWire = fixture.serialWireInstrument!
-            let serialWire = serialWireDebug.serialWire!
-            serialWire.setReset(true)
-            try serialWire.write()
-            Thread.sleep(forTimeInterval: 0.1)
-            serialWire.setReset(false)
-            try serialWire.write()
-            Thread.sleep(forTimeInterval: 1.0)
-            
-            serialWireDebug.resetDebugPort()
-            try serialWire.write()
-            
-            var debugPortIDCode: UInt32 = 0
-            try serialWireDebug.readPortIDCode(&debugPortIDCode)
-            NSLog(FDSerialWireDebug.debugPortIDCodeDescription(debugPortIDCode))
-
-            try serialWireDebug.initializeDebugPort()
-            try serialWireDebug.halt()
-            
-            // !!! In "fresh" boards there seems to be interrupts pending, this seems to clear it (this needs more investigation) -denis
-            try serialWireDebug.writeMemory(0xE000ED0C, value: 0x05FA0001)
-            try serialWireDebug.step()
-            
-            try serialWireDebug.initializeAccessPort()
-            var cpuID: UInt32 = 0
-            try serialWireDebug.readCPUID(&cpuID)
-            swd1TextField.stringValue = FDSerialWireDebug.cpuIDDescription(cpuID)
-        } catch {
-            NSLog("error \(error)")
+        run(script: IdentifyScript(fixture: fixture, presenter: self))
+    }
+    
+    @IBAction func flashIdentify(_ sender: Any) {
+        NSLog("flash identify")
+        run(script: SpiFlashTestScript(fixture: fixture, presenter: self))
+    }
+    
+    func run(script: Script) {
+        messageTextView.string = ""
+        
+        runner = Runner(fixture: fixture, presenter: self, script: script)
+        runner?.start()
+    }
+    
+    func showOnMain(message: String) {
+        messageTextView.textStorage?.append(NSAttributedString(string: message + "\n"))
+        messageTextView.scrollToEndOfDocument(nil)
+    }
+    
+    func show(message: String) {
+        DispatchQueue.main.async() {
+            self.showOnMain(message: message)
         }
     }
     
-    @IBAction func swd2Identify(_ sender: Any) {
-        NSLog("SWD 2 identify")
+    func completedOnMain() {
+        runner = nil
+    }
+    
+    func completed() {
+        DispatchQueue.main.async() {
+            self.completedOnMain()
+        }
     }
     
 }
