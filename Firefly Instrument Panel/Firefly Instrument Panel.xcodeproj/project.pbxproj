@@ -12,6 +12,7 @@
 		921B4D56206AB0D30072BEAF /* SerialWireDebugScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921B4D55206AB0D30072BEAF /* SerialWireDebugScript.swift */; };
 		921B4D58206AB1BF0072BEAF /* SpiFlashTestScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921B4D57206AB1BF0072BEAF /* SpiFlashTestScript.swift */; };
 		921B4D62206AD1DA0072BEAF /* firefly_test_suite.elf in Resources */ = {isa = PBXBuildFile; fileRef = 921B4D61206AD1DA0072BEAF /* firefly_test_suite.elf */; };
+		925FB256206BDFDF0071E417 /* Heap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925FB255206BDFDF0071E417 /* Heap.swift */; };
 		92654D03205B06E9008D000D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92654D02205B06E9008D000D /* AppDelegate.swift */; };
 		92654D05205B06E9008D000D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92654D04205B06E9008D000D /* ViewController.swift */; };
 		92654D07205B06E9008D000D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92654D06205B06E9008D000D /* Assets.xcassets */; };
@@ -84,6 +85,7 @@
 		921B4D57206AB1BF0072BEAF /* SpiFlashTestScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpiFlashTestScript.swift; sourceTree = "<group>"; };
 		921B4D61206AD1DA0072BEAF /* firefly_test_suite.elf */ = {isa = PBXFileReference; lastKnownFileType = file; name = firefly_test_suite.elf; path = "../../../firefly-ice-firmware/fixture/firefly_test_suite THUMB Debug/firefly_test_suite.elf"; sourceTree = "<group>"; };
 		923900DC2062D94400EC9AB4 /* Firefly Instrument Panel.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Firefly Instrument Panel.entitlements"; sourceTree = "<group>"; };
+		925FB255206BDFDF0071E417 /* Heap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Heap.swift; sourceTree = "<group>"; };
 		92654CFF205B06E9008D000D /* Firefly Instrument Panel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Firefly Instrument Panel.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		92654D02205B06E9008D000D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		92654D04205B06E9008D000D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 				921B4D55206AB0D30072BEAF /* SerialWireDebugScript.swift */,
 				921B4D50206AAA7B0072BEAF /* IdentifyScript.swift */,
 				921B4D57206AB1BF0072BEAF /* SpiFlashTestScript.swift */,
+				925FB255206BDFDF0071E417 /* Heap.swift */,
 			);
 			path = "Firefly Instrument Panel";
 			sourceTree = "<group>";
@@ -319,6 +322,7 @@
 				921B4D51206AAA7B0072BEAF /* IdentifyScript.swift in Sources */,
 				92660282206AA4A400DF7B43 /* Script.swift in Sources */,
 				92660280206AA30700DF7B43 /* Presenter.swift in Sources */,
+				925FB256206BDFDF0071E417 /* Heap.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

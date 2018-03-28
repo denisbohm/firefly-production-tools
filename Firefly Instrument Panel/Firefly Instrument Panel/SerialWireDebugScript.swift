@@ -14,6 +14,7 @@ class SerialWireDebugScript: FixtureScript {
     var serialWireDebug: FDSerialWireDebug? = nil
     let executable = FDExecutable()
     let cortex = FDCortexM()
+    var trace = true
     
     func setupSerialWireDebug() throws {
         presenter.show(message: "attaching to serial wire debug port...")
@@ -123,6 +124,26 @@ class SerialWireDebugScript: FixtureScript {
         if cortex.heapRange.location < (cortex.programRange.location + cortex.programRange.length) {
             throw FixtureScript.ScriptError.setupFailure
         }
+    }
+    
+    func run(_ address: UInt32, r0: UInt32 = 0, r1: UInt32 = 0, r2: UInt32 = 0, r3: UInt32 = 0, timeout: TimeInterval = 1.0) throws -> UInt32 {
+        try cortex.setupCall(address, r0: r0, r1: r1, r2: r2, r3: r3, run: !trace)
+        var resultR0: UInt32 = 0
+        if trace {
+            var pc: UInt32 = 0
+            while true {
+                try serialWireDebug?.readRegister(UInt16(CORTEX_M_REGISTER_PC), value: &pc)
+                if pc == cortex.breakLocation {
+                    break
+                }
+                NSLog("pc %08x", pc)
+                try serialWireDebug?.step()
+            }
+            try serialWireDebug?.readRegister(UInt16(CORTEX_M_REGISTER_R0), value: &resultR0)
+        } else {
+            try cortex.wait(forHalt: timeout, resultR0: &resultR0)
+        }
+        return resultR0
     }
     
 }
