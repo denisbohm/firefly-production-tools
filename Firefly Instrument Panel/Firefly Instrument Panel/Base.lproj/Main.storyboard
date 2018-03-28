@@ -709,306 +709,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="750" height="572"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ger-JP-dlC">
-                                <rect key="frame" x="18" y="529" width="70" height="24"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="66" id="YFJ-wn-8oG"/>
-                                </constraints>
-                                <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="1Au-VJ-uTH">
-                                    <font key="font" metaFont="system"/>
-                                    <segments>
-                                        <segment label="Off" width="32" selected="YES"/>
-                                        <segment label="On" width="32" tag="1"/>
-                                    </segments>
-                                </segmentedCell>
-                                <connections>
-                                    <action selector="buttonRelayChanged:" target="XfG-lQ-9wD" id="c9u-J5-3pW"/>
-                                </connections>
-                            </segmentedControl>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bve-Jw-9ZW">
-                                <rect key="frame" x="94" y="533" width="638" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Button Relay" id="ptn-Ih-9Si">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="e3o-UV-lUL">
-                                <rect key="frame" x="18" y="502" width="70" height="24"/>
-                                <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="Mmc-il-Tc6">
-                                    <font key="font" metaFont="system"/>
-                                    <segments>
-                                        <segment label="Off" width="32" selected="YES"/>
-                                        <segment label="On" width="32" tag="1"/>
-                                    </segments>
-                                </segmentedCell>
-                                <connections>
-                                    <action selector="usbPowerRelayChanged:" target="XfG-lQ-9wD" id="gkA-Je-WgT"/>
-                                </connections>
-                            </segmentedControl>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="P1w-V2-0uR">
-                                <rect key="frame" x="94" y="506" width="638" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="USB Power Relay" id="MoH-j8-cR5">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kqX-3l-4xd">
-                                <rect key="frame" x="18" y="475" width="70" height="24"/>
-                                <segmentedCell key="cell" enabled="NO" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="9q1-ue-dnO">
-                                    <font key="font" metaFont="system"/>
-                                    <segments>
-                                        <segment label="Off" width="32" selected="YES"/>
-                                        <segment label="On" width="32" tag="1"/>
-                                    </segments>
-                                </segmentedCell>
-                            </segmentedControl>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NcF-9A-ZYg">
-                                <rect key="frame" x="94" y="479" width="638" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="USB Data Relay" id="Vo7-zK-0v0">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="621-on-emg">
-                                <rect key="frame" x="18" y="448" width="70" height="24"/>
-                                <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="xdH-3a-T1J">
-                                    <font key="font" metaFont="system"/>
-                                    <segments>
-                                        <segment label="Off" width="32" selected="YES"/>
-                                        <segment label="On" width="32" tag="1"/>
-                                    </segments>
-                                </segmentedCell>
-                                <connections>
-                                    <action selector="voltageSenseRelayChanged:" target="XfG-lQ-9wD" id="W0d-Rw-kn5"/>
-                                </connections>
-                            </segmentedControl>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="u0u-vg-3Em">
-                                <rect key="frame" x="94" y="452" width="638" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Voltage Sense Relay" id="Olh-8y-uWE">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1es-4s-CHO">
-                                <rect key="frame" x="18" y="419" width="70" height="24"/>
-                                <segmentedCell key="cell" enabled="NO" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="SSm-g5-Rfo">
-                                    <font key="font" metaFont="system"/>
-                                    <segments>
-                                        <segment label="Off" width="32" selected="YES"/>
-                                        <segment label="On" width="32" tag="1"/>
-                                    </segments>
-                                </segmentedCell>
-                            </segmentedControl>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mBe-Ze-PgJ">
-                                <rect key="frame" x="94" y="423" width="638" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="Battery Voltage Sense Relay" id="65J-DK-gRp">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yNn-sQ-zpQ">
-                                <rect key="frame" x="18" y="392" width="70" height="24"/>
-                                <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="ZXW-6D-udf">
-                                    <font key="font" metaFont="system"/>
-                                    <segments>
-                                        <segment label="Off" width="32" selected="YES"/>
-                                        <segment label="On" width="32" tag="1"/>
-                                    </segments>
-                                </segmentedCell>
-                                <connections>
-                                    <action selector="fillSupercapRelayChanged:" target="XfG-lQ-9wD" id="9C8-93-XHQ"/>
-                                </connections>
-                            </segmentedControl>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MhS-Pk-ZSP">
-                                <rect key="frame" x="94" y="396" width="638" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Fill Supercap Relay" id="NwP-Bk-nnk">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="lFP-Md-SiT">
-                                <rect key="frame" x="18" y="365" width="70" height="24"/>
-                                <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="GQQ-Xq-Jgk">
-                                    <font key="font" metaFont="system"/>
-                                    <segments>
-                                        <segment label="Off" width="32" selected="YES"/>
-                                        <segment label="On" width="32" tag="1"/>
-                                    </segments>
-                                </segmentedCell>
-                                <connections>
-                                    <action selector="drainSupercapRelayChanged:" target="XfG-lQ-9wD" id="7Cc-qe-qrc"/>
-                                </connections>
-                            </segmentedControl>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dQW-va-lO3">
-                                <rect key="frame" x="94" y="369" width="638" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Drain Supercap Relay" id="u7w-Xt-csp">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hDX-v9-788">
-                                <rect key="frame" x="18" y="338" width="70" height="24"/>
-                                <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="4IH-Fr-e19">
-                                    <font key="font" metaFont="system"/>
-                                    <segments>
-                                        <segment label="Off" width="32" selected="YES"/>
-                                        <segment label="On" width="32" tag="1"/>
-                                    </segments>
-                                </segmentedCell>
-                                <connections>
-                                    <action selector="supercapToBatteryRelayChanged:" target="XfG-lQ-9wD" id="gvZ-98-zhD"/>
-                                </connections>
-                            </segmentedControl>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ncq-R7-hre">
-                                <rect key="frame" x="94" y="342" width="638" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Supercap To Battery Relay" id="zgu-Sk-LPW">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eLw-wf-haf">
-                                <rect key="frame" x="18" y="309" width="70" height="24"/>
-                                <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="nI7-eY-YDA">
-                                    <font key="font" metaFont="system"/>
-                                    <segments>
-                                        <segment label="Off" width="32" selected="YES"/>
-                                        <segment label="On" width="32" tag="1"/>
-                                    </segments>
-                                </segmentedCell>
-                                <connections>
-                                    <action selector="simulatorToBatteryRelayChanged:" target="XfG-lQ-9wD" id="PGw-EZ-nzR"/>
-                                </connections>
-                            </segmentedControl>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="h3N-2A-cR9">
-                                <rect key="frame" x="94" y="313" width="638" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Simulator To Battery Relay" id="EFg-iw-vgU">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xTM-oe-nhD">
-                                <rect key="frame" x="18" y="125" width="70" height="24"/>
-                                <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="vBJ-6q-Adt">
-                                    <font key="font" metaFont="system"/>
-                                    <segments>
-                                        <segment label="Off" width="32" selected="YES"/>
-                                        <segment label="On" width="32" tag="1"/>
-                                    </segments>
-                                </segmentedCell>
-                                <connections>
-                                    <action selector="batterySimulatorEnableChanged:" target="XfG-lQ-9wD" id="eMA-ny-PG1"/>
-                                </connections>
-                            </segmentedControl>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YCb-dB-zs0">
-                                <rect key="frame" x="94" y="129" width="638" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Battery Simulator" id="TAk-KM-o3d">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sTX-Dn-iAo">
-                                <rect key="frame" x="18" y="286" width="70" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="3.1 V" id="ctA-gd-V1v">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zol-kY-kfa">
-                                <rect key="frame" x="94" y="286" width="638" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Battery Simulator Voltage" id="v8Y-Be-CmL">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mfY-3q-NoP">
-                                <rect key="frame" x="18" y="261" width="70" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="3.1 V" id="1BR-yn-KmH">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vtZ-ar-bZm">
-                                <rect key="frame" x="94" y="261" width="638" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Main Voltage" id="aRa-Od-wsm">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dsX-Ry-GYJ">
-                                <rect key="frame" x="18" y="236" width="70" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="3.1 V" id="y1x-N0-0st">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Xzq-hy-zaq">
-                                <rect key="frame" x="94" y="236" width="638" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Auxiliary Voltage" id="g5e-yz-5s1">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="q75-rm-HpG">
-                                <rect key="frame" x="18" y="211" width="70" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="10.3 mA" id="Pfy-dH-pl9">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="V7h-df-cuN">
-                                <rect key="frame" x="94" y="211" width="638" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="USB Current" id="v17-KF-Vzi">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="avP-Ik-HNc">
-                                <rect key="frame" x="18" y="186" width="70" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="10.3 uA" id="9Sl-GP-KCz">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="LV6-ad-wdQ">
-                                <rect key="frame" x="94" y="186" width="638" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Battery Simulator Current" id="XPL-y2-ap7">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cw0-Nt-FNS">
-                                <rect key="frame" x="20" y="156" width="66" height="22"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="right" title="3.9 V" drawsBackground="YES" id="JIH-U6-8mU">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                                <connections>
-                                    <action selector="batterySimulatorVoltageChanged:" target="XfG-lQ-9wD" id="YXt-0i-ZAG"/>
-                                </connections>
-                            </textField>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="US4-ko-GUK">
-                                <rect key="frame" x="14" y="79" width="79" height="32"/>
+                                <rect key="frame" x="14" y="13" width="80" height="32"/>
                                 <buttonCell key="cell" type="push" title="SWD 1" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="aMU-le-EsT">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -1017,72 +719,18 @@
                                     <action selector="swd1Identify:" target="XfG-lQ-9wD" id="vK9-GV-5LP"/>
                                 </connections>
                             </button>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YpD-LL-vST">
-                                <rect key="frame" x="14" y="46" width="80" height="32"/>
-                                <buttonCell key="cell" type="push" title="Flash" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="91P-p1-evC">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="flashIdentify:" target="XfG-lQ-9wD" id="568-sT-3ib"/>
-                                </connections>
-                            </button>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="d69-W2-OtM">
-                                <rect key="frame" x="94" y="90" width="638" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="not identified" id="Tyb-9Z-SRr">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5gD-o7-N6q">
-                                <rect key="frame" x="94" y="55" width="638" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="not identified" id="2z6-Gi-cmd">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="h3H-Bm-bkZ">
-                                <rect key="frame" x="94" y="159" width="638" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Battery Simulator Voltage" id="NTa-B1-BCP">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VYd-a4-q0g">
-                                <rect key="frame" x="14" y="13" width="143" height="32"/>
-                                <buttonCell key="cell" type="push" title="Attach To Fixture" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LsN-BH-0ll">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="attach:" target="XfG-lQ-9wD" id="NeS-zF-tBj"/>
-                                </connections>
-                            </button>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7nz-zR-7XU">
-                                <rect key="frame" x="195" y="13" width="85" height="32"/>
-                                <buttonCell key="cell" type="push" title="Update" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="JAX-y9-E5p">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="update:" target="XfG-lQ-9wD" id="SIP-hF-rkt"/>
-                                </connections>
-                            </button>
                             <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ydp-I9-FK1">
-                                <rect key="frame" x="282" y="20" width="448" height="530"/>
+                                <rect key="frame" x="20" y="61" width="710" height="489"/>
                                 <clipView key="contentView" id="bcP-oX-2wy">
-                                    <rect key="frame" x="1" y="1" width="446" height="528"/>
+                                    <rect key="frame" x="1" y="1" width="708" height="487"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textView editable="NO" importsGraphics="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="Lbt-YY-wCa">
-                                            <rect key="frame" x="0.0" y="0.0" width="446" height="528"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="708" height="487"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <size key="minSize" width="446" height="528"/>
-                                            <size key="maxSize" width="463" height="10000000"/>
+                                            <size key="minSize" width="708" height="487"/>
+                                            <size key="maxSize" width="708" height="10000000"/>
                                             <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </textView>
                                     </subviews>
@@ -1093,147 +741,49 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="Ruo-0f-kqC">
-                                    <rect key="frame" x="431" y="1" width="16" height="528"/>
+                                    <rect key="frame" x="693" y="1" width="16" height="487"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="LlG-zU-AR2">
+                                <rect key="frame" x="654" y="13" width="82" height="32"/>
+                                <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="dh4-h7-IML">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                    <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="cancel:" target="XfG-lQ-9wD" id="OnR-pU-iAt"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YpD-LL-vST">
+                                <rect key="frame" x="94" y="13" width="73" height="32"/>
+                                <buttonCell key="cell" type="push" title="Flash" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="91P-p1-evC">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="flashIdentify:" target="XfG-lQ-9wD" id="568-sT-3ib"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="cw0-Nt-FNS" firstAttribute="leading" secondItem="xTM-oe-nhD" secondAttribute="leading" id="0Cl-3l-fjJ"/>
-                            <constraint firstItem="Ger-JP-dlC" firstAttribute="trailing" secondItem="e3o-UV-lUL" secondAttribute="trailing" id="0DW-hZ-wDz"/>
-                            <constraint firstItem="YpD-LL-vST" firstAttribute="top" secondItem="US4-ko-GUK" secondAttribute="bottom" constant="12" symbolic="YES" id="1V8-jv-b3I"/>
-                            <constraint firstItem="NcF-9A-ZYg" firstAttribute="leading" secondItem="u0u-vg-3Em" secondAttribute="leading" id="1ce-Fg-yBv"/>
-                            <constraint firstItem="lFP-Md-SiT" firstAttribute="leading" secondItem="hDX-v9-788" secondAttribute="leading" id="2XH-Zv-wAq"/>
-                            <constraint firstItem="xTM-oe-nhD" firstAttribute="leading" secondItem="US4-ko-GUK" secondAttribute="leading" id="2aL-F1-VSp"/>
-                            <constraint firstItem="eLw-wf-haf" firstAttribute="trailing" secondItem="sTX-Dn-iAo" secondAttribute="trailing" id="3Hq-4x-2FP"/>
-                            <constraint firstItem="h3H-Bm-bkZ" firstAttribute="leading" secondItem="YCb-dB-zs0" secondAttribute="leading" id="3d3-Y0-vzZ"/>
-                            <constraint firstItem="MhS-Pk-ZSP" firstAttribute="leading" secondItem="dQW-va-lO3" secondAttribute="leading" id="3ec-7q-zNc"/>
-                            <constraint firstItem="Bve-Jw-9ZW" firstAttribute="trailing" secondItem="P1w-V2-0uR" secondAttribute="trailing" id="3g7-ZC-rob"/>
-                            <constraint firstItem="e3o-UV-lUL" firstAttribute="leading" secondItem="kqX-3l-4xd" secondAttribute="leading" id="3gl-rB-kbh"/>
-                            <constraint firstItem="yNn-sQ-zpQ" firstAttribute="centerY" secondItem="MhS-Pk-ZSP" secondAttribute="centerY" id="5Fb-qy-0AP"/>
-                            <constraint firstItem="q75-rm-HpG" firstAttribute="baseline" secondItem="V7h-df-cuN" secondAttribute="baseline" id="5P3-Er-Qsi"/>
-                            <constraint firstItem="lFP-Md-SiT" firstAttribute="top" secondItem="yNn-sQ-zpQ" secondAttribute="bottom" constant="6" id="5WX-C7-BcB"/>
-                            <constraint firstItem="V7h-df-cuN" firstAttribute="trailing" secondItem="LV6-ad-wdQ" secondAttribute="trailing" id="7Ue-uU-h8M"/>
-                            <constraint firstItem="YpD-LL-vST" firstAttribute="leading" secondItem="VYd-a4-q0g" secondAttribute="leading" id="7i1-De-BwR"/>
-                            <constraint firstItem="mBe-Ze-PgJ" firstAttribute="trailing" secondItem="MhS-Pk-ZSP" secondAttribute="trailing" id="81j-0e-ohH"/>
-                            <constraint firstItem="avP-Ik-HNc" firstAttribute="baseline" secondItem="LV6-ad-wdQ" secondAttribute="baseline" id="8nQ-zc-Idz"/>
-                            <constraint firstItem="avP-Ik-HNc" firstAttribute="top" secondItem="q75-rm-HpG" secondAttribute="bottom" constant="8" symbolic="YES" id="9Rk-Fb-oVb"/>
-                            <constraint firstItem="5gD-o7-N6q" firstAttribute="leading" secondItem="YpD-LL-vST" secondAttribute="trailing" constant="8" symbolic="YES" id="9ie-Fi-3Yt"/>
-                            <constraint firstItem="avP-Ik-HNc" firstAttribute="trailing" secondItem="cw0-Nt-FNS" secondAttribute="trailing" id="9m1-C8-gnG"/>
-                            <constraint firstItem="7nz-zR-7XU" firstAttribute="bottom" secondItem="ydp-I9-FK1" secondAttribute="bottom" id="A4l-4c-56x"/>
-                            <constraint firstItem="Xzq-hy-zaq" firstAttribute="leading" secondItem="V7h-df-cuN" secondAttribute="leading" id="ADt-cp-5mT"/>
-                            <constraint firstItem="LV6-ad-wdQ" firstAttribute="leading" secondItem="h3H-Bm-bkZ" secondAttribute="leading" id="AJG-eG-CfV"/>
-                            <constraint firstItem="yNn-sQ-zpQ" firstAttribute="top" secondItem="1es-4s-CHO" secondAttribute="bottom" constant="6" id="AU5-g3-mkI"/>
-                            <constraint firstItem="hDX-v9-788" firstAttribute="leading" secondItem="eLw-wf-haf" secondAttribute="leading" id="BjK-eV-ahL"/>
-                            <constraint firstItem="dsX-Ry-GYJ" firstAttribute="top" secondItem="mfY-3q-NoP" secondAttribute="bottom" constant="8" symbolic="YES" id="C6X-I9-5ws"/>
-                            <constraint firstItem="P1w-V2-0uR" firstAttribute="leading" secondItem="NcF-9A-ZYg" secondAttribute="leading" id="CXM-gA-iV5"/>
-                            <constraint firstItem="Ger-JP-dlC" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" symbolic="YES" id="Cx6-w9-L09"/>
-                            <constraint firstItem="avP-Ik-HNc" firstAttribute="leading" secondItem="cw0-Nt-FNS" secondAttribute="leading" id="DaL-Hw-tN0"/>
-                            <constraint firstItem="zol-kY-kfa" firstAttribute="trailing" secondItem="vtZ-ar-bZm" secondAttribute="trailing" id="Dk6-Uu-ldx"/>
-                            <constraint firstItem="yNn-sQ-zpQ" firstAttribute="trailing" secondItem="lFP-Md-SiT" secondAttribute="trailing" id="ERE-FZ-pV3"/>
-                            <constraint firstItem="US4-ko-GUK" firstAttribute="top" secondItem="xTM-oe-nhD" secondAttribute="bottom" constant="20" symbolic="YES" id="EXD-Nx-PBh"/>
-                            <constraint firstItem="dsX-Ry-GYJ" firstAttribute="leading" secondItem="q75-rm-HpG" secondAttribute="leading" id="Ega-hs-edN"/>
-                            <constraint firstItem="xTM-oe-nhD" firstAttribute="centerX" secondItem="US4-ko-GUK" secondAttribute="centerX" id="FNk-jN-YQe"/>
-                            <constraint firstItem="1es-4s-CHO" firstAttribute="top" secondItem="621-on-emg" secondAttribute="bottom" constant="8" symbolic="YES" id="Fzl-J0-BVB"/>
-                            <constraint firstItem="e3o-UV-lUL" firstAttribute="trailing" secondItem="kqX-3l-4xd" secondAttribute="trailing" id="GXk-iw-xvo"/>
-                            <constraint firstItem="h3N-2A-cR9" firstAttribute="leading" secondItem="zol-kY-kfa" secondAttribute="leading" id="HBR-9f-I0F"/>
-                            <constraint firstItem="V7h-df-cuN" firstAttribute="leading" secondItem="LV6-ad-wdQ" secondAttribute="leading" id="HNZ-ex-1bH"/>
-                            <constraint firstItem="US4-ko-GUK" firstAttribute="leading" secondItem="YpD-LL-vST" secondAttribute="leading" id="Hw7-wA-uTU"/>
-                            <constraint firstItem="kqX-3l-4xd" firstAttribute="trailing" secondItem="621-on-emg" secondAttribute="trailing" id="IJ3-k5-rOd"/>
-                            <constraint firstItem="u0u-vg-3Em" firstAttribute="leading" secondItem="mBe-Ze-PgJ" secondAttribute="leading" id="JZE-sq-eHt"/>
-                            <constraint firstItem="MhS-Pk-ZSP" firstAttribute="trailing" secondItem="dQW-va-lO3" secondAttribute="trailing" id="Jou-4p-1eT"/>
-                            <constraint firstItem="xTM-oe-nhD" firstAttribute="top" secondItem="cw0-Nt-FNS" secondAttribute="bottom" constant="8" symbolic="YES" id="KOP-gz-JLb"/>
-                            <constraint firstItem="1es-4s-CHO" firstAttribute="centerY" secondItem="mBe-Ze-PgJ" secondAttribute="centerY" id="Lg8-kK-Jkf"/>
-                            <constraint firstItem="kqX-3l-4xd" firstAttribute="leading" secondItem="621-on-emg" secondAttribute="leading" id="M7K-B3-wZH"/>
-                            <constraint firstItem="sTX-Dn-iAo" firstAttribute="top" secondItem="eLw-wf-haf" secondAttribute="bottom" constant="8" symbolic="YES" id="MAZ-da-bSN"/>
-                            <constraint firstItem="ncq-R7-hre" firstAttribute="trailing" secondItem="h3N-2A-cR9" secondAttribute="trailing" id="N5Z-D4-FOs"/>
-                            <constraint firstItem="kqX-3l-4xd" firstAttribute="top" secondItem="e3o-UV-lUL" secondAttribute="bottom" constant="6" id="NR2-Xh-Tc9"/>
-                            <constraint firstItem="cw0-Nt-FNS" firstAttribute="trailing" secondItem="xTM-oe-nhD" secondAttribute="trailing" id="NrS-52-FD7"/>
-                            <constraint firstItem="Xzq-hy-zaq" firstAttribute="trailing" secondItem="V7h-df-cuN" secondAttribute="trailing" id="Nt4-2s-XjV"/>
-                            <constraint firstItem="lFP-Md-SiT" firstAttribute="trailing" secondItem="hDX-v9-788" secondAttribute="trailing" id="PMx-vg-xQh"/>
-                            <constraint firstItem="eLw-wf-haf" firstAttribute="top" secondItem="hDX-v9-788" secondAttribute="bottom" constant="8" symbolic="YES" id="PRJ-Id-GjR"/>
-                            <constraint firstItem="Ger-JP-dlC" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="PV2-Qw-5FI"/>
-                            <constraint firstItem="sTX-Dn-iAo" firstAttribute="baseline" secondItem="zol-kY-kfa" secondAttribute="baseline" id="TFb-yk-wIW"/>
-                            <constraint firstItem="zol-kY-kfa" firstAttribute="leading" secondItem="vtZ-ar-bZm" secondAttribute="leading" id="TGF-Z0-B9m"/>
-                            <constraint firstItem="VYd-a4-q0g" firstAttribute="baseline" secondItem="7nz-zR-7XU" secondAttribute="baseline" id="Tfc-eh-Dh2"/>
-                            <constraint firstItem="NcF-9A-ZYg" firstAttribute="trailing" secondItem="u0u-vg-3Em" secondAttribute="trailing" id="URp-CF-wYa"/>
-                            <constraint firstItem="1es-4s-CHO" firstAttribute="leading" secondItem="yNn-sQ-zpQ" secondAttribute="leading" id="V9n-Rj-t4z"/>
-                            <constraint firstItem="YpD-LL-vST" firstAttribute="centerY" secondItem="5gD-o7-N6q" secondAttribute="centerY" id="VDU-cl-mEx"/>
-                            <constraint firstItem="q75-rm-HpG" firstAttribute="trailing" secondItem="avP-Ik-HNc" secondAttribute="trailing" id="Vid-fD-Avt"/>
-                            <constraint firstItem="US4-ko-GUK" firstAttribute="centerX" secondItem="YpD-LL-vST" secondAttribute="centerX" id="Vjv-GD-dgt"/>
-                            <constraint firstItem="yNn-sQ-zpQ" firstAttribute="leading" secondItem="lFP-Md-SiT" secondAttribute="leading" id="Vzf-mg-oQi"/>
-                            <constraint firstItem="P1w-V2-0uR" firstAttribute="trailing" secondItem="NcF-9A-ZYg" secondAttribute="trailing" id="YEk-zZ-ZV6"/>
-                            <constraint firstItem="eLw-wf-haf" firstAttribute="leading" secondItem="sTX-Dn-iAo" secondAttribute="leading" id="Yrf-88-ura"/>
-                            <constraint firstItem="US4-ko-GUK" firstAttribute="top" secondItem="d69-W2-OtM" secondAttribute="top" id="ap1-by-WI1"/>
-                            <constraint firstItem="Ger-JP-dlC" firstAttribute="centerY" secondItem="Bve-Jw-9ZW" secondAttribute="centerY" id="b4S-0G-Xo8"/>
-                            <constraint firstItem="u0u-vg-3Em" firstAttribute="trailing" secondItem="mBe-Ze-PgJ" secondAttribute="trailing" id="blR-kq-gcp"/>
-                            <constraint firstItem="621-on-emg" firstAttribute="top" secondItem="kqX-3l-4xd" secondAttribute="bottom" constant="6" id="cGb-Y6-Opv"/>
-                            <constraint firstItem="7nz-zR-7XU" firstAttribute="leading" secondItem="VYd-a4-q0g" secondAttribute="trailing" constant="50" id="cZJ-e3-ibC"/>
-                            <constraint firstItem="mfY-3q-NoP" firstAttribute="baseline" secondItem="vtZ-ar-bZm" secondAttribute="baseline" id="cyT-Qo-Lox"/>
-                            <constraint firstItem="sTX-Dn-iAo" firstAttribute="leading" secondItem="mfY-3q-NoP" secondAttribute="leading" id="dab-pk-A8I"/>
-                            <constraint firstItem="621-on-emg" firstAttribute="trailing" secondItem="1es-4s-CHO" secondAttribute="trailing" id="daw-yu-vJr"/>
-                            <constraint firstItem="Bve-Jw-9ZW" firstAttribute="leading" secondItem="P1w-V2-0uR" secondAttribute="leading" id="ds8-xi-vgL"/>
-                            <constraint firstItem="ydp-I9-FK1" firstAttribute="leading" secondItem="7nz-zR-7XU" secondAttribute="trailing" constant="8" symbolic="YES" id="e91-Zp-Vt0"/>
-                            <constraint firstItem="h3H-Bm-bkZ" firstAttribute="trailing" secondItem="YCb-dB-zs0" secondAttribute="trailing" id="eA0-lP-375"/>
-                            <constraint firstItem="e3o-UV-lUL" firstAttribute="centerY" secondItem="P1w-V2-0uR" secondAttribute="centerY" id="eiw-dE-d28"/>
-                            <constraint firstItem="mfY-3q-NoP" firstAttribute="trailing" secondItem="dsX-Ry-GYJ" secondAttribute="trailing" id="f5b-7I-bAx"/>
-                            <constraint firstItem="LV6-ad-wdQ" firstAttribute="trailing" secondItem="h3H-Bm-bkZ" secondAttribute="trailing" id="fJ1-L7-Ghd"/>
-                            <constraint firstItem="dsX-Ry-GYJ" firstAttribute="trailing" secondItem="q75-rm-HpG" secondAttribute="trailing" id="fS4-91-eS7"/>
-                            <constraint firstItem="1es-4s-CHO" firstAttribute="trailing" secondItem="yNn-sQ-zpQ" secondAttribute="trailing" id="gI2-pw-i18"/>
-                            <constraint firstItem="mfY-3q-NoP" firstAttribute="leading" secondItem="dsX-Ry-GYJ" secondAttribute="leading" id="gUm-wW-blP"/>
-                            <constraint firstItem="h3N-2A-cR9" firstAttribute="trailing" secondItem="zol-kY-kfa" secondAttribute="trailing" id="gWc-WN-rC2"/>
-                            <constraint firstItem="lFP-Md-SiT" firstAttribute="centerY" secondItem="dQW-va-lO3" secondAttribute="centerY" id="iJ5-Aa-XLp"/>
-                            <constraint firstItem="xTM-oe-nhD" firstAttribute="centerY" secondItem="YCb-dB-zs0" secondAttribute="centerY" id="j9d-aY-URt"/>
-                            <constraint firstItem="621-on-emg" firstAttribute="centerY" secondItem="u0u-vg-3Em" secondAttribute="centerY" id="jEN-PL-5El"/>
-                            <constraint firstItem="q75-rm-HpG" firstAttribute="leading" secondItem="avP-Ik-HNc" secondAttribute="leading" id="jiE-Jq-KE0"/>
-                            <constraint firstItem="d69-W2-OtM" firstAttribute="leading" secondItem="5gD-o7-N6q" secondAttribute="leading" id="mGf-VQ-5ky"/>
-                            <constraint firstItem="sTX-Dn-iAo" firstAttribute="trailing" secondItem="mfY-3q-NoP" secondAttribute="trailing" id="nUA-eC-Ca4"/>
-                            <constraint firstItem="mBe-Ze-PgJ" firstAttribute="leading" secondItem="MhS-Pk-ZSP" secondAttribute="leading" id="oR2-UQ-ANo"/>
-                            <constraint firstItem="vtZ-ar-bZm" firstAttribute="leading" secondItem="Xzq-hy-zaq" secondAttribute="leading" id="pHR-Fm-apv"/>
-                            <constraint firstAttribute="bottom" secondItem="VYd-a4-q0g" secondAttribute="bottom" constant="20" symbolic="YES" id="pQa-FJ-QL6"/>
-                            <constraint firstItem="e3o-UV-lUL" firstAttribute="top" secondItem="Ger-JP-dlC" secondAttribute="bottom" constant="6" id="qcc-6i-oXc"/>
-                            <constraint firstItem="cw0-Nt-FNS" firstAttribute="baseline" secondItem="h3H-Bm-bkZ" secondAttribute="baseline" id="quu-l6-XHo"/>
-                            <constraint firstItem="dQW-va-lO3" firstAttribute="trailing" secondItem="ncq-R7-hre" secondAttribute="trailing" id="r96-cL-Cei"/>
-                            <constraint firstItem="hDX-v9-788" firstAttribute="centerY" secondItem="ncq-R7-hre" secondAttribute="centerY" id="rRy-N9-MCO"/>
-                            <constraint firstItem="cw0-Nt-FNS" firstAttribute="top" secondItem="avP-Ik-HNc" secondAttribute="bottom" constant="8" symbolic="YES" id="s3s-io-JAb"/>
-                            <constraint firstItem="YCb-dB-zs0" firstAttribute="leading" secondItem="d69-W2-OtM" secondAttribute="leading" id="sCi-Yw-R7X"/>
-                            <constraint firstItem="VYd-a4-q0g" firstAttribute="top" secondItem="YpD-LL-vST" secondAttribute="bottom" constant="12" symbolic="YES" id="sUS-gF-ZZf"/>
-                            <constraint firstItem="dsX-Ry-GYJ" firstAttribute="baseline" secondItem="Xzq-hy-zaq" secondAttribute="baseline" id="sqp-eV-db0"/>
-                            <constraint firstItem="Bve-Jw-9ZW" firstAttribute="trailing" secondItem="ydp-I9-FK1" secondAttribute="trailing" id="tJx-DX-8Pd"/>
-                            <constraint firstItem="mfY-3q-NoP" firstAttribute="top" secondItem="sTX-Dn-iAo" secondAttribute="bottom" constant="8" symbolic="YES" id="tor-RA-Izs"/>
-                            <constraint firstItem="eLw-wf-haf" firstAttribute="centerY" secondItem="h3N-2A-cR9" secondAttribute="centerY" id="uTa-E0-Jgy"/>
-                            <constraint firstItem="ncq-R7-hre" firstAttribute="leading" secondItem="h3N-2A-cR9" secondAttribute="leading" id="urY-zD-uvd"/>
-                            <constraint firstItem="YCb-dB-zs0" firstAttribute="trailing" secondItem="d69-W2-OtM" secondAttribute="trailing" id="vJ9-ZC-0Ks"/>
-                            <constraint firstItem="d69-W2-OtM" firstAttribute="trailing" secondItem="5gD-o7-N6q" secondAttribute="trailing" id="vcN-C4-Fk3"/>
-                            <constraint firstItem="Bve-Jw-9ZW" firstAttribute="top" secondItem="ydp-I9-FK1" secondAttribute="top" id="wgo-cN-Luq"/>
-                            <constraint firstItem="621-on-emg" firstAttribute="leading" secondItem="1es-4s-CHO" secondAttribute="leading" id="xZT-RV-oHx"/>
-                            <constraint firstItem="kqX-3l-4xd" firstAttribute="centerY" secondItem="NcF-9A-ZYg" secondAttribute="centerY" id="xa8-7D-GWq"/>
-                            <constraint firstItem="dQW-va-lO3" firstAttribute="leading" secondItem="ncq-R7-hre" secondAttribute="leading" id="xzf-PP-xr2"/>
-                            <constraint firstItem="hDX-v9-788" firstAttribute="trailing" secondItem="eLw-wf-haf" secondAttribute="trailing" id="yG0-cX-yyj"/>
-                            <constraint firstItem="q75-rm-HpG" firstAttribute="top" secondItem="dsX-Ry-GYJ" secondAttribute="bottom" constant="8" symbolic="YES" id="zBY-5R-x8p"/>
-                            <constraint firstItem="vtZ-ar-bZm" firstAttribute="trailing" secondItem="Xzq-hy-zaq" secondAttribute="trailing" id="zCF-z4-BwV"/>
-                            <constraint firstItem="Ger-JP-dlC" firstAttribute="leading" secondItem="e3o-UV-lUL" secondAttribute="leading" id="zKD-u9-Mpo"/>
-                            <constraint firstAttribute="trailing" secondItem="Bve-Jw-9ZW" secondAttribute="trailing" constant="20" symbolic="YES" id="zlE-bR-7CP"/>
+                            <constraint firstItem="YpD-LL-vST" firstAttribute="baseline" secondItem="LlG-zU-AR2" secondAttribute="baseline" id="9h7-gU-PMh"/>
+                            <constraint firstAttribute="trailing" secondItem="ydp-I9-FK1" secondAttribute="trailing" constant="20" symbolic="YES" id="9u8-1Y-yXc"/>
+                            <constraint firstItem="YpD-LL-vST" firstAttribute="leading" secondItem="US4-ko-GUK" secondAttribute="trailing" constant="12" symbolic="YES" id="Bfw-75-p4v"/>
+                            <constraint firstItem="ydp-I9-FK1" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="JG8-Z7-rIe"/>
+                            <constraint firstItem="ydp-I9-FK1" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="22" id="VH5-5g-QuL"/>
+                            <constraint firstAttribute="bottom" secondItem="US4-ko-GUK" secondAttribute="bottom" constant="20" symbolic="YES" id="b1F-Qm-4w6"/>
+                            <constraint firstItem="US4-ko-GUK" firstAttribute="baseline" secondItem="YpD-LL-vST" secondAttribute="baseline" id="gxC-K7-0ms"/>
+                            <constraint firstItem="ydp-I9-FK1" firstAttribute="leading" secondItem="US4-ko-GUK" secondAttribute="leading" id="quJ-MH-j8t"/>
+                            <constraint firstItem="US4-ko-GUK" firstAttribute="top" secondItem="ydp-I9-FK1" secondAttribute="bottom" constant="20" symbolic="YES" id="wxi-Qq-SeO"/>
+                            <constraint firstItem="ydp-I9-FK1" firstAttribute="trailing" secondItem="LlG-zU-AR2" secondAttribute="trailing" id="zco-oz-ZWZ"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="auxiliaryVoltageTextField" destination="dsX-Ry-GYJ" id="P7y-DV-FxE"/>
-                        <outlet property="batterySimulatorCurrentTextField" destination="avP-Ik-HNc" id="hEC-Zg-UcO"/>
-                        <outlet property="batterySimulatorEnableSegmentedControl" destination="xTM-oe-nhD" id="ibB-aT-YV1"/>
-                        <outlet property="batterySimulatorVoltageTextField" destination="cw0-Nt-FNS" id="uqk-5e-hUc"/>
-                        <outlet property="batteryVoltageTextField" destination="sTX-Dn-iAo" id="Bfj-Ww-qED"/>
-                        <outlet property="buttonRelaySegmentedControl" destination="Ger-JP-dlC" id="zLs-GM-giv"/>
-                        <outlet property="drainSupercapRelaySegmentedControl" destination="lFP-Md-SiT" id="Ttf-hY-ePb"/>
-                        <outlet property="fillSupercapRelaySegmentedControl" destination="yNn-sQ-zpQ" id="bxL-qh-w1o"/>
-                        <outlet property="mainVoltageTextField" destination="mfY-3q-NoP" id="8z8-T0-XiW"/>
                         <outlet property="messageTextView" destination="Lbt-YY-wCa" id="Mdq-QP-pB6"/>
-                        <outlet property="simulatorToBatteryRelaySegmentedControl" destination="eLw-wf-haf" id="Ugb-nT-fyg"/>
-                        <outlet property="supercapToBatteryRelaySegmentedControl" destination="hDX-v9-788" id="osT-Fb-1oX"/>
-                        <outlet property="swd1TextField" destination="d69-W2-OtM" id="GE7-7s-EeO"/>
-                        <outlet property="swd2TextField" destination="5gD-o7-N6q" id="Cb3-xc-eiH"/>
-                        <outlet property="usbCurrentTextField" destination="q75-rm-HpG" id="enc-XC-bfQ"/>
-                        <outlet property="usbPowerRelaySegmentedControl" destination="e3o-UV-lUL" id="936-uK-SI7"/>
-                        <outlet property="voltageSenseRelaySegmentedControl" destination="621-on-emg" id="0hj-tD-HIv"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

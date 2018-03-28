@@ -128,12 +128,15 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         try fd_i2cm_bus_enable(binary: binary, bus: bus)
         presenter.show(message: "setting system voltage...")
         let result = try fd_bq25120_set_system_voltage(device: device, voltage: 3.2)
-        presenter.show(message: "result = \(result)")
+        Thread.sleep(forTimeInterval: 0.1)
+        let conversion = try fixture.voltageInstrument?.convert()
+        presenter.show(message: "result = \(result), voltage = \(String(describing: conversion?.voltage))")
     }
 
     override func setup() throws {
         try super.setup()
         try setupExecutable(resource: "firefly_test_suite")
+        let _ = try run(getFunction(name: "SystemInit").address)
         try setupSystemVoltage()
     }
     
