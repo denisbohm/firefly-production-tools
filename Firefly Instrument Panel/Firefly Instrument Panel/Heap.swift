@@ -13,7 +13,7 @@ protocol HeapObject {
     var address: UInt32? { get set }
     
     func locate(address: UInt32) -> UInt32
-    func encode(binary: Binary)
+    func encode(encoder: Heap.Encoder)
     func decode(binary: Binary) throws
     var size: UInt32 { get }
     
@@ -37,8 +37,8 @@ class Heap {
             return address + size
         }
         
-        func encode(binary: Binary) {
-            binary.write(value)
+        func encode(encoder: Heap.Encoder) {
+            encoder.write(value)
         }
         
         func decode(binary: Binary) throws {
@@ -69,9 +69,9 @@ class Heap {
             return location
         }
         
-        func encode(binary: Binary) {
+        func encode(encoder: Heap.Encoder) {
             for heapObject in value {
-                heapObject.encode(binary: binary)
+                encoder.write(heapObject)
             }
         }
         
@@ -123,14 +123,26 @@ class Heap {
         
     }
     
-    class HeapEncoder {
+    class Encoder {
         
-        func encode(binary: Binary, object: HeapObject) {
-            let _ = object.locate(address: 0x20000000)
-            let binary = Binary(byteOrder: .littleEndian)
-            object.encode(binary: binary)
+        let swapBytes = !isByteOrderNative(.littleEndian)
+        var data = Data()
+        
+        func encode(object: HeapObject) {
+            let count = object.locate(address: 0)
+            data = Data(count: Int(count))
+            object.encode(encoder: self)
         }
         
+        func write<B: BinaryConvertable>(_ value: B) {
+            let subdata = Binary.pack(value, swapBytes: swapBytes)
+            // !!! subdata replace
+        }
+        
+        func write(_ object: HeapObject) {
+            object.encode(encoder: self)
+        }
+
     }
 
 }

@@ -146,4 +146,44 @@ class SerialWireDebugScript: FixtureScript {
         return resultR0
     }
     
+    struct Location {
+        let base: UInt32
+        let offset: UInt32
+        let name: String
+    }
+    
+    func dump(locations: [Location]) throws {
+        for location in locations {
+            var value: UInt32 = 0
+            try serialWireDebug?.readMemory(location.base + location.offset, value: &value)
+            NSLog(String(format: "%08x + %03x = %08x \(location.name)", location.base, location.offset, value))
+        }
+    }
+    
+    func dumpTWIM0() throws {
+        try dump(locations: [
+            Location(base: 0x40003000, offset: 0x104, name: "TWM0 EVENTS_STOPPED"),
+            Location(base: 0x40003000, offset: 0x124, name: "TWM0 EVENTS_ERROR"),
+            Location(base: 0x40003000, offset: 0x148, name: "TWM0 EVENTS_SUSPENDED"),
+            Location(base: 0x40003000, offset: 0x14C, name: "TWM0 EVENTS_RXSTARTED"),
+            Location(base: 0x40003000, offset: 0x150, name: "TWM0 EVENTS_TXSTARTED"),
+            Location(base: 0x40003000, offset: 0x15C, name: "TWM0 EVENTS_LASTRX"),
+            Location(base: 0x40003000, offset: 0x160, name: "TWM0 EVENTS_LASTTX"),
+            Location(base: 0x40003000, offset: 0x200, name: "TWM0 SHORTS"),
+            Location(base: 0x40003000, offset: 0x300, name: "TWM0 INTEN"),
+            Location(base: 0x40003000, offset: 0x4C4, name: "TWM0 ERRORSRC"),
+            Location(base: 0x40003000, offset: 0x500, name: "TWM0 ENABLE"),
+            Location(base: 0x40003000, offset: 0x524, name: "TWM0 FREQUENCY"),
+            Location(base: 0x40003000, offset: 0x534, name: "TWM0 RXD.PTR"),
+            Location(base: 0x40003000, offset: 0x538, name: "TWM0 RXD.MAXCNT"),
+            Location(base: 0x40003000, offset: 0x53C, name: "TWM0 RXD.AMOUNT"),
+            Location(base: 0x40003000, offset: 0x540, name: "TWM0 RXD.LIST"),
+            Location(base: 0x40003000, offset: 0x544, name: "TWM0 TXD.PTR"),
+            Location(base: 0x40003000, offset: 0x548, name: "TWM0 TXD.MAXCNT"),
+            Location(base: 0x40003000, offset: 0x54C, name: "TWM0 TXD.AMOUNT"),
+            Location(base: 0x40003000, offset: 0x550, name: "TWM0 TXD.LIST"),
+            Location(base: 0x40003000, offset: 0x588, name: "TWM0 ADDRESS"),
+            ])
+    }
+    
 }

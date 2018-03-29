@@ -40,6 +40,10 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         let _ = try run(getFunction(name: "fd_gpio_configure_output").address, r0: gpio.port, r1: gpio.pin)
     }
     
+    func fd_gpio_configure_output_open_drain(gpio: fd_gpio_t) throws {
+        let _ = try run(getFunction(name: "fd_gpio_configure_output_open_drain").address, r0: gpio.port, r1: gpio.pin)
+    }
+    
     func fd_gpio_set(gpio: fd_gpio_t, value: Bool) throws {
         let _ = try run(getFunction(name: "fd_gpio_set").address, r0: gpio.port, r1: gpio.pin, r2: value ? 1 : 0)
     }
@@ -82,7 +86,7 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         }
         
         func write(binary: Binary) {
-            bus.write(binary: binary)
+            binary.write(bus.heapAddress!)
             binary.write(address)
         }
         
@@ -97,7 +101,7 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         bus.write(binary: binary)
         let busCount: UInt32 = 1
         
-        let address: UInt32 = 0xd4 // bq25120 8-bit shifted address
+        let address: UInt32 = 0x6a // bq25120 7-bit address
         let device = fd_i2cm_device_t(bus: bus, address: address)
         device.heapAddress = cortex.heapRange.location + UInt32(binary.length)
         device.write(binary: binary)
@@ -116,16 +120,20 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         let cdn = fd_gpio_t(port: 1, pin: 15)
         try fd_gpio_configure_output(gpio: cdn)
         try fd_gpio_set(gpio: cdn, value: true)
-        let resultR0 = try run(getFunction(name: "fd_bq25120_set_system_voltage").address, r0: device.heapAddress!, r1: voltage.bitPattern)
+        try serialWireDebug?.writeRegister(UInt16(CORTEX_M_REGISTER_S0), value:voltage.bitPattern)
+        let resultR0 = try run(getFunction(name: "fd_bq25120_set_system_voltage").address, r0: device.heapAddress!)
         return resultR0 != 0
     }
     
     func setupSystemVoltage() throws {
         let binary = Binary(byteOrder: .littleEndian)
+        
         presenter.show(message: "initializing I2CM...")
         let (bus, device) = try fd_i2cm_initialize(binary: binary)
+
         presenter.show(message: "enabling I2C bus...")
         try fd_i2cm_bus_enable(binary: binary, bus: bus)
+        
         presenter.show(message: "setting system voltage...")
         let result = try fd_bq25120_set_system_voltage(device: device, voltage: 3.2)
         Thread.sleep(forTimeInterval: 0.1)
@@ -246,6 +254,72 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         let data = try serialWireDebug!.readMemory(information, length: 4)
         let binary = Binary(data: data, byteOrder: .littleEndian)
         return try fd_spi_flash_information_t(binary: binary)
+    }
+    
+    class fd_lsm6dsl_configuration_t: BinaryWritable {
+        
+        var heapAddress: UInt32? = nil
+        
+        let fifo_threshold: UInt16
+        let fifo_output_data_rate: UInt8
+        let accelerometer_output_data_rate: UInt8
+        let accelerometer_low_power: Bool
+        let accelerometer_full_scale_range: UInt8
+        let accelerometer_bandwidth_filter: UInt8
+        let accelerometer_enable: Bool
+        let gyro_output_data_rate: UInt8
+        let gyro_low_power: Bool
+        let gyro_full_scale_range: UInt8
+        let gyro_high_pass_filter: UInt8
+        let gyro_enable: Bool
+
+        init(
+            fifo_threshold: UInt16,
+            fifo_output_data_rate: UInt8,
+            accelerometer_output_data_rate: UInt8,
+            accelerometer_low_power: Bool,
+            accelerometer_full_scale_range: UInt8,
+            accelerometer_bandwidth_filter: UInt8,
+            accelerometer_enable: Bool,
+            gyro_output_data_rate: UInt8,
+            gyro_low_power: Bool,
+            gyro_full_scale_range: UInt8,
+            gyro_high_pass_filter: UInt8,
+            gyro_enable: Bool
+        ) {
+            self.fifo_threshold = fifo_threshold
+            self.fifo_output_data_rate = fifo_output_data_rate
+            self.accelerometer_output_data_rate = accelerometer_output_data_rate
+            self.accelerometer_low_power = accelerometer_low_power
+            self.accelerometer_full_scale_range = accelerometer_full_scale_range
+            self.accelerometer_bandwidth_filter = accelerometer_bandwidth_filter
+            self.accelerometer_enable = accelerometer_enable
+            self.gyro_output_data_rate = gyro_output_data_rate
+            self.gyro_low_power = gyro_low_power
+            self.gyro_full_scale_range = gyro_full_scale_range
+            self.gyro_high_pass_filter = gyro_high_pass_filter
+            self.gyro_enable = gyro_enable
+        }
+        
+        func write(binary: Binary) {
+            binary.write(fifo_threshold)
+            binary.write(fifo_output_data_rate)
+            binary.write(accelerometer_output_data_rate)
+            binary.write(UInt8(accelerometer_low_power ? 1 : 0))
+            binary.write(accelerometer_full_scale_range)
+            binary.write(accelerometer_bandwidth_filter)
+            binary.write(UInt8(accelerometer_enable ? 1 : 0))
+            binary.write(gyro_output_data_rate)
+            binary.write(UInt8(gyro_low_power ? 1 : 0))
+            binary.write(gyro_full_scale_range)
+            binary.write(gyro_high_pass_filter)
+            binary.write(UInt8(gyro_enable ? 1 : 0))
+        }
+
+    }
+    
+    func fd_lsm6ds3_configure(device: fd_spim_device_t, configuration: fd_lsm6dsl_configuration_t) {
+        
     }
 
     func main() throws {
