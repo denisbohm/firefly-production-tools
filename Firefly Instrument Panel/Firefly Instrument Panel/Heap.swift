@@ -123,15 +123,15 @@ class Heap {
     var baseAddress: UInt32 = 0
     var freeAddress: UInt32 = 0
     var roots: [HeapObject] = []
-    var data: Data
     var pending: [HeapObject] = []
-    
+    var data: Data
+
     init(data: Data = Data()) {
         self.data = data
     }
     
     func setBase(address: UInt32) {
-        baseAddress = address
+        baseAddress = (address + 0x3) & ~0x3 // align to 4-byte boundary
         freeAddress = address
     }
     
@@ -146,6 +146,7 @@ class Heap {
         while !pending.isEmpty {
             let object = pending.removeFirst()
             object.locate(locator: self)
+            freeAddress = (freeAddress + 0x3) & ~0x3 // align to 4-byte boundary
         }
     }
     
@@ -167,6 +168,8 @@ class Heap {
     }
     
     func allocate(object: HeapObject) {
+        let amount = UInt32(object.size - 1)
+        freeAddress = (freeAddress + amount) & ~amount;
         object.heapAddress = freeAddress
         freeAddress += object.size
     }

@@ -198,6 +198,11 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         let _ = try run(getFunction(name: "fd_spim_bus_enable").address, r0: bus.heapAddress!)
     }
     
+    func fd_spim_device_sequence_tx1_rx1(device: fd_spim_device_t, tx_byte: UInt8) throws -> UInt8 {
+        let resultR0 = try run(getFunction(name: "fd_spim_device_sequence_tx1_rx1").address, r0: device.heapAddress!, r1: UInt32(tx_byte))
+        return UInt8(truncatingIfNeeded: resultR0)
+    }
+    
     class fd_spi_flash_information_t: Heap.Struct {
         
         let manufacturer_id: Heap.Primitive<UInt8>
@@ -377,6 +382,14 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
     let FD_LSM6DSL_GHPF_P0324_HZ    = UInt8(0b101)
     let FD_LSM6DSL_GHPF_2P07_HZ     = UInt8(0b110)
     let FD_LSM6DSL_GHPF_16P32_HZ    = UInt8(0b111)
+    
+    func dumpLSM6DSL(device: fd_spim_device_t) throws {
+        NSLog("LSM6DSL Registers")
+        for i in 0 ... 0x7f {
+        let value = try fd_spim_device_sequence_tx1_rx1(device: device, tx_byte: UInt8(0x80 | i))
+            NSLog("  %02x = %02x", i, value)
+        }
+    }
 
     func lsm6dslTest(heap: Heap, device: fd_spim_device_t) throws {
         try fd_spim_bus_enable(bus: device.bus.object)
@@ -384,12 +397,8 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         let whoAmI = try fd_lsm6dsl_read(device: device, location: 0x0f)
         presenter.show(message: String(format: "lsm6dsl whoAmI %02x", whoAmI))
         
-        try dumpP0()
-        try dumpP1()
-        try dumpSPIM2()
-        
         let subheap = Heap()
-        subheap.setBase(address: (heap.freeAddress + 3) & ~0x3)
+        subheap.setBase(address: heap.freeAddress)
         let configuration = fd_lsm6dsl_configuration_t(
             fifo_threshold: 32,
             fifo_output_data_rate: FD_LSM6DSL_ODR_13_HZ,
@@ -412,12 +421,10 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         subheap.addRoot(object: sample)
         subheap.locate()
         subheap.encode()
-        while (subheap.data.count & 0x3) != 0 {
-            subheap.data.append(0)
-        }
         try serialWireDebug?.writeMemory(subheap.baseAddress, data: subheap.data)
         try fd_lsm6ds3_configure(device: device, configuration: configuration)
         Thread.sleep(forTimeInterval: 1.0)
+
         let count = try fd_lsm6dsl_read_fifo_samples(device: device, samples: sample, sample_count: 1)
         subheap.data = try serialWireDebug!.readMemory(subheap.baseAddress, length: UInt32(subheap.data.count))
         try subheap.decode()
