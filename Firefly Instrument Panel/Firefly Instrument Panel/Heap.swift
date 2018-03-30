@@ -151,7 +151,7 @@ class Heap {
     
     func encode() {
         let count = Int(freeAddress - baseAddress)
-        data = Data(count: count - data.count)
+        data = Data(count: count)
         pending.removeAll()
         pending.append(contentsOf: roots)
         while !pending.isEmpty {

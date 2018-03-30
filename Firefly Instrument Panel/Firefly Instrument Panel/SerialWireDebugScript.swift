@@ -147,42 +147,93 @@ class SerialWireDebugScript: FixtureScript {
     }
     
     struct Location {
-        let base: UInt32
         let offset: UInt32
         let name: String
     }
     
-    func dump(locations: [Location]) throws {
+    func dump(name: String, base: UInt32, locations: [Location]) throws {
         for location in locations {
             var value: UInt32 = 0
-            try serialWireDebug?.readMemory(location.base + location.offset, value: &value)
-            NSLog(String(format: "%08x + %03x = %08x \(location.name)", location.base, location.offset, value))
+            try serialWireDebug?.readMemory(base + location.offset, value: &value)
+            NSLog(String(format: "%08x + %03x = %08x \(name) \(location.name)", base, location.offset, value))
         }
     }
     
+    func dumpP0() throws {
+        try dump(name: "P0", base: 0x50000000, locations: [
+            Location(offset: 0x700, name: "PIN_CNF[0]"),
+            Location(offset: 0x704, name: "PIN_CNF[1]"),
+            Location(offset: 0x708, name: "PIN_CNF[2]"),
+            Location(offset: 0x70c, name: "PIN_CNF[3]"),
+            Location(offset: 0x710, name: "PIN_CNF[4]"),
+            Location(offset: 0x714, name: "PIN_CNF[5]"),
+            Location(offset: 0x718, name: "PIN_CNF[6]"),
+            Location(offset: 0x71c, name: "PIN_CNF[7]"),
+            ])
+    }
+    
+    func dumpP1() throws {
+        try dump(name: "P1", base: 0x50000300, locations: [
+            Location(offset: 0x700, name: "PIN_CNF[0]"),
+            Location(offset: 0x704, name: "PIN_CNF[1]"),
+            Location(offset: 0x708, name: "PIN_CNF[2]"),
+            Location(offset: 0x70c, name: "PIN_CNF[3]"),
+            Location(offset: 0x710, name: "PIN_CNF[4]"),
+            Location(offset: 0x714, name: "PIN_CNF[5]"),
+            Location(offset: 0x718, name: "PIN_CNF[6]"),
+            Location(offset: 0x71c, name: "PIN_CNF[7]"),
+            ])
+    }
+    
     func dumpTWIM0() throws {
-        try dump(locations: [
-            Location(base: 0x40003000, offset: 0x104, name: "TWM0 EVENTS_STOPPED"),
-            Location(base: 0x40003000, offset: 0x124, name: "TWM0 EVENTS_ERROR"),
-            Location(base: 0x40003000, offset: 0x148, name: "TWM0 EVENTS_SUSPENDED"),
-            Location(base: 0x40003000, offset: 0x14C, name: "TWM0 EVENTS_RXSTARTED"),
-            Location(base: 0x40003000, offset: 0x150, name: "TWM0 EVENTS_TXSTARTED"),
-            Location(base: 0x40003000, offset: 0x15C, name: "TWM0 EVENTS_LASTRX"),
-            Location(base: 0x40003000, offset: 0x160, name: "TWM0 EVENTS_LASTTX"),
-            Location(base: 0x40003000, offset: 0x200, name: "TWM0 SHORTS"),
-            Location(base: 0x40003000, offset: 0x300, name: "TWM0 INTEN"),
-            Location(base: 0x40003000, offset: 0x4C4, name: "TWM0 ERRORSRC"),
-            Location(base: 0x40003000, offset: 0x500, name: "TWM0 ENABLE"),
-            Location(base: 0x40003000, offset: 0x524, name: "TWM0 FREQUENCY"),
-            Location(base: 0x40003000, offset: 0x534, name: "TWM0 RXD.PTR"),
-            Location(base: 0x40003000, offset: 0x538, name: "TWM0 RXD.MAXCNT"),
-            Location(base: 0x40003000, offset: 0x53C, name: "TWM0 RXD.AMOUNT"),
-            Location(base: 0x40003000, offset: 0x540, name: "TWM0 RXD.LIST"),
-            Location(base: 0x40003000, offset: 0x544, name: "TWM0 TXD.PTR"),
-            Location(base: 0x40003000, offset: 0x548, name: "TWM0 TXD.MAXCNT"),
-            Location(base: 0x40003000, offset: 0x54C, name: "TWM0 TXD.AMOUNT"),
-            Location(base: 0x40003000, offset: 0x550, name: "TWM0 TXD.LIST"),
-            Location(base: 0x40003000, offset: 0x588, name: "TWM0 ADDRESS"),
+        try dump(name: "TWIM0", base: 0x40003000, locations: [
+            Location(offset: 0x104, name: "EVENTS_STOPPED"),
+            Location(offset: 0x124, name: "EVENTS_ERROR"),
+            Location(offset: 0x148, name: "EVENTS_SUSPENDED"),
+            Location(offset: 0x14C, name: "EVENTS_RXSTARTED"),
+            Location(offset: 0x150, name: "EVENTS_TXSTARTED"),
+            Location(offset: 0x15C, name: "EVENTS_LASTRX"),
+            Location(offset: 0x160, name: "EVENTS_LASTTX"),
+            Location(offset: 0x200, name: "SHORTS"),
+            Location(offset: 0x300, name: "INTEN"),
+            Location(offset: 0x4C4, name: "ERRORSRC"),
+            Location(offset: 0x500, name: "ENABLE"),
+            Location(offset: 0x524, name: "FREQUENCY"),
+            Location(offset: 0x534, name: "RXD.PTR"),
+            Location(offset: 0x538, name: "RXD.MAXCNT"),
+            Location(offset: 0x53C, name: "RXD.AMOUNT"),
+            Location(offset: 0x540, name: "RXD.LIST"),
+            Location(offset: 0x544, name: "TXD.PTR"),
+            Location(offset: 0x548, name: "TXD.MAXCNT"),
+            Location(offset: 0x54C, name: "TXD.AMOUNT"),
+            Location(offset: 0x550, name: "TXD.LIST"),
+            Location(offset: 0x588, name: "ADDRESS"),
+            ])
+    }
+    
+    func dumpSPIM2() throws {
+        try dump(name: "SPIM2", base: 0x40023000, locations: [
+            Location(offset: 0x104, name: "EVENTS_STOPPED"),
+            Location(offset: 0x110, name: "EVENTS_ENDRX"),
+            Location(offset: 0x118, name: "EVENTS_END"),
+            Location(offset: 0x120, name: "EVENTS_ENDTX"),
+            Location(offset: 0x14c, name: "EVENTS_STARTED"),
+            Location(offset: 0x200, name: "SHORTS"),
+            Location(offset: 0x500, name: "ENABLE"),
+            Location(offset: 0x508, name: "PSEL.SCK"),
+            Location(offset: 0x50c, name: "PSEL.MOSI"),
+            Location(offset: 0x510, name: "PSEL.MISO"),
+            Location(offset: 0x514, name: "PSEL.CSN"),
+            Location(offset: 0x524, name: "FREQUENCY"),
+            Location(offset: 0x534, name: "RXD.PTR"),
+            Location(offset: 0x538, name: "RXD.MAXCNT"),
+            Location(offset: 0x53c, name: "RXD.AMOUNT"),
+            Location(offset: 0x540, name: "RXD.LIST"),
+            Location(offset: 0x544, name: "TXD.PTR"),
+            Location(offset: 0x548, name: "TXD.MAXCNT"),
+            Location(offset: 0x54C, name: "TXD.AMOUNT"),
+            Location(offset: 0x550, name: "TXD.LIST"),
+            Location(offset: 0x554, name: "CONFIG"),
             ])
     }
     

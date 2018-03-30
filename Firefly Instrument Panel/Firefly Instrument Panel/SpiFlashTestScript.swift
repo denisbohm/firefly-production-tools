@@ -81,7 +81,7 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         
         heap.locate()
         heap.encode()
-        try serialWireDebug?.writeMemory(cortex.heapRange.location, data: heap.data)
+        try serialWireDebug?.writeMemory(heap.baseAddress, data: heap.data)
         let _ = try run(getFunction(name: "fd_i2cm_initialize").address, r0: bus.heapAddress!, r1: busCount, r2: device.heapAddress!, r3: deviceCount)
         return (bus: bus, device: device)
     }
@@ -159,6 +159,7 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
     
     func fd_spim_initialize(heap: Heap) throws -> (flashDevice: fd_spim_device_t, lsm6dslDevice: fd_spim_device_t) {
         let SPIM1: UInt32 = 0x40004000
+        let SPIM2: UInt32 = 0x40023000
         let flashBus = fd_spim_bus_t(
             instance: SPIM1,
             sclk: fd_gpio_t(port: 0, pin: 5),
@@ -167,8 +168,6 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
             frequency: 8000000,
             mode: 3
         )
-        heap.addRoot(object: flashBus)
-        let SPIM2: UInt32 = 0x40023000
         let lsm6dslBus = fd_spim_bus_t(
             instance: SPIM2,
             sclk: fd_gpio_t(port: 1, pin: 3),
@@ -177,18 +176,20 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
             frequency: 8000000,
             mode: 3
         )
-        heap.addRoot(object: lsm6dslBus)
         let busCount: UInt32 = 2
         
         let flashDevice = fd_spim_device_t(bus: flashBus, csn: fd_gpio_t(port: 0, pin: 6))
-        heap.addRoot(object: flashDevice)
         let lsm6dslDevice = fd_spim_device_t(bus: lsm6dslBus, csn: fd_gpio_t(port: 1, pin: 4))
-        heap.addRoot(object: lsm6dslDevice)
         let deviceCount: UInt32 = 2
+        
+        heap.addRoot(object: flashBus)
+        heap.addRoot(object: lsm6dslBus)
+        heap.addRoot(object: flashDevice)
+        heap.addRoot(object: lsm6dslDevice)
 
         heap.locate()
         heap.encode()
-        try serialWireDebug?.writeMemory(cortex.heapRange.location, data: heap.data)
+        try serialWireDebug?.writeMemory(heap.baseAddress, data: heap.data)
         let _ = try run(getFunction(name: "fd_spim_initialize").address, r0: flashBus.heapAddress!, r1: busCount, r2: flashDevice.heapAddress!, r3: deviceCount)
         return (flashDevice: flashDevice, lsm6dslDevice: lsm6dslDevice)
     }
@@ -329,6 +330,11 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         
     }
     
+    func fd_lsm6dsl_read(device: fd_spim_device_t, location: UInt8) throws -> UInt8 {
+        let resultR0 = try run(getFunction(name: "fd_lsm6dsl_read").address, r0: device.heapAddress!, r1: UInt32(location))
+        return UInt8(truncatingIfNeeded: resultR0)
+    }
+    
     func fd_lsm6ds3_configure(device: fd_spim_device_t, configuration: fd_lsm6dsl_configuration_t) throws {
         let _ = try run(getFunction(name: "fd_lsm6ds3_configure").address, r0: device.heapAddress!, r1: configuration.heapAddress!)
     }
@@ -373,8 +379,17 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
     let FD_LSM6DSL_GHPF_16P32_HZ    = UInt8(0b111)
 
     func lsm6dslTest(heap: Heap, device: fd_spim_device_t) throws {
+        try fd_spim_bus_enable(bus: device.bus.object)
+
+        let whoAmI = try fd_lsm6dsl_read(device: device, location: 0x0f)
+        presenter.show(message: String(format: "lsm6dsl whoAmI %02x", whoAmI))
+        
+        try dumpP0()
+        try dumpP1()
+        try dumpSPIM2()
+        
         let subheap = Heap()
-        subheap.setBase(address: heap.freeAddress)
+        subheap.setBase(address: (heap.freeAddress + 3) & ~0x3)
         let configuration = fd_lsm6dsl_configuration_t(
             fifo_threshold: 32,
             fifo_output_data_rate: FD_LSM6DSL_ODR_13_HZ,
@@ -397,6 +412,10 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         subheap.addRoot(object: sample)
         subheap.locate()
         subheap.encode()
+        while (subheap.data.count & 0x3) != 0 {
+            subheap.data.append(0)
+        }
+        try serialWireDebug?.writeMemory(subheap.baseAddress, data: subheap.data)
         try fd_lsm6ds3_configure(device: device, configuration: configuration)
         Thread.sleep(forTimeInterval: 1.0)
         let count = try fd_lsm6dsl_read_fifo_samples(device: device, samples: sample, sample_count: 1)
@@ -421,7 +440,6 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         let (flashDevice, lsm6dslDevice) = try fd_spim_initialize(heap: heap)
         presenter.show(message: "enabling SPIM bus...")
         try fd_spim_bus_enable(bus: flashDevice.bus.object)
-        try fd_spim_bus_enable(bus: lsm6dslDevice.bus.object)
         presenter.show(message: "getting SPI flash information...")
         let information = try fd_spi_flash_get_information(heap: heap, device: flashDevice)
         presenter.show(message: String(format: "%02x %02x %02x %02x", information.manufacturer_id.value, information.device_id.value, information.memory_type.value, information.memory_capacity.value))
