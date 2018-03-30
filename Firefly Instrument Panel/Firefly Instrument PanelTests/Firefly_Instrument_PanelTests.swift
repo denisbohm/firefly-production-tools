@@ -22,15 +22,21 @@ class Firefly_Instrument_PanelTests: XCTestCase {
     }
     
     func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+        let heap = Heap()
+        heap.setBase(address: 0x20000000)
+
+        let TWIM0: UInt32 = 0x40003000
+        let scl = SpiFlashTestScript.fd_gpio_t(port: 1, pin: 12)
+        let sda = SpiFlashTestScript.fd_gpio_t(port: 1, pin: 13)
+        let bus = SpiFlashTestScript.fd_i2cm_bus_t(instance: TWIM0, scl: scl, sda: sda, frequency: 100000)
+        heap.addRoot(object: bus)
+        
+        let address: UInt32 = 0x6a // bq25120 7-bit address
+        let device = SpiFlashTestScript.fd_i2cm_device_t(bus: bus, address: address)
+        heap.addRoot(object: device)
+        
+        heap.encode()
+        NSLog("\(heap.data)")
     }
     
 }

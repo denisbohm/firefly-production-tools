@@ -14,7 +14,7 @@ class SerialWireDebugScript: FixtureScript {
     var serialWireDebug: FDSerialWireDebug? = nil
     let executable = FDExecutable()
     let cortex = FDCortexM()
-    var trace = true
+    var trace = false
     
     func setupSerialWireDebug() throws {
         presenter.show(message: "attaching to serial wire debug port...")

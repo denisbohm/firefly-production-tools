@@ -11,5 +11,5 @@ import Cocoa
 protocol Script {
 
     func main() throws
-    
+
 }

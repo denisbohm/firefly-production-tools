@@ -8,141 +8,199 @@
 
 import FireflyInstruments
 
-protocol HeapObject {
+protocol HeapObject: class {
     
-    var address: UInt32? { get set }
-    
-    func locate(address: UInt32) -> UInt32
-    func encode(encoder: Heap.Encoder)
-    func decode(binary: Binary) throws
+    var heapAddress: UInt32? { get set }
     var size: UInt32 { get }
+    func locate(locator: Heap)
+    func encode(encoder: Heap)
+    func decode(decoder: Heap) throws
     
 }
 
+// 1) allocate and encode objects into ARM ABI (including object pointers and graphs)
+// 2) transfer binary regions to MCU heap
+// 3) transfer binary regions from MCU heap
+// 4) decode object field changes only
+//
+// http://infocenter.arm.com/help/topic/com.arm.doc.ihi0042f/IHI0042F_aapcs.pdf
 class Heap {
 
-    let binary = Binary(byteOrder: .littleEndian)
-    
-    class HeapPrimitive<T>: HeapObject where T: BinaryConvertable {
+    class Primitive<T>: HeapObject where T: BinaryConvertable {
         
-        var address: UInt32? = nil
+        var heapAddress: UInt32? = nil
         var value: T
         
         init(value: T) {
             self.value = value
         }
         
-        func locate(address: UInt32) -> UInt32 {
-            self.address = address
-            return address + size
+        var size: UInt32 {
+            get {
+                return UInt32(MemoryLayout<T>.size)
+            }
         }
         
-        func encode(encoder: Heap.Encoder) {
-            encoder.write(value)
+        func locate(locator: Heap) {
+            locator.allocate(object: self)
         }
         
-        func decode(binary: Binary) throws {
-            value = try binary.read()
+        func encode(encoder: Heap) {
+            encoder.write(address: heapAddress!, value: value)
         }
         
-        var size: UInt32 { get { return 4 } }
+        func decode(decoder: Heap) throws {
+            value = try decoder.read(address: heapAddress!)
+        }
         
     }
     
-    class HeapStruct: HeapObject {
+    class Struct: HeapObject {
         
-        var address: UInt32? = nil
-        let value: [HeapObject]
+        var heapAddress: UInt32? = nil
+        let fields: [HeapObject]
         
-        init(value: [HeapObject]) {
-            self.value = value
-        }
-        
-        func locate(address: UInt32) -> UInt32 {
-            self.address = address
-            var location = address
-            for heapObject in value {
-                if heapObject.address == nil {
-                    location = heapObject.locate(address: location)
-                }
-            }
-            return location
-        }
-        
-        func encode(encoder: Heap.Encoder) {
-            for heapObject in value {
-                encoder.write(heapObject)
-            }
-        }
-        
-        func decode(binary: Binary) throws {
-            for heapObject in value {
-                try heapObject.decode(binary: binary)
-            }
+        init(fields: [HeapObject]) {
+            self.fields = fields
         }
         
         var size: UInt32 {
             get {
-                return value.reduce(0) { return $0 + $1.size }
+                return fields.reduce(0) { return $0 + $1.size }
+            }
+        }
+        
+        func locate(locator: Heap) {
+            self.heapAddress = locator.freeAddress
+            
+            for object in fields {
+                object.locate(locator: locator)
+            }
+        }
+        
+        func encode(encoder: Heap) {
+            for object in fields {
+                object.encode(encoder: encoder)
+            }
+        }
+        
+        func decode(decoder: Heap) throws {
+            for object in fields {
+                try object.decode(decoder: decoder)
             }
         }
         
     }
     
-    class Gpio: HeapStruct {
+    class Reference<T>: HeapObject where T: HeapObject {
         
-        var port: HeapPrimitive<UInt32>
-        var pin: HeapPrimitive<UInt32>
+        var heapAddress: UInt32? = nil
+        let object: T
         
-        init(port: UInt32, pin: UInt32) {
-            self.port = HeapPrimitive<UInt32>(value: port)
-            self.pin = HeapPrimitive<UInt32>(value: pin)
-            super.init(value: [self.port, self.pin])
+        init(object: T) {
+            self.object = object
+        }
+        
+        var size: UInt32 { get { return 4 } }
+        
+        func locate(locator: Heap) {
+            locator.allocate(object: self)
+            locator.locate(object: object)
+        }
+        
+        func encode(encoder: Heap) {
+            encoder.write(address: heapAddress!, value: object.heapAddress!)
+            encoder.encode(object: object)
+        }
+        
+        func decode(decoder: Heap) throws {
+            decoder.decode(object: object)
         }
         
     }
     
-    class fd_spim_bus_t: HeapStruct {
-        
-        let instance: HeapPrimitive<UInt32>
-        let sclk: Gpio
-        let mosi: Gpio
-        let miso: Gpio
-        let frequency: HeapPrimitive<UInt32>
-        let mode: HeapPrimitive<UInt32>
-        
-        init(instance: UInt32, sclk: Gpio, mosi: Gpio, miso: Gpio, frequency: UInt32, mode: UInt32) {
-            self.instance = HeapPrimitive<UInt32>(value: instance)
-            self.sclk = sclk
-            self.mosi = mosi
-            self.miso = miso
-            self.frequency = HeapPrimitive<UInt32>(value: frequency)
-            self.mode = HeapPrimitive<UInt32>(value: mode)
-            super.init(value: [self.instance, self.sclk, self.mosi, self.miso, self.frequency, self.mode])
-        }
-        
+    let swapBytes = !isByteOrderNative(.littleEndian)
+    var baseAddress: UInt32 = 0
+    var freeAddress: UInt32 = 0
+    var roots: [HeapObject] = []
+    var data: Data
+    var pending: [HeapObject] = []
+    
+    init(data: Data = Data()) {
+        self.data = data
     }
     
-    class Encoder {
-        
-        let swapBytes = !isByteOrderNative(.littleEndian)
-        var data = Data()
-        
-        func encode(object: HeapObject) {
-            let count = object.locate(address: 0)
-            data = Data(count: Int(count))
-            object.encode(encoder: self)
-        }
-        
-        func write<B: BinaryConvertable>(_ value: B) {
-            let subdata = Binary.pack(value, swapBytes: swapBytes)
-            // !!! subdata replace
-        }
-        
-        func write(_ object: HeapObject) {
-            object.encode(encoder: self)
-        }
-
+    func setBase(address: UInt32) {
+        baseAddress = address
+        freeAddress = address
     }
-
+    
+    func addRoot(object: HeapObject) {
+        roots.append(object)
+    }
+    
+    func locate() {
+        freeAddress = baseAddress
+        pending.removeAll()
+        pending.append(contentsOf: roots)
+        while !pending.isEmpty {
+            let object = pending.removeFirst()
+            object.locate(locator: self)
+        }
+    }
+    
+    func encode() {
+        let count = Int(freeAddress - baseAddress)
+        data = Data(count: count - data.count)
+        pending.removeAll()
+        pending.append(contentsOf: roots)
+        while !pending.isEmpty {
+            let object = pending.removeFirst()
+            object.encode(encoder: self)
+        }
+    }
+    
+    func locate(object: HeapObject) {
+        if object.heapAddress == nil {
+            pending.append(object)
+        }
+    }
+    
+    func allocate(object: HeapObject) {
+        object.heapAddress = freeAddress
+        freeAddress += object.size
+    }
+    
+    func write<B: BinaryConvertable>(address: UInt32, value: B) {
+        let subdata = Binary.pack(value, swapBytes: swapBytes)
+        let start = data.index(data.startIndex, offsetBy: Int(address - baseAddress))
+        let end = data.index(start, offsetBy: subdata.count)
+        data.replaceSubrange(start ..< end, with: subdata)
+    }
+    
+    func encode(object: HeapObject) {
+        if true /* not encoded */ {
+            pending.append(object)
+        }
+    }
+    
+    func decode() throws {
+        pending.removeAll()
+        pending.append(contentsOf: roots)
+        while !pending.isEmpty {
+            let object = pending.removeFirst()
+            try object.decode(decoder: self)
+        }
+    }
+    
+    func decode(object: HeapObject) {
+        if true /* not decoded */ {
+            pending.append(object)
+        }
+    }
+    
+    func read<B: BinaryConvertable>(address: UInt32) throws -> B {
+        return try Binary.unpack(data, index: Int(address - baseAddress), swapBytes: swapBytes)
+    }
+    
 }
