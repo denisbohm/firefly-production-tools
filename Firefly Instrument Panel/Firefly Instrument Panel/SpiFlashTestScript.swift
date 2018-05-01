@@ -109,16 +109,25 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         presenter.show(message: "enabling I2C bus...")
         try fd_i2cm_bus_enable(bus: bus)
         
-        presenter.show(message: "setting system voltage...")
+        presenter.show(message: "setting system rail to 3.2 V...")
         let result = try fd_bq25120_set_system_voltage(device: device, voltage: 3.2)
         Thread.sleep(forTimeInterval: 0.1)
         let conversion = try fixture.voltageInstrument?.convert()
         presenter.show(message: "result = \(result), voltage = \(String(describing: conversion?.voltage))")
+        
+        presenter.show(message: "enabling 5 V rail...")
+        let boost_5v0_en = fd_gpio_t(port: 0, pin: 8)
+        try fd_gpio_configure_output(gpio: boost_5v0_en)
+        try fd_gpio_set(gpio: boost_5v0_en, value: true)
+        Thread.sleep(forTimeInterval: 0.1)
+        // !!! VB is not connected on instrument board, so can't test 5V rail... -denis
+//        let conversion5V = try fixture.auxiliaryVoltageInstrument?.convert()
+//        presenter.show(message: "result = \(result), voltage = \(String(describing: conversion5V?.voltage))")
     }
 
     override func setup() throws {
         try super.setup()
-        try setupExecutable(resource: "firefly_test_suite")
+        try setupExecutable(resource: "firefly_test_suite", address: 0x20000000, length: 0x40000)
         let _ = try run(getFunction(name: "SystemInit").address)
         try setupSystemVoltage()
     }

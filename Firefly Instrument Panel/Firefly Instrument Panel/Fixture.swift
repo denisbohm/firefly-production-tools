@@ -12,7 +12,8 @@ class Fixture {
     
     public var instrumentFinder = USBHIDFinder(name: "Firefly Instrument", vid: 0x0483, pid: 0x5710)
     public var instrumentManager: InstrumentManager? = nil
-    public var serialWireInstrument: SerialWireInstrument? = nil
+    public var serialWire1Instrument: SerialWireInstrument? = nil
+    public var serialWire2Instrument: SerialWireInstrument? = nil
     public var colorInstrument: ColorInstrument? = nil
     public var buttonRelayInstrument: RelayInstrument? = nil
     public var usbPowerRelayInstrument: RelayInstrument? = nil
@@ -35,8 +36,9 @@ class Fixture {
         try instrumentManager!.resetInstruments()
         try instrumentManager!.discoverInstruments()
         
-        serialWireInstrument = try instrumentManager!.getInstrument("SerialWire1")
-        
+        serialWire1Instrument = try instrumentManager!.getInstrument("SerialWire1")
+        serialWire2Instrument = try instrumentManager!.getInstrument("SerialWire2")
+
         colorInstrument = try instrumentManager!.getInstrument("Color1")
         
         buttonRelayInstrument = try instrumentManager!.getInstrument("Relay1")
@@ -64,6 +66,16 @@ class Fixture {
         for entry in fileSystem!.list() {
             NSLog("\t\(entry.name)\t\(entry.date)\t\(entry.length)\t@0x%08x", entry.address)
         }
+    }
+    
+    func getSerialWireInstrument(_ identifier: String) -> SerialWireInstrument? {
+        if identifier == "SerialWire1" {
+            return serialWire1Instrument
+        }
+        if identifier == "SerialWire2" {
+            return serialWire2Instrument
+        }
+        return nil
     }
 
 }

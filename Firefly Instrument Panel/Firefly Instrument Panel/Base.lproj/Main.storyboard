@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -730,7 +730,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <size key="minSize" width="708" height="487"/>
-                                            <size key="maxSize" width="708" height="10000000"/>
+                                            <size key="maxSize" width="710" height="10000000"/>
                                             <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </textView>
                                     </subviews>
@@ -765,21 +765,45 @@ Gw
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="flashIdentify:" target="XfG-lQ-9wD" id="568-sT-3ib"/>
+                                    <action selector="spiFlashTest:" target="XfG-lQ-9wD" id="SvD-9P-WGI"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Fdm-Bo-ZYT">
+                                <rect key="frame" x="166" y="13" width="82" height="32"/>
+                                <buttonCell key="cell" type="push" title="SWD 2" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="nS0-Fv-p3A">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="swd2Identify:" target="XfG-lQ-9wD" id="H6R-Bn-stg"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="PII-we-agz">
+                                <rect key="frame" x="247" y="13" width="85" height="32"/>
+                                <buttonCell key="cell" type="push" title="Display" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="4Jh-Wu-cHD">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="displayTest:" target="XfG-lQ-9wD" id="IuU-WA-xN5"/>
                                 </connections>
                             </button>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="YpD-LL-vST" firstAttribute="baseline" secondItem="LlG-zU-AR2" secondAttribute="baseline" id="9h7-gU-PMh"/>
-                            <constraint firstAttribute="trailing" secondItem="ydp-I9-FK1" secondAttribute="trailing" constant="20" symbolic="YES" id="9u8-1Y-yXc"/>
-                            <constraint firstItem="YpD-LL-vST" firstAttribute="leading" secondItem="US4-ko-GUK" secondAttribute="trailing" constant="12" symbolic="YES" id="Bfw-75-p4v"/>
-                            <constraint firstItem="ydp-I9-FK1" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="JG8-Z7-rIe"/>
-                            <constraint firstItem="ydp-I9-FK1" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="22" id="VH5-5g-QuL"/>
-                            <constraint firstAttribute="bottom" secondItem="US4-ko-GUK" secondAttribute="bottom" constant="20" symbolic="YES" id="b1F-Qm-4w6"/>
-                            <constraint firstItem="US4-ko-GUK" firstAttribute="baseline" secondItem="YpD-LL-vST" secondAttribute="baseline" id="gxC-K7-0ms"/>
-                            <constraint firstItem="ydp-I9-FK1" firstAttribute="leading" secondItem="US4-ko-GUK" secondAttribute="leading" id="quJ-MH-j8t"/>
-                            <constraint firstItem="US4-ko-GUK" firstAttribute="top" secondItem="ydp-I9-FK1" secondAttribute="bottom" constant="20" symbolic="YES" id="wxi-Qq-SeO"/>
-                            <constraint firstItem="ydp-I9-FK1" firstAttribute="trailing" secondItem="LlG-zU-AR2" secondAttribute="trailing" id="zco-oz-ZWZ"/>
+                            <constraint firstItem="Fdm-Bo-ZYT" firstAttribute="baseline" secondItem="PII-we-agz" secondAttribute="baseline" id="03x-Od-TWO"/>
+                            <constraint firstItem="ydp-I9-FK1" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="22" id="5Ba-0p-GwA"/>
+                            <constraint firstItem="YpD-LL-vST" firstAttribute="leading" secondItem="US4-ko-GUK" secondAttribute="trailing" constant="12" symbolic="YES" id="6uR-Pt-p6W"/>
+                            <constraint firstItem="US4-ko-GUK" firstAttribute="baseline" secondItem="YpD-LL-vST" secondAttribute="baseline" id="8N0-Ia-kK5"/>
+                            <constraint firstAttribute="bottom" secondItem="US4-ko-GUK" secondAttribute="bottom" constant="20" symbolic="YES" id="AvI-Yu-KvZ"/>
+                            <constraint firstItem="PII-we-agz" firstAttribute="leading" secondItem="Fdm-Bo-ZYT" secondAttribute="trailing" constant="11" id="Dkm-1X-Ltj"/>
+                            <constraint firstItem="ydp-I9-FK1" firstAttribute="leading" secondItem="US4-ko-GUK" secondAttribute="leading" id="H53-nz-V2m"/>
+                            <constraint firstItem="PII-we-agz" firstAttribute="baseline" secondItem="LlG-zU-AR2" secondAttribute="baseline" id="Sai-ME-bDt"/>
+                            <constraint firstItem="ydp-I9-FK1" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="VH0-FD-UeD"/>
+                            <constraint firstItem="Fdm-Bo-ZYT" firstAttribute="leading" secondItem="YpD-LL-vST" secondAttribute="trailing" constant="11" id="bIC-ld-Tuw"/>
+                            <constraint firstItem="YpD-LL-vST" firstAttribute="baseline" secondItem="Fdm-Bo-ZYT" secondAttribute="baseline" id="cvj-Gq-NOr"/>
+                            <constraint firstAttribute="trailing" secondItem="ydp-I9-FK1" secondAttribute="trailing" constant="20" symbolic="YES" id="e1J-9D-GuB"/>
+                            <constraint firstItem="US4-ko-GUK" firstAttribute="top" secondItem="ydp-I9-FK1" secondAttribute="bottom" constant="20" symbolic="YES" id="rGs-O7-shz"/>
+                            <constraint firstItem="ydp-I9-FK1" firstAttribute="trailing" secondItem="LlG-zU-AR2" secondAttribute="trailing" id="x4f-XI-dAd"/>
                         </constraints>
                     </view>
                     <connections>

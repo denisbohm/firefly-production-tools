@@ -11,17 +11,28 @@ import FireflyInstruments
 
 class SerialWireDebugScript: FixtureScript {
 
+    let serialWireInstrumentIdentifier: String
+    var serialWireInstrument: SerialWireInstrument? = nil
     var serialWireDebug: FDSerialWireDebug? = nil
     let executable = FDExecutable()
     let cortex = FDCortexM()
     var trace = false
     
+    init(fixture: Fixture, presenter: Presenter, serialWireInstrumentIdentifier: String) {
+        self.serialWireInstrumentIdentifier = serialWireInstrumentIdentifier
+        super.init(fixture: fixture, presenter: presenter)
+    }
+    
     func setupSerialWireDebug() throws {
+        guard let serialWireInstrument = serialWireInstrument else {
+            return
+        }
+        
         presenter.show(message: "attaching to serial wire debug port...")
-        try fixture.serialWireInstrument?.setEnabled(true)
+        try serialWireInstrument.setEnabled(true)
         
         let serialWireDebug = FDSerialWireDebug()
-        serialWireDebug.serialWire = fixture.serialWireInstrument!
+        serialWireDebug.serialWire = serialWireInstrument
         let serialWire = serialWireDebug.serialWire!
         serialWire.setReset(true)
         try serialWire.write()
@@ -51,34 +62,47 @@ class SerialWireDebugScript: FixtureScript {
     
     override func setup() throws {
         try super.setup()
+        serialWireInstrument = fixture.getSerialWireInstrument(serialWireInstrumentIdentifier)
         try setupSerialWireDebug()
     }
     
-    func setupExecutable(resource: String) throws {
+    func setupExecutable(resource: String, address: UInt32, length: UInt32) throws {
         presenter.show(message: "locating executable resource \(resource)...")
         guard let path = Bundle(for: SerialWireDebugScript.self).path(forResource: resource, ofType: "elf") else {
             throw ScriptError.setupFailure
         }
         presenter.show(message: "reading executable...")
         try executable.load(path)
-        executable.sections = executable.combineAllSectionsType(.program, address: 0x20000000, length: 0x40000, pageSize: 4)
+        executable.sections = executable.combineAllSectionsType(.program, address: address, length: length, pageSize: 4)
+        if executable.sections.count != 1 {
+            throw ScriptError.setupFailure
+        }
         let section = executable.sections[0]
-        let data = section.data
-        let length = UInt32(data.count)
 
         presenter.show(message: "loading executable into MCU RAM...")
+        #if true
+        guard let serialWireDebug = self.serialWireDebug else {
+            throw ScriptError.setupFailure
+        }
+        try serialWireDebug.writeMemory(section.address, data: section.data)
+        let verify = try serialWireDebug.readMemory(section.address, length: UInt32(section.data.count))
+        if verify != section.data {
+            throw ScriptError.setupFailure
+        }
+        #else
         guard
             let fileSystem = fixture.fileSystem,
             let storageInstrument = fixture.storageInstrument,
-            let serialWireInstrument = fixture.serialWireInstrument
+            let serialWireInstrument = serialWireInstrument
         else {
             throw ScriptError.setupFailure
         }
-        let entry = try fileSystem.ensure(resource, data: data)
-        try serialWireInstrument.writeFromStorage(section.address, length: length, storageIdentifier: storageInstrument.identifier, storageAddress: entry.address)
-        try serialWireInstrument.compareToStorage(section.address, length: length, storageIdentifier: storageInstrument.identifier, storageAddress: entry.address)
+        let entry = try fileSystem.ensure(resource, data: section.data)
+        try serialWireInstrument.writeFromStorage(section.address, length: UInt32(section.data.count), storageIdentifier: storageInstrument.identifier, storageAddress: entry.address)
+        try serialWireInstrument.compareToStorage(section.address, length: UInt32(section.data.count), storageIdentifier: storageInstrument.identifier, storageAddress: entry.address)
+        #endif
         
-        try setupCortex()
+        try setupCortex(address: address, length: length, stackSize: 0x1000, heapSize: 0x1000)
     }
     
     func getFunction(name: String) throws -> FDExecutableFunction {
@@ -90,16 +114,16 @@ class SerialWireDebugScript: FixtureScript {
         return function
     }
 
-    func setupCortex() throws {
+    func setupCortex(address: UInt32, length: UInt32, stackSize: UInt32, heapSize: UInt32) throws {
         presenter.show(message: "setting up MCU RPC...")
 
         cortex.logger = serialWireDebug!.logger
         cortex.serialWireDebug = serialWireDebug
         cortex.breakLocation = try getFunction(name: "halt").address
 
-        let ramStart = 0x20000000
-        let stackLength = 0x1000
-        let heapLength = 0x1000
+        let ramStart = Int(address)
+        let stackLength = Int(stackSize)
+        let heapLength = Int(heapSize)
         
         var programAddressEnd = ramStart
         for section in executable.sections {

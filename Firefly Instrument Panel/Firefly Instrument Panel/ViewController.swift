@@ -29,12 +29,22 @@ class ViewController: NSViewController, Presenter {
     
     @IBAction func swd1Identify(_ sender: Any) {
         NSLog("SWD 1 identify")
-        run(script: IdentifyScript(fixture: fixture, presenter: self))
+        run(script: IdentifyScript(fixture: fixture, presenter: self, serialWireInstrumentIdentifier: "SerialWire1"))
     }
     
-    @IBAction func flashIdentify(_ sender: Any) {
-        NSLog("flash identify")
-        run(script: SpiFlashTestScript(fixture: fixture, presenter: self))
+    @IBAction func spiFlashTest(_ sender: Any) {
+        NSLog("SPI flash test")
+        run(script: SpiFlashTestScript(fixture: fixture, presenter: self, serialWireInstrumentIdentifier: "SerialWire1"))
+    }
+    
+    @IBAction func swd2Identify(_ sender: Any) {
+        NSLog("SWD 2 identify")
+        run(script: IdentifyScript(fixture: fixture, presenter: self, serialWireInstrumentIdentifier: "SerialWire2"))
+    }
+    
+    @IBAction func displayTest(_ sender: Any) {
+        NSLog("display test")
+        run(script: DisplayTestScript(fixture: fixture, presenter: self, serialWireInstrumentIdentifier: "SerialWire2"))
     }
     
     func run(script: Script) {
