@@ -14,8 +14,9 @@
 		921B4D62206AD1DA0072BEAF /* firefly_test_suite.elf in Resources */ = {isa = PBXBuildFile; fileRef = 921B4D61206AD1DA0072BEAF /* firefly_test_suite.elf */; };
 		922121BB206F1CEA009EF087 /* Cortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922121BA206F1CEA009EF087 /* Cortex.swift */; };
 		925142232098B41E004A22B9 /* DisplayTestScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925142222098B41E004A22B9 /* DisplayTestScript.swift */; };
-		925142262098BEFB004A22B9 /* Display.elf in Resources */ = {isa = PBXBuildFile; fileRef = 925142252098BEFB004A22B9 /* Display.elf */; };
 		925142282098F6AE004A22B9 /* PowerSetupScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925142272098F6AE004A22B9 /* PowerSetupScript.swift */; };
+		925F481D20ACB8A900D22C00 /* ProgramScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925F481C20ACB8A900D22C00 /* ProgramScript.swift */; };
+		925F482020ACB96100D22C00 /* Programmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925F481F20ACB96100D22C00 /* Programmer.swift */; };
 		925FB256206BDFDF0071E417 /* Heap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925FB255206BDFDF0071E417 /* Heap.swift */; };
 		92654D03205B06E9008D000D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92654D02205B06E9008D000D /* AppDelegate.swift */; };
 		92654D05205B06E9008D000D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92654D04205B06E9008D000D /* ViewController.swift */; };
@@ -26,6 +27,7 @@
 		9266027D206A9F5900DF7B43 /* Runner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9266027C206A9F5900DF7B43 /* Runner.swift */; };
 		92660280206AA30700DF7B43 /* Presenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9266027F206AA30700DF7B43 /* Presenter.swift */; };
 		92660282206AA4A400DF7B43 /* Script.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92660281206AA4A400DF7B43 /* Script.swift */; };
+		92921BFE20A61CAF00837756 /* BatteryPowerScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92921BFD20A61CAF00837756 /* BatteryPowerScript.swift */; };
 		92D86D1E205B08AE00BEED38 /* FireflyInstruments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92654D28205B084F008D000D /* FireflyInstruments.framework */; };
 		92D86D1F205B08AE00BEED38 /* FireflyInstruments.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92654D28205B084F008D000D /* FireflyInstruments.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -91,8 +93,9 @@
 		922121BA206F1CEA009EF087 /* Cortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cortex.swift; sourceTree = "<group>"; };
 		923900DC2062D94400EC9AB4 /* Firefly Instrument Panel.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Firefly Instrument Panel.entitlements"; sourceTree = "<group>"; };
 		925142222098B41E004A22B9 /* DisplayTestScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayTestScript.swift; sourceTree = "<group>"; };
-		925142252098BEFB004A22B9 /* Display.elf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Display.elf; path = "../../../../atlas/atlas-wristband3-firmware/build/Display THUMB Debug/Display.elf"; sourceTree = "<group>"; };
 		925142272098F6AE004A22B9 /* PowerSetupScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerSetupScript.swift; sourceTree = "<group>"; };
+		925F481C20ACB8A900D22C00 /* ProgramScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramScript.swift; sourceTree = "<group>"; };
+		925F481F20ACB96100D22C00 /* Programmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Programmer.swift; sourceTree = "<group>"; };
 		925FB255206BDFDF0071E417 /* Heap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Heap.swift; sourceTree = "<group>"; };
 		92654CFF205B06E9008D000D /* Firefly Instrument Panel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Firefly Instrument Panel.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		92654D02205B06E9008D000D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -109,6 +112,7 @@
 		9266027C206A9F5900DF7B43 /* Runner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Runner.swift; sourceTree = "<group>"; };
 		9266027F206AA30700DF7B43 /* Presenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presenter.swift; sourceTree = "<group>"; };
 		92660281206AA4A400DF7B43 /* Script.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Script.swift; sourceTree = "<group>"; };
+		92921BFD20A61CAF00837756 /* BatteryPowerScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryPowerScript.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,7 +156,6 @@
 		92654D01205B06E9008D000D /* Firefly Instrument Panel */ = {
 			isa = PBXGroup;
 			children = (
-				925142252098BEFB004A22B9 /* Display.elf */,
 				921B4D61206AD1DA0072BEAF /* firefly_test_suite.elf */,
 				92654D0B205B06E9008D000D /* Info.plist */,
 				923900DC2062D94400EC9AB4 /* Firefly Instrument Panel.entitlements */,
@@ -173,6 +176,9 @@
 				922121BA206F1CEA009EF087 /* Cortex.swift */,
 				925142222098B41E004A22B9 /* DisplayTestScript.swift */,
 				925142272098F6AE004A22B9 /* PowerSetupScript.swift */,
+				92921BFD20A61CAF00837756 /* BatteryPowerScript.swift */,
+				925F481C20ACB8A900D22C00 /* ProgramScript.swift */,
+				925F481F20ACB96100D22C00 /* Programmer.swift */,
 			);
 			path = "Firefly Instrument Panel";
 			sourceTree = "<group>";
@@ -243,7 +249,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Firefly Design LLC";
 				TargetAttributes = {
 					92654CFE205B06E9008D000D = {
@@ -306,7 +312,6 @@
 			files = (
 				92654D07205B06E9008D000D /* Assets.xcassets in Resources */,
 				921B4D62206AD1DA0072BEAF /* firefly_test_suite.elf in Resources */,
-				925142262098BEFB004A22B9 /* Display.elf in Resources */,
 				92654D0A205B06E9008D000D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -327,6 +332,8 @@
 			files = (
 				925142282098F6AE004A22B9 /* PowerSetupScript.swift in Sources */,
 				921B4D58206AB1BF0072BEAF /* SpiFlashTestScript.swift in Sources */,
+				92921BFE20A61CAF00837756 /* BatteryPowerScript.swift in Sources */,
+				925F482020ACB96100D22C00 /* Programmer.swift in Sources */,
 				92654D05205B06E9008D000D /* ViewController.swift in Sources */,
 				925142232098B41E004A22B9 /* DisplayTestScript.swift in Sources */,
 				9266027D206A9F5900DF7B43 /* Runner.swift in Sources */,
@@ -335,6 +342,7 @@
 				92654D03205B06E9008D000D /* AppDelegate.swift in Sources */,
 				921B4D56206AB0D30072BEAF /* SerialWireDebugScript.swift in Sources */,
 				92654D21205B080D008D000D /* Fixture.swift in Sources */,
+				925F481D20ACB8A900D22C00 /* ProgramScript.swift in Sources */,
 				921B4D51206AAA7B0072BEAF /* IdentifyScript.swift in Sources */,
 				92660282206AA4A400DF7B43 /* Script.swift in Sources */,
 				92660280206AA30700DF7B43 /* Presenter.swift in Sources */,
@@ -396,6 +404,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -403,6 +412,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -453,6 +463,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -460,6 +471,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;

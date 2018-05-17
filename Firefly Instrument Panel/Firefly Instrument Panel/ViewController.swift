@@ -27,6 +27,29 @@ class ViewController: NSViewController, Presenter {
         }
     }
     
+    func loadFirmware(_ name: String) -> IntelHex? {
+        let file = "/Users/denis/sandbox/atlas/atlas-wristband3-firmware/build/\(name)"
+        return try? IntelHexParser.parse(content: (try? String(contentsOfFile: file)) ?? "")
+    }
+    
+    @IBAction func programFirmware(_ sender: Any) {
+        NSLog("Program Firmware")
+        guard
+            let boot = loadFirmware("atlas_boot THUMB Release/atlas_boot.hex"),
+            let application = loadFirmware("atlas_app THUMB Release/atlas_app.hex"),
+            let softdevice = loadFirmware("nRF5_SDK/components/softdevice/s140/hex/s140_nrf52_6.0.0_softdevice.hex")
+        else {
+            show(message: "Can't load firmware!")
+            return
+        }
+        run(script: ProgramScript(fixture: fixture, presenter: self, serialWireInstrumentIdentifier: "SerialWire1", boot: boot, application: application, softdevice: softdevice, serialNumber: 0))
+    }
+    
+    @IBAction func batteryPower(_ sender: Any) {
+        NSLog("Battery Power")
+        run(script: BatteryPowerScript(fixture: fixture, presenter: self))
+    }
+    
     @IBAction func swd1Identify(_ sender: Any) {
         NSLog("SWD 1 identify")
         run(script: IdentifyScript(fixture: fixture, presenter: self, serialWireInstrumentIdentifier: "SerialWire1"))
