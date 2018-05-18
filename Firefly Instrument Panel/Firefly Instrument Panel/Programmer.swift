@@ -51,6 +51,7 @@ class Programmer {
         if fixture.fileSystem != nil {
             let resource = flash.resource()
             let executable = try flash.readFirmware()
+            try serialWireDebug.halt()
             try loadIntoRAM(serialWireDebugScript: serialWireDebugScript, resource: resource, executable: executable, address: flash.ramAddress, length: flash.ramSize)
         } else {
             try flash.loadFirmwareIntoRAM()

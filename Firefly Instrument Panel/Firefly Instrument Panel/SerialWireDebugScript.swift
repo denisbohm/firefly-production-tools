@@ -87,6 +87,13 @@ class SerialWireDebugScript: FixtureScript {
         try serialWireDebug.writeMemory(section.address, data: section.data)
         let verify = try serialWireDebug.readMemory(section.address, length: UInt32(section.data.count))
         if verify != section.data {
+            for i in 0 ..< verify.count {
+                let expected = section.data[i]
+                let actual = verify[i]
+                if actual != expected {
+                    presenter.show(message: "verify failed at offset \(i) expected \(expected) \(actual)")
+                }
+            }
             throw ScriptError.setupFailure
         }
         #else

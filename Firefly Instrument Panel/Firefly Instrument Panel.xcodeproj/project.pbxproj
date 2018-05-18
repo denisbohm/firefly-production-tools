@@ -11,8 +11,10 @@
 		921B4D54206AAF270072BEAF /* FixtureScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921B4D53206AAF270072BEAF /* FixtureScript.swift */; };
 		921B4D56206AB0D30072BEAF /* SerialWireDebugScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921B4D55206AB0D30072BEAF /* SerialWireDebugScript.swift */; };
 		921B4D58206AB1BF0072BEAF /* SpiFlashTestScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921B4D57206AB1BF0072BEAF /* SpiFlashTestScript.swift */; };
-		921B4D62206AD1DA0072BEAF /* firefly_test_suite.elf in Resources */ = {isa = PBXBuildFile; fileRef = 921B4D61206AD1DA0072BEAF /* firefly_test_suite.elf */; };
 		922121BB206F1CEA009EF087 /* Cortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922121BA206F1CEA009EF087 /* Cortex.swift */; };
+		924410F720AF24090082D0D1 /* s140_nrf52_6.0.0_softdevice.hex in Resources */ = {isa = PBXBuildFile; fileRef = 924410F520AF24090082D0D1 /* s140_nrf52_6.0.0_softdevice.hex */; };
+		924410F920AF241B0082D0D1 /* atlas_app.hex in Resources */ = {isa = PBXBuildFile; fileRef = 924410F820AF241B0082D0D1 /* atlas_app.hex */; };
+		924410FB20AF242B0082D0D1 /* atlas_boot.hex in Resources */ = {isa = PBXBuildFile; fileRef = 924410FA20AF242B0082D0D1 /* atlas_boot.hex */; };
 		925142232098B41E004A22B9 /* DisplayTestScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925142222098B41E004A22B9 /* DisplayTestScript.swift */; };
 		925142282098F6AE004A22B9 /* PowerSetupScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925142272098F6AE004A22B9 /* PowerSetupScript.swift */; };
 		925F481D20ACB8A900D22C00 /* ProgramScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925F481C20ACB8A900D22C00 /* ProgramScript.swift */; };
@@ -30,6 +32,7 @@
 		92921BFE20A61CAF00837756 /* BatteryPowerScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92921BFD20A61CAF00837756 /* BatteryPowerScript.swift */; };
 		92D86D1E205B08AE00BEED38 /* FireflyInstruments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92654D28205B084F008D000D /* FireflyInstruments.framework */; };
 		92D86D1F205B08AE00BEED38 /* FireflyInstruments.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92654D28205B084F008D000D /* FireflyInstruments.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		92EAAFC520AF2FD20009B175 /* firefly_test_suite.elf in Resources */ = {isa = PBXBuildFile; fileRef = 924410FE20AF26010082D0D1 /* firefly_test_suite.elf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,9 +92,12 @@
 		921B4D53206AAF270072BEAF /* FixtureScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixtureScript.swift; sourceTree = "<group>"; };
 		921B4D55206AB0D30072BEAF /* SerialWireDebugScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialWireDebugScript.swift; sourceTree = "<group>"; };
 		921B4D57206AB1BF0072BEAF /* SpiFlashTestScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpiFlashTestScript.swift; sourceTree = "<group>"; };
-		921B4D61206AD1DA0072BEAF /* firefly_test_suite.elf */ = {isa = PBXFileReference; lastKnownFileType = file; name = firefly_test_suite.elf; path = "../../../firefly-ice-firmware/fixture/firefly_test_suite THUMB Debug/firefly_test_suite.elf"; sourceTree = "<group>"; };
 		922121BA206F1CEA009EF087 /* Cortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cortex.swift; sourceTree = "<group>"; };
 		923900DC2062D94400EC9AB4 /* Firefly Instrument Panel.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Firefly Instrument Panel.entitlements"; sourceTree = "<group>"; };
+		924410F520AF24090082D0D1 /* s140_nrf52_6.0.0_softdevice.hex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = s140_nrf52_6.0.0_softdevice.hex; sourceTree = "<group>"; };
+		924410F820AF241B0082D0D1 /* atlas_app.hex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = atlas_app.hex; path = "../../../../atlas/atlas-wristband3-firmware/build/atlas_app THUMB Release/atlas_app.hex"; sourceTree = "<group>"; };
+		924410FA20AF242B0082D0D1 /* atlas_boot.hex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = atlas_boot.hex; path = "../../../../atlas/atlas-wristband3-firmware/build/atlas_boot THUMB Release/atlas_boot.hex"; sourceTree = "<group>"; };
+		924410FE20AF26010082D0D1 /* firefly_test_suite.elf */ = {isa = PBXFileReference; lastKnownFileType = file; name = firefly_test_suite.elf; path = "../../../firefly-ice-firmware/fixture/firefly_test_suite THUMB Debug/firefly_test_suite.elf"; sourceTree = "<group>"; };
 		925142222098B41E004A22B9 /* DisplayTestScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayTestScript.swift; sourceTree = "<group>"; };
 		925142272098F6AE004A22B9 /* PowerSetupScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerSetupScript.swift; sourceTree = "<group>"; };
 		925F481C20ACB8A900D22C00 /* ProgramScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramScript.swift; sourceTree = "<group>"; };
@@ -134,6 +140,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		924410FC20AF25E20082D0D1 /* firmware */ = {
+			isa = PBXGroup;
+			children = (
+				924410FE20AF26010082D0D1 /* firefly_test_suite.elf */,
+				924410F520AF24090082D0D1 /* s140_nrf52_6.0.0_softdevice.hex */,
+				924410FA20AF242B0082D0D1 /* atlas_boot.hex */,
+				924410F820AF241B0082D0D1 /* atlas_app.hex */,
+			);
+			name = firmware;
+			sourceTree = "<group>";
+		};
+		924410FF20AF26770082D0D1 /* misc */ = {
+			isa = PBXGroup;
+			children = (
+				92654D0B205B06E9008D000D /* Info.plist */,
+				923900DC2062D94400EC9AB4 /* Firefly Instrument Panel.entitlements */,
+				92654D0C205B06E9008D000D /* Firefly_Instrument_Panel.entitlements */,
+				92654D06205B06E9008D000D /* Assets.xcassets */,
+			);
+			name = misc;
+			sourceTree = "<group>";
+		};
 		92654CF6205B06E9008D000D = {
 			isa = PBXGroup;
 			children = (
@@ -156,29 +184,26 @@
 		92654D01205B06E9008D000D /* Firefly Instrument Panel */ = {
 			isa = PBXGroup;
 			children = (
-				921B4D61206AD1DA0072BEAF /* firefly_test_suite.elf */,
-				92654D0B205B06E9008D000D /* Info.plist */,
-				923900DC2062D94400EC9AB4 /* Firefly Instrument Panel.entitlements */,
-				92654D0C205B06E9008D000D /* Firefly_Instrument_Panel.entitlements */,
-				92654D06205B06E9008D000D /* Assets.xcassets */,
-				92654D08205B06E9008D000D /* Main.storyboard */,
 				92654D02205B06E9008D000D /* AppDelegate.swift */,
-				92654D04205B06E9008D000D /* ViewController.swift */,
-				92654D20205B080D008D000D /* Fixture.swift */,
-				9266027F206AA30700DF7B43 /* Presenter.swift */,
-				92660281206AA4A400DF7B43 /* Script.swift */,
-				9266027C206A9F5900DF7B43 /* Runner.swift */,
-				921B4D53206AAF270072BEAF /* FixtureScript.swift */,
-				921B4D55206AB0D30072BEAF /* SerialWireDebugScript.swift */,
-				921B4D50206AAA7B0072BEAF /* IdentifyScript.swift */,
-				921B4D57206AB1BF0072BEAF /* SpiFlashTestScript.swift */,
-				925FB255206BDFDF0071E417 /* Heap.swift */,
+				92921BFD20A61CAF00837756 /* BatteryPowerScript.swift */,
 				922121BA206F1CEA009EF087 /* Cortex.swift */,
 				925142222098B41E004A22B9 /* DisplayTestScript.swift */,
+				924410FC20AF25E20082D0D1 /* firmware */,
+				92654D20205B080D008D000D /* Fixture.swift */,
+				921B4D53206AAF270072BEAF /* FixtureScript.swift */,
+				925FB255206BDFDF0071E417 /* Heap.swift */,
+				921B4D50206AAA7B0072BEAF /* IdentifyScript.swift */,
+				92654D08205B06E9008D000D /* Main.storyboard */,
+				924410FF20AF26770082D0D1 /* misc */,
 				925142272098F6AE004A22B9 /* PowerSetupScript.swift */,
-				92921BFD20A61CAF00837756 /* BatteryPowerScript.swift */,
-				925F481C20ACB8A900D22C00 /* ProgramScript.swift */,
+				9266027F206AA30700DF7B43 /* Presenter.swift */,
 				925F481F20ACB96100D22C00 /* Programmer.swift */,
+				925F481C20ACB8A900D22C00 /* ProgramScript.swift */,
+				9266027C206A9F5900DF7B43 /* Runner.swift */,
+				92660281206AA4A400DF7B43 /* Script.swift */,
+				921B4D55206AB0D30072BEAF /* SerialWireDebugScript.swift */,
+				921B4D57206AB1BF0072BEAF /* SpiFlashTestScript.swift */,
+				92654D04205B06E9008D000D /* ViewController.swift */,
 			);
 			path = "Firefly Instrument Panel";
 			sourceTree = "<group>";
@@ -310,8 +335,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92EAAFC520AF2FD20009B175 /* firefly_test_suite.elf in Resources */,
 				92654D07205B06E9008D000D /* Assets.xcassets in Resources */,
-				921B4D62206AD1DA0072BEAF /* firefly_test_suite.elf in Resources */,
+				924410F920AF241B0082D0D1 /* atlas_app.hex in Resources */,
+				924410FB20AF242B0082D0D1 /* atlas_boot.hex in Resources */,
+				924410F720AF24090082D0D1 /* s140_nrf52_6.0.0_softdevice.hex in Resources */,
 				92654D0A205B06E9008D000D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -10,7 +10,7 @@ import Foundation
 import ARMSerialWireDebug
 import FireflyInstruments
 
-class ProgramScript: SerialWireDebugScript, Script {
+class ProgramScript: SpiFlashTestScript {
     
     enum LocalError: Error {
         case unknownProcessor
@@ -129,7 +129,15 @@ class ProgramScript: SerialWireDebugScript, Script {
         flash = try programmer.setupFlash(serialWireDebugScript: self)
     }
     
-    func main() throws {
+    func eraseChip() throws {
+        presenter.show(message: "erasing chip...")
+        try flash?.massErase()
+        presenter.show(message: "chip erased")
+    }
+    
+    override func main() throws {
+        try setup()
+        try eraseChip()
         try programBoot()
         try programApplication()
         try programSoftdevice()
