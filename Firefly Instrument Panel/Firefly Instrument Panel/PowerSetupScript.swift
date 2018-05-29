@@ -129,7 +129,7 @@ class PowerSetupScript: SerialWireDebugScript {
         serialWireInstrument = fixture.getSerialWireInstrument(serialWireInstrumentIdentifier)
         try setupSerialWireDebug()
 
-        try setupExecutable(resource: "firefly_test_suite", address: 0x20000000, length: 0x40000)
+        try setupExecutable(resource: "fd_test_suite_nrf5", address: 0x20000000, length: 0x40000)
         let _ = try run(getFunction(name: "SystemInit").address)
         try setupSystemVoltage()
     }

@@ -16,17 +16,15 @@ class FixtureScript {
     
     let fixture: Fixture
     let presenter: Presenter
+    var doSetupInstruments = true
     
     init(fixture: Fixture, presenter: Presenter) {
         self.fixture = fixture
         self.presenter = presenter
     }
     
-    func setupInstruments() throws {
-        presenter.show(message: "connecting to instruments...")
-        try fixture.collectInstruments()
-        
-        presenter.show(message: "initializing instruments...")
+    func powerOnBatterySimulator() throws {
+        presenter.show(message: "powering on battery simulator...")
         try fixture.voltageSenseRelayInstrument?.set(true)
         try fixture.batteryInstrument?.setEnabled(true)
         try fixture.simulatorToBatteryRelayInstrument?.set(true)
@@ -37,8 +35,17 @@ class FixtureScript {
         }
     }
     
+    func setupInstruments() throws {
+        presenter.show(message: "connecting to instruments...")
+        try fixture.collectInstruments()
+        
+        try powerOnBatterySimulator()
+    }
+    
     func setup() throws {
-        try setupInstruments()
+        if doSetupInstruments {
+            try setupInstruments()
+        }
     }
     
 }

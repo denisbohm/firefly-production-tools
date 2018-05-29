@@ -808,26 +808,38 @@ Gw
                                     <action selector="programFirmware:" target="XfG-lQ-9wD" id="ZjK-tp-sVx"/>
                                 </connections>
                             </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MaT-hm-shj">
+                                <rect key="frame" x="502" y="13" width="102" height="32"/>
+                                <buttonCell key="cell" type="push" title="Quiescent" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="nzY-gA-N30">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="quiescentTest:" target="XfG-lQ-9wD" id="ra6-pe-QOg"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="fuE-Si-ZOh" firstAttribute="baseline" secondItem="O1h-0L-tgg" secondAttribute="baseline" id="09R-wN-im1"/>
-                            <constraint firstItem="YpD-LL-vST" firstAttribute="baseline" secondItem="Fdm-Bo-ZYT" secondAttribute="baseline" id="4Pv-YR-nBl"/>
-                            <constraint firstItem="Fdm-Bo-ZYT" firstAttribute="leading" secondItem="YpD-LL-vST" secondAttribute="trailing" constant="11" id="4wa-B3-hcM"/>
-                            <constraint firstItem="ydp-I9-FK1" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="9Dx-Yf-lPF"/>
-                            <constraint firstItem="PII-we-agz" firstAttribute="baseline" secondItem="fuE-Si-ZOh" secondAttribute="baseline" id="E3E-cl-RnM"/>
-                            <constraint firstItem="US4-ko-GUK" firstAttribute="top" secondItem="ydp-I9-FK1" secondAttribute="bottom" constant="20" symbolic="YES" id="HvP-nJ-ifS"/>
-                            <constraint firstItem="fuE-Si-ZOh" firstAttribute="leading" secondItem="PII-we-agz" secondAttribute="trailing" constant="11" id="I2t-DS-ueY"/>
-                            <constraint firstItem="ydp-I9-FK1" firstAttribute="trailing" secondItem="LlG-zU-AR2" secondAttribute="trailing" id="Kjz-EB-OY8"/>
-                            <constraint firstAttribute="trailing" secondItem="ydp-I9-FK1" secondAttribute="trailing" constant="20" symbolic="YES" id="Kxt-ma-8nG"/>
-                            <constraint firstAttribute="bottom" secondItem="US4-ko-GUK" secondAttribute="bottom" constant="20" symbolic="YES" id="LlX-iU-ZDn"/>
-                            <constraint firstItem="O1h-0L-tgg" firstAttribute="leading" secondItem="fuE-Si-ZOh" secondAttribute="trailing" constant="7" id="NcG-wW-r0c"/>
-                            <constraint firstItem="YpD-LL-vST" firstAttribute="leading" secondItem="US4-ko-GUK" secondAttribute="trailing" constant="12" symbolic="YES" id="QWn-4h-4h8"/>
-                            <constraint firstItem="US4-ko-GUK" firstAttribute="baseline" secondItem="YpD-LL-vST" secondAttribute="baseline" id="bAV-W6-igf"/>
-                            <constraint firstItem="Fdm-Bo-ZYT" firstAttribute="baseline" secondItem="PII-we-agz" secondAttribute="baseline" id="cPP-7T-Djd"/>
-                            <constraint firstItem="PII-we-agz" firstAttribute="leading" secondItem="Fdm-Bo-ZYT" secondAttribute="trailing" constant="11" id="uPi-tw-Hc7"/>
-                            <constraint firstItem="O1h-0L-tgg" firstAttribute="baseline" secondItem="LlG-zU-AR2" secondAttribute="baseline" id="ucE-pp-5q2"/>
-                            <constraint firstItem="ydp-I9-FK1" firstAttribute="leading" secondItem="US4-ko-GUK" secondAttribute="leading" id="ufg-O6-6xd"/>
-                            <constraint firstItem="ydp-I9-FK1" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="22" id="x3w-VB-beX"/>
+                            <constraint firstItem="O1h-0L-tgg" firstAttribute="leading" secondItem="fuE-Si-ZOh" secondAttribute="trailing" constant="7" id="BsH-NN-jwo"/>
+                            <constraint firstAttribute="trailing" secondItem="ydp-I9-FK1" secondAttribute="trailing" constant="20" symbolic="YES" id="GUK-85-dcb"/>
+                            <constraint firstItem="ydp-I9-FK1" firstAttribute="trailing" secondItem="LlG-zU-AR2" secondAttribute="trailing" id="KHb-CH-kJS"/>
+                            <constraint firstItem="fuE-Si-ZOh" firstAttribute="baseline" secondItem="O1h-0L-tgg" secondAttribute="baseline" id="KU7-40-hYP"/>
+                            <constraint firstItem="ydp-I9-FK1" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="L6w-TR-Duj"/>
+                            <constraint firstItem="MaT-hm-shj" firstAttribute="leading" secondItem="O1h-0L-tgg" secondAttribute="trailing" constant="12" symbolic="YES" id="LyL-8s-mjP"/>
+                            <constraint firstAttribute="bottom" secondItem="US4-ko-GUK" secondAttribute="bottom" constant="20" symbolic="YES" id="Ogr-gi-ZSB"/>
+                            <constraint firstItem="US4-ko-GUK" firstAttribute="top" secondItem="ydp-I9-FK1" secondAttribute="bottom" constant="20" symbolic="YES" id="P9d-na-gxM"/>
+                            <constraint firstItem="YpD-LL-vST" firstAttribute="leading" secondItem="US4-ko-GUK" secondAttribute="trailing" constant="12" symbolic="YES" id="Q0m-fB-WwP"/>
+                            <constraint firstItem="PII-we-agz" firstAttribute="leading" secondItem="Fdm-Bo-ZYT" secondAttribute="trailing" constant="11" id="Vaf-jw-T5O"/>
+                            <constraint firstItem="ydp-I9-FK1" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="22" id="aNZ-s3-4yH"/>
+                            <constraint firstItem="Fdm-Bo-ZYT" firstAttribute="leading" secondItem="YpD-LL-vST" secondAttribute="trailing" constant="11" id="bWt-Xb-bJu"/>
+                            <constraint firstItem="US4-ko-GUK" firstAttribute="baseline" secondItem="YpD-LL-vST" secondAttribute="baseline" id="cgU-RM-gfg"/>
+                            <constraint firstItem="PII-we-agz" firstAttribute="baseline" secondItem="fuE-Si-ZOh" secondAttribute="baseline" id="fw2-HB-VjM"/>
+                            <constraint firstItem="Fdm-Bo-ZYT" firstAttribute="baseline" secondItem="PII-we-agz" secondAttribute="baseline" id="jvZ-ce-8R8"/>
+                            <constraint firstItem="O1h-0L-tgg" firstAttribute="baseline" secondItem="MaT-hm-shj" secondAttribute="baseline" id="mYj-AB-jhh"/>
+                            <constraint firstItem="MaT-hm-shj" firstAttribute="baseline" secondItem="LlG-zU-AR2" secondAttribute="baseline" id="nsk-SP-RW0"/>
+                            <constraint firstItem="ydp-I9-FK1" firstAttribute="leading" secondItem="US4-ko-GUK" secondAttribute="leading" id="ozg-JK-95t"/>
+                            <constraint firstItem="YpD-LL-vST" firstAttribute="baseline" secondItem="Fdm-Bo-ZYT" secondAttribute="baseline" id="sJV-mX-eHR"/>
+                            <constraint firstItem="fuE-Si-ZOh" firstAttribute="leading" secondItem="PII-we-agz" secondAttribute="trailing" constant="11" id="vNd-aB-Ls8"/>
                         </constraints>
                     </view>
                     <connections>

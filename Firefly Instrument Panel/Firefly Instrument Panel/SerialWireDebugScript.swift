@@ -28,7 +28,7 @@ class SerialWireDebugScript: FixtureScript {
             return
         }
         
-        presenter.show(message: "attaching to serial wire debug port...")
+        presenter.show(message: "attaching to serial wire debug port of \(serialWireInstrumentIdentifier)...")
         try serialWireInstrument.setEnabled(true)
         
         let serialWireDebug = FDSerialWireDebug()
@@ -46,7 +46,7 @@ class SerialWireDebugScript: FixtureScript {
         
         var debugPortIDCode: UInt32 = 0
         try serialWireDebug.readPortIDCode(&debugPortIDCode)
-        NSLog(FDSerialWireDebug.debugPortIDCodeDescription(debugPortIDCode))
+        presenter.show(message: FDSerialWireDebug.debugPortIDCodeDescription(debugPortIDCode))
         
         try serialWireDebug.initializeDebugPort()
         try serialWireDebug.halt()

@@ -126,7 +126,7 @@ class ProgramScript: SpiFlashTestScript {
     override func setup() throws {
         try super.setup()
         let programmer = Programmer()
-        flash = try programmer.setupFlash(serialWireDebugScript: self)
+        flash = try programmer.setupFlash(serialWireDebugScript: self, processor: "NRF52")
     }
     
     func eraseChip() throws {

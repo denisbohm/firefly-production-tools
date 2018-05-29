@@ -29,11 +29,11 @@ class ViewController: NSViewController, Presenter {
     
     func loadFirmware(resource: String) -> IntelHex? {
         guard let path = Bundle.main.path(forResource: resource, ofType: "hex") else {
-            show(message: "can't find resource \"\(resource)")
+            show(message: "can't find resource \"\(resource)\"")
             return nil
         }
         guard let content = try? String(contentsOfFile: path) else {
-            show(message: "can't read resource \"\(resource)")
+            show(message: "can't read resource \"\(resource)\"")
             return nil
         }
         return try? IntelHexParser.parse(content: content)
@@ -50,6 +50,18 @@ class ViewController: NSViewController, Presenter {
             return
         }
         run(script: ProgramScript(fixture: fixture, presenter: self, serialWireInstrumentIdentifier: "SerialWire1", boot: boot, application: application, softdevice: softdevice, serialNumber: 0))
+    }
+    
+    @IBAction func quiescentTest(_ sender: Any) {
+        NSLog("quiescent test")
+        guard
+            let nrf5Firmware = loadFirmware(resource: "fd_quiescent_test_nrf5"),
+            let apolloFirmware = loadFirmware(resource: "fd_quiescent_test_apollo")
+        else {
+                show(message: "Can't load firmware!")
+                return
+        }
+        run(script: QuiescentScript(fixture: fixture, presenter: self, nrf5Firmware: nrf5Firmware, apolloFirmware: apolloFirmware))
     }
     
     @IBAction func batteryPower(_ sender: Any) {

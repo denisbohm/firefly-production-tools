@@ -39,12 +39,12 @@ class Programmer {
         try serialWireInstrument.compareToStorage(section.address, length: length, storageIdentifier: storageInstrument.identifier, storageAddress: entry.address)
     }
 
-    public func setupFlash(serialWireDebugScript: SerialWireDebugScript) throws -> FDFireflyFlash {
+    public func setupFlash(serialWireDebugScript: SerialWireDebugScript, processor: String) throws -> FDFireflyFlash {
         let fixture = serialWireDebugScript.fixture
         guard let serialWireDebug = serialWireDebugScript.serialWireDebug else {
             throw LocalError.preconditionFailure
         }
-        let flash = try FDFireflyFlash("NRF52")
+        let flash = try FDFireflyFlash(processor)
         flash.serialWireDebug = serialWireDebug
         flash.logger = serialWireDebug.logger
         try flash.setupProcessor()
@@ -117,7 +117,7 @@ class Programmer {
             let writer = WriteViaStorage(serialWireInstrument: serialWireInstrument, storageInstrument: storageInstrument, storageAddress: entry.address)
             try flash.writePages(address, data: data, erase: true, writer: writer)
             try serialWireInstrument.compareToStorage(address, length: UInt32(length), storageIdentifier: storageInstrument.identifier, storageAddress: entry.address)
-            presenter.show(message: "\(name) pass")
+            presenter.show(message: "\(name) program: pass")
         } else {
             try flash.writePages(address, data: data, erase: true)
             let verify = try flash.serialWireDebug!.readMemory(address, length: UInt32(data.count))
