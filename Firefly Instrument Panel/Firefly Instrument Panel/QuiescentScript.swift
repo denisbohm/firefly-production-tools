@@ -47,7 +47,7 @@ class QuiescentScript: FixtureScript, Script {
         try serialWireDebugScript.setup()
         
         let programmer = Programmer()
-        let flash = try programmer.setupFlash(serialWireDebugScript: serialWireDebugScript, processor: "Apollo")
+        let flash = try programmer.setupFlash(serialWireDebugScript: serialWireDebugScript, processor: "APOLLO")
         presenter.show(message: "erasing apollo...")
         try flash.massErase()
         presenter.show(message: "apollo erased")

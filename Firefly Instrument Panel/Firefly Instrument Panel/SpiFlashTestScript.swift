@@ -65,7 +65,7 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         }
         
     }
-
+    
     func fd_i2cm_initialize(heap: Heap) throws -> (bus: fd_i2cm_bus_t, device: fd_i2cm_device_t) {
         let TWIM0: UInt32 = 0x40003000
         let scl = fd_gpio_t(port: 1, pin: 12)
@@ -447,6 +447,75 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         ))
     }
 
+    class fd_pwm_module_t: Heap.Struct {
+        
+        let instance: Heap.Primitive<UInt32>
+        let frequency: Heap.Primitive<Float32>
+        
+        init(instance: UInt32, frequency: Float32) {
+            self.instance = Heap.Primitive(value: instance)
+            self.frequency = Heap.Primitive(value: frequency)
+            super.init(fields: [self.instance, self.frequency])
+        }
+        
+    }
+    
+    class fd_pwm_channel_t: Heap.Struct {
+        
+        let module: Heap.Reference<fd_pwm_module_t>
+        let instance: Heap.Primitive<UInt32>
+        let gpio: fd_gpio_t
+        
+        init(module: fd_pwm_module_t, instance: UInt32, gpio: fd_gpio_t) {
+            self.module = Heap.Reference(object: module)
+            self.instance = Heap.Primitive(value: instance)
+            self.gpio = gpio
+            super.init(fields: [self.module, self.instance, self.gpio])
+        }
+        
+    }
+    
+    func fd_pwm_initialize(heap: Heap) throws -> (module: fd_pwm_module_t, channel: fd_pwm_channel_t) {
+        let PWM0: UInt32 = 0x4001C000
+        let module = fd_pwm_module_t(instance: PWM0, frequency: 32000.0)
+        heap.addRoot(object: module)
+        let moduleCount: UInt32 = 1
+        
+        let channel = fd_pwm_channel_t(module: module, instance: 0, gpio: fd_gpio_t(port: 0, pin: 20))
+        heap.addRoot(object: channel)
+
+        heap.locate()
+        heap.encode()
+        try serialWireDebug?.writeMemory(heap.baseAddress, data: heap.data)
+        let _ = try run(getFunction(name: "fd_pwm_initialize").address, r0: module.heapAddress!, r1: moduleCount)
+        return (module: module, channel: channel)
+    }
+    
+    func fd_pwm_module_enable(module: fd_pwm_module_t) throws {
+        let _ = try run(getFunction(name: "fd_pwm_module_enable").address, r0: module.heapAddress!)
+    }
+    
+    func fd_pwm_channel_start(channel: fd_pwm_channel_t, intensity: Float32) throws {
+        try serialWireDebug?.writeRegister(UInt16(CORTEX_M_REGISTER_S0), value:intensity.bitPattern)
+        let _ = try run(getFunction(name: "fd_pwm_channel_start").address, r0: channel.heapAddress!)
+    }
+    
+    func vibrate() throws {
+        let heap = Heap()
+        heap.setBase(address: cortex.heapRange.location)
+        
+        presenter.show(message: "initializing PWM...")
+        let (module, channel) = try fd_pwm_initialize(heap: heap)
+        
+        presenter.show(message: "enabling PWM module...")
+        try fd_pwm_module_enable(module: module)
+        
+        presenter.show(message: "starting PWM channel...")
+        try fd_pwm_channel_start(channel: channel, intensity: 0.5)
+        
+        Thread.sleep(forTimeInterval: 15)
+    }
+    
     func main() throws {
         try setup()
 
@@ -461,6 +530,8 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         presenter.show(message: String(format: "%02x %02x %02x %02x", information.manufacturer_id.value, information.device_id.value, information.memory_type.value, information.memory_capacity.value))
         presenter.show(message: "getting LSM6DSL samples...")
         try lsm6dslTest(heap: heap, device: lsm6dslDevice)
+        presenter.show(message: "vibrating at 32kHz 50% duty cycle...")
+        try vibrate()
     }
 
 }

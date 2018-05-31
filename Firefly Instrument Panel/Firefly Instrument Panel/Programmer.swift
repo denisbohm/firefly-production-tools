@@ -115,7 +115,7 @@ class Programmer {
             let entry = try fileSystem.ensure(name, data: data)
             
             let writer = WriteViaStorage(serialWireInstrument: serialWireInstrument, storageInstrument: storageInstrument, storageAddress: entry.address)
-            try flash.writePages(address, data: data, erase: true, writer: writer)
+            try flash.writePages(address, data: data, erase: true, writer: nil)
             try serialWireInstrument.compareToStorage(address, length: UInt32(length), storageIdentifier: storageInstrument.identifier, storageAddress: entry.address)
             presenter.show(message: "\(name) program: pass")
         } else {
