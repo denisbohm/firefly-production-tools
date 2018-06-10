@@ -25,14 +25,16 @@ class FixtureScript {
     
     func powerOnBatterySimulator() throws {
         presenter.show(message: "powering on battery simulator...")
+        Thread.sleep(forTimeInterval: 1.0)
         try fixture.voltageSenseRelayInstrument?.set(true)
         try fixture.batteryInstrument?.setEnabled(true)
         try fixture.simulatorToBatteryRelayInstrument?.set(true)
-        Thread.sleep(forTimeInterval: 0.1)
+        Thread.sleep(forTimeInterval: 1.0)
         let conversion = try fixture.voltageInstrument?.convert()
         if (conversion == nil) || (conversion!.voltage < 1.7) {
             throw ScriptError.setupFailure
         }
+        try fixture.voltageSenseRelayInstrument?.set(false)
     }
     
     func setupInstruments() throws {

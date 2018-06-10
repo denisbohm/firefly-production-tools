@@ -127,7 +127,7 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
 
     override func setup() throws {
         try super.setup()
-        try setupExecutable(resource: "firefly_test_suite", address: 0x20000000, length: 0x40000)
+        try setupExecutable(resource: "fd_test_suite_nrf5", address: 0x20000000, length: 0x40000)
         let _ = try run(getFunction(name: "SystemInit").address)
         try setupSystemVoltage()
     }
@@ -501,6 +501,13 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
     }
     
     func vibrate() throws {
+        let motor = fd_gpio_t(port: 0, pin: 20)
+        try fd_gpio_configure_output(gpio: motor)
+        for _ in 0 ... 1000000 {
+            try fd_gpio_set(gpio: motor, value: false)
+            try fd_gpio_set(gpio: motor, value: true)
+        }
+
         let heap = Heap()
         heap.setBase(address: cortex.heapRange.location)
         
