@@ -9,8 +9,8 @@
 import ARMSerialWireDebug
 import FireflyInstruments
 
-class SpiFlashTestScript: SerialWireDebugScript, Script {
-
+class FireflyDesignScript: SerialWireDebugScript {
+    
     class fd_gpio_t: Heap.Struct {
         
         var port: Heap.Primitive<UInt32>
@@ -36,6 +36,10 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         let _ = try run(getFunction(name: "fd_gpio_set").address, r0: gpio.port.value, r1: gpio.pin.value, r2: value ? 1 : 0)
     }
     
+}
+
+class SpiFlashTestScript: FireflyDesignScript, Script {
+
     class fd_i2cm_bus_t: Heap.Struct {
         
         let instance: Heap.Primitive<UInt32>
@@ -90,14 +94,36 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         let _ = try run(getFunction(name: "fd_i2cm_bus_enable").address, r0: bus.heapAddress!)
     }
     
+    func fd_bq25120_write(heap: Heap, device: fd_i2cm_device_t, location: UInt8, value: UInt8) throws -> Bool {
+        let resultR0 = try run(getFunction(name: "fd_bq25120_write").address, r0: device.heapAddress!, r1: UInt32(location), r2: UInt32(value))
+        return resultR0 != 0
+    }
+    
+    func fd_bq25120_read(heap: Heap, device: fd_i2cm_device_t, location: UInt8) throws -> (result: Bool, value: UInt8) {
+        try serialWireDebug?.writeMemory(heap.freeAddress, value: 0x5a5a5a5a)
+        let resultR0 = try run(getFunction(name: "fd_i2cm_device_sequence_tx1_rx1").address, r0: device.heapAddress!, r1: UInt32(location), r2: heap.freeAddress)
+        let data = try serialWireDebug?.readMemory(heap.freeAddress, length: 1)
+        return (result: resultR0 != 0, value: data![0])
+    }
+    
     func fd_bq25120_set_system_voltage(device: fd_i2cm_device_t, voltage: Float) throws -> Bool {
-        let cdn = fd_gpio_t(port: 1, pin: 15)
-        try fd_gpio_configure_output(gpio: cdn)
-        try fd_gpio_set(gpio: cdn, value: true)
         try serialWireDebug?.writeRegister(UInt16(CORTEX_M_REGISTER_S0), value:voltage.bitPattern)
         let resultR0 = try run(getFunction(name: "fd_bq25120_set_system_voltage").address, r0: device.heapAddress!)
         return resultR0 != 0
     }
+    
+    let FD_BQ25120_STATUS_SHIPMODE_REG: UInt8 =     0x00
+    let FD_BQ25120_FAULTS_FAULTMASKS_REG: UInt8 =   0x01
+    let FD_BQ25120_TSCONTROL_STATUS_REG: UInt8 =    0x02
+    let FD_BQ25120_FASTCHARGE_CTL_REG: UInt8 =      0x03
+    let FD_BQ25120_CHARGETERM_I2CADDR_REG: UInt8 =  0x04
+    let FD_BQ25120_BATT_VOLTAGE_CTL_REG: UInt8 =    0x05
+    let FD_BQ25120_SYSTEM_VOUT_CTL_REG: UInt8 =     0x06
+    let FD_BQ25120_LOADSW_LDO_CTL_REG: UInt8 =      0x07
+    let FD_BQ25120_PUSH_BTN_CTL_REG: UInt8 =        0x08
+    let FD_BQ25120_ILIMIT_UVLO_CTL_REG: UInt8 =     0x09
+    let FD_BQ25120_BATT_VOLT_MONITOR_REG: UInt8 =   0x0A
+    let FD_BQ25120_VIN_DPM_TIMER_REG: UInt8 =       0x0B
     
     func setupSystemVoltage() throws {
         let heap = Heap()
@@ -109,12 +135,34 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         presenter.show(message: "enabling I2C bus...")
         try fd_i2cm_bus_enable(bus: bus)
         
+        // enabling BQ communication
+        let cdn = fd_gpio_t(port: 1, pin: 15)
+        try fd_gpio_configure_output(gpio: cdn)
+        try fd_gpio_set(gpio: cdn, value: true)
+        Thread.sleep(forTimeInterval: 1.0);
+
+        do {
+            let (ok, status) = try fd_bq25120_read(heap: heap, device: device, location: FD_BQ25120_STATUS_SHIPMODE_REG)
+            presenter.show(message: String(format:"status: \(ok) 0x%02x", status))
+        }
+
         presenter.show(message: "setting system rail to 3.2 V...")
+        try fixture.voltageSenseRelayInstrument?.set(true)
         let result = try fd_bq25120_set_system_voltage(device: device, voltage: 3.2)
-        Thread.sleep(forTimeInterval: 0.1)
+        Thread.sleep(forTimeInterval: 0.5)
         let conversion = try fixture.voltageInstrument?.convert()
+        try fixture.voltageSenseRelayInstrument?.set(false)
         presenter.show(message: "result = \(result), voltage = \(String(describing: conversion?.voltage))")
-        
+
+        do {
+            let (ok, status) = try fd_bq25120_read(heap: heap, device: device, location: FD_BQ25120_STATUS_SHIPMODE_REG)
+            presenter.show(message: String(format:"status: \(ok) 0x%02x", status))
+        }
+        do {
+            let (ok, vout) = try fd_bq25120_read(heap: heap, device: device, location: FD_BQ25120_SYSTEM_VOUT_CTL_REG)
+            presenter.show(message: String(format:"vout: \(ok) 0x%02x (expectation: 0xfc)", vout))
+        }
+
         presenter.show(message: "enabling 5 V rail...")
         let boost_5v0_en = fd_gpio_t(port: 0, pin: 8)
         try fd_gpio_configure_output(gpio: boost_5v0_en)
@@ -171,9 +219,9 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         let SPIM2: UInt32 = 0x40023000
         let flashBus = fd_spim_bus_t(
             instance: SPIM1,
-            sclk: fd_gpio_t(port: 0, pin: 5),
-            mosi: fd_gpio_t(port: 0, pin: 4),
-            miso: fd_gpio_t(port: 0, pin: 7),
+            sclk: fd_gpio_t(port: 0, pin: 15),
+            mosi: fd_gpio_t(port: 0, pin: 14),
+            miso: fd_gpio_t(port: 0, pin: 13),
             frequency: 8000000,
             mode: 3
         )
@@ -181,13 +229,13 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
             instance: SPIM2,
             sclk: fd_gpio_t(port: 1, pin: 3),
             mosi: fd_gpio_t(port: 1, pin: 2),
-            miso: fd_gpio_t(port: 1, pin: 1),
+            miso: fd_gpio_t(port: 1, pin: 5),
             frequency: 8000000,
             mode: 3
         )
         let busCount: UInt32 = 2
         
-        let flashDevice = fd_spim_device_t(bus: flashBus, csn: fd_gpio_t(port: 0, pin: 6))
+        let flashDevice = fd_spim_device_t(bus: flashBus, csn: fd_gpio_t(port: 0, pin: 16))
         let lsm6dslDevice = fd_spim_device_t(bus: lsm6dslBus, csn: fd_gpio_t(port: 1, pin: 4))
         let deviceCount: UInt32 = 2
         
@@ -523,9 +571,27 @@ class SpiFlashTestScript: SerialWireDebugScript, Script {
         Thread.sleep(forTimeInterval: 15)
     }
     
+    func toggle_off_on(gpio: fd_gpio_t, duration: TimeInterval) throws {
+        try fd_gpio_configure_output(gpio: gpio)
+        try fd_gpio_set(gpio: gpio, value: false)
+        Thread.sleep(forTimeInterval: duration)
+        try fd_gpio_set(gpio: gpio, value: true)
+    }
+    
+    func petIndicatorTest() throws {
+        let red = fd_gpio_t(port: 0, pin: 21)
+        try toggle_off_on(gpio: red, duration: 1.0)
+        let green = fd_gpio_t(port: 0, pin: 23)
+        try toggle_off_on(gpio: green, duration: 1.0)
+        let blue = fd_gpio_t(port: 0, pin: 25)
+        try toggle_off_on(gpio: blue, duration: 1.0)
+    }
+    
     func main() throws {
         try setup()
 
+        try petIndicatorTest()
+        
         let heap = Heap()
         heap.setBase(address: cortex.heapRange.location)
         presenter.show(message: "initializing SPIM...")

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		920C18F920FFCA6100B9786E /* aw_test_suite_apollo.elf in Resources */ = {isa = PBXBuildFile; fileRef = 920C18F820FFCA6100B9786E /* aw_test_suite_apollo.elf */; };
 		921B4D51206AAA7B0072BEAF /* IdentifyScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921B4D50206AAA7B0072BEAF /* IdentifyScript.swift */; };
 		921B4D54206AAF270072BEAF /* FixtureScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921B4D53206AAF270072BEAF /* FixtureScript.swift */; };
 		921B4D56206AB0D30072BEAF /* SerialWireDebugScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921B4D55206AB0D30072BEAF /* SerialWireDebugScript.swift */; };
@@ -92,6 +93,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		920C18F820FFCA6100B9786E /* aw_test_suite_apollo.elf */ = {isa = PBXFileReference; lastKnownFileType = file; name = aw_test_suite_apollo.elf; path = "../../../../atlas/atlas-wristband3-firmware/build/aw_test_suite_apollo THUMB Debug/aw_test_suite_apollo.elf"; sourceTree = "<group>"; };
 		921B4D50206AAA7B0072BEAF /* IdentifyScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifyScript.swift; sourceTree = "<group>"; };
 		921B4D53206AAF270072BEAF /* FixtureScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixtureScript.swift; sourceTree = "<group>"; };
 		921B4D55206AB0D30072BEAF /* SerialWireDebugScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialWireDebugScript.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 		924410FC20AF25E20082D0D1 /* firmware */ = {
 			isa = PBXGroup;
 			children = (
+				920C18F820FFCA6100B9786E /* aw_test_suite_apollo.elf */,
 				9285262920BDDAE200BD2CF6 /* fd_quiescent_test_apollo.hex */,
 				9285262720BDDAD800BD2CF6 /* fd_quiescent_test_nrf5.hex */,
 				9285262520BDD4BA00BD2CF6 /* fd_test_suite_apollo.elf */,
@@ -352,6 +355,7 @@
 				9285262620BDD4BA00BD2CF6 /* fd_test_suite_apollo.elf in Resources */,
 				924410F920AF241B0082D0D1 /* atlas_app.hex in Resources */,
 				9285262A20BDDAE200BD2CF6 /* fd_quiescent_test_apollo.hex in Resources */,
+				920C18F920FFCA6100B9786E /* aw_test_suite_apollo.elf in Resources */,
 				924410FB20AF242B0082D0D1 /* atlas_boot.hex in Resources */,
 				924410F720AF24090082D0D1 /* s140_nrf52_6.0.0_softdevice.hex in Resources */,
 				92654D0A205B06E9008D000D /* Main.storyboard in Resources */,

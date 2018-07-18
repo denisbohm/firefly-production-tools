@@ -119,6 +119,17 @@ class Heap {
         
     }
     
+    class PrimitiveStruct<T: BinaryConvertable>: Heap.Struct {
+        
+        let value: Heap.Primitive<T>
+        
+        init(value: T) {
+            self.value = Heap.Primitive(value: value)
+            super.init(fields: [self.value])
+        }
+        
+    }
+    
     let swapBytes = !isByteOrderNative(.littleEndian)
     var baseAddress: UInt32 = 0
     var freeAddress: UInt32 = 0

@@ -118,6 +118,9 @@ class SerialWireDebugScript: FixtureScript {
         guard let function = object as? FDExecutableFunction else {
             throw FixtureScript.ScriptError.setupFailure
         }
+        guard function.address != 0 else {
+            throw FixtureScript.ScriptError.setupFailure
+        }
         return function
     }
 

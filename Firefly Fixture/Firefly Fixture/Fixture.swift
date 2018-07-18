@@ -638,8 +638,8 @@ class Fixture {
         let bounds = clipper.path(dimension, offset: properties.wallThickness + properties.pcbOutlineTolerance)
         let outline = clipper.path(dimension, offset: properties.pcbOutlineTolerance)
         let ledge = clipper.path(dimension, offset: -(properties.ledgeThickness - properties.pcbOutlineTolerance))
-        let boundsToOutline = Geometry.split(path1: bounds, path2: outline, x0: -5.0, x1: 5.0)
-        let outlineToLedge = Geometry.split(path1: outline, path2: ledge, x0: -5.0, x1: 5.0)
+        let boundsToOutline = Geometry.split(path1: bounds, path2: outline, x0: -4.0, x1: 4.0)
+        let outlineToLedge = Geometry.split(path1: outline, path2: ledge, x0: -4.0, x1: 4.0)
 
         let boundsToOutlineCut = NSBezierPath()
         boundsToOutlineCut.append(boundsToOutline.leftOuterPath)
