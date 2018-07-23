@@ -36,6 +36,11 @@ class FireflyDesignScript: SerialWireDebugScript {
         let _ = try run(getFunction(name: "fd_gpio_set").address, r0: gpio.port.value, r1: gpio.pin.value, r2: value ? 1 : 0)
     }
     
+    func fd_gpio_get(gpio: fd_gpio_t) throws -> Bool {
+        let r0 = try run(getFunction(name: "fd_gpio_get").address, r0: gpio.port.value, r1: gpio.pin.value)
+        return r0 != 0
+    }
+    
 }
 
 class SpiFlashTestScript: FireflyDesignScript, Script {

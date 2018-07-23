@@ -89,6 +89,11 @@ class ViewController: NSViewController, Presenter {
         run(script: DisplayTestScript(fixture: fixture, presenter: self, serialWireInstrumentIdentifier: "SerialWire2"))
     }
     
+    @IBAction func chargeTest(_ sender: Any) {
+        NSLog("charge test")
+        run(script: ChargeScript(fixture: fixture, presenter: self, serialWireInstrumentIdentifier: "SerialWire1"))
+    }
+    
     func run(script: Script) {
         messageTextView.string = ""
         

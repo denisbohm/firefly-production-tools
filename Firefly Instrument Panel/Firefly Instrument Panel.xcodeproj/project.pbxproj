@@ -13,6 +13,7 @@
 		921B4D56206AB0D30072BEAF /* SerialWireDebugScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921B4D55206AB0D30072BEAF /* SerialWireDebugScript.swift */; };
 		921B4D58206AB1BF0072BEAF /* SpiFlashTestScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921B4D57206AB1BF0072BEAF /* SpiFlashTestScript.swift */; };
 		922121BB206F1CEA009EF087 /* Cortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922121BA206F1CEA009EF087 /* Cortex.swift */; };
+		9235F68321065614002B30F4 /* ChargeScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9235F68221065614002B30F4 /* ChargeScript.swift */; };
 		924410F720AF24090082D0D1 /* s140_nrf52_6.0.0_softdevice.hex in Resources */ = {isa = PBXBuildFile; fileRef = 924410F520AF24090082D0D1 /* s140_nrf52_6.0.0_softdevice.hex */; };
 		924410F920AF241B0082D0D1 /* atlas_app.hex in Resources */ = {isa = PBXBuildFile; fileRef = 924410F820AF241B0082D0D1 /* atlas_app.hex */; };
 		924410FB20AF242B0082D0D1 /* atlas_boot.hex in Resources */ = {isa = PBXBuildFile; fileRef = 924410FA20AF242B0082D0D1 /* atlas_boot.hex */; };
@@ -99,6 +100,7 @@
 		921B4D55206AB0D30072BEAF /* SerialWireDebugScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialWireDebugScript.swift; sourceTree = "<group>"; };
 		921B4D57206AB1BF0072BEAF /* SpiFlashTestScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpiFlashTestScript.swift; sourceTree = "<group>"; };
 		922121BA206F1CEA009EF087 /* Cortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cortex.swift; sourceTree = "<group>"; };
+		9235F68221065614002B30F4 /* ChargeScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChargeScript.swift; sourceTree = "<group>"; };
 		923900DC2062D94400EC9AB4 /* Firefly Instrument Panel.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Firefly Instrument Panel.entitlements"; sourceTree = "<group>"; };
 		924410F520AF24090082D0D1 /* s140_nrf52_6.0.0_softdevice.hex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = s140_nrf52_6.0.0_softdevice.hex; sourceTree = "<group>"; };
 		924410F820AF241B0082D0D1 /* atlas_app.hex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = atlas_app.hex; path = "../../../../atlas/atlas-wristband3-firmware/build/atlas_app THUMB Release/atlas_app.hex"; sourceTree = "<group>"; };
@@ -150,6 +152,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9235F67821065570002B30F4 /* scripts */ = {
+			isa = PBXGroup;
+			children = (
+				92921BFD20A61CAF00837756 /* BatteryPowerScript.swift */,
+				925142222098B41E004A22B9 /* DisplayTestScript.swift */,
+				921B4D53206AAF270072BEAF /* FixtureScript.swift */,
+				921B4D50206AAA7B0072BEAF /* IdentifyScript.swift */,
+				925142272098F6AE004A22B9 /* PowerSetupScript.swift */,
+				925F481C20ACB8A900D22C00 /* ProgramScript.swift */,
+				921B4D55206AB0D30072BEAF /* SerialWireDebugScript.swift */,
+				921B4D57206AB1BF0072BEAF /* SpiFlashTestScript.swift */,
+				9285261B20BDCF8400BD2CF6 /* QuiescentScript.swift */,
+				9235F68221065614002B30F4 /* ChargeScript.swift */,
+			);
+			name = scripts;
+			sourceTree = "<group>";
+		};
 		924410FC20AF25E20082D0D1 /* firmware */ = {
 			isa = PBXGroup;
 			children = (
@@ -198,27 +217,19 @@
 		92654D01205B06E9008D000D /* Firefly Instrument Panel */ = {
 			isa = PBXGroup;
 			children = (
+				9235F67821065570002B30F4 /* scripts */,
 				92654D02205B06E9008D000D /* AppDelegate.swift */,
-				92921BFD20A61CAF00837756 /* BatteryPowerScript.swift */,
 				922121BA206F1CEA009EF087 /* Cortex.swift */,
-				925142222098B41E004A22B9 /* DisplayTestScript.swift */,
 				924410FC20AF25E20082D0D1 /* firmware */,
 				92654D20205B080D008D000D /* Fixture.swift */,
-				921B4D53206AAF270072BEAF /* FixtureScript.swift */,
 				925FB255206BDFDF0071E417 /* Heap.swift */,
-				921B4D50206AAA7B0072BEAF /* IdentifyScript.swift */,
 				92654D08205B06E9008D000D /* Main.storyboard */,
 				924410FF20AF26770082D0D1 /* misc */,
-				925142272098F6AE004A22B9 /* PowerSetupScript.swift */,
 				9266027F206AA30700DF7B43 /* Presenter.swift */,
 				925F481F20ACB96100D22C00 /* Programmer.swift */,
-				925F481C20ACB8A900D22C00 /* ProgramScript.swift */,
 				9266027C206A9F5900DF7B43 /* Runner.swift */,
 				92660281206AA4A400DF7B43 /* Script.swift */,
-				921B4D55206AB0D30072BEAF /* SerialWireDebugScript.swift */,
-				921B4D57206AB1BF0072BEAF /* SpiFlashTestScript.swift */,
 				92654D04205B06E9008D000D /* ViewController.swift */,
-				9285261B20BDCF8400BD2CF6 /* QuiescentScript.swift */,
 			);
 			path = "Firefly Instrument Panel";
 			sourceTree = "<group>";
@@ -387,6 +398,7 @@
 				9266027D206A9F5900DF7B43 /* Runner.swift in Sources */,
 				921B4D54206AAF270072BEAF /* FixtureScript.swift in Sources */,
 				922121BB206F1CEA009EF087 /* Cortex.swift in Sources */,
+				9235F68321065614002B30F4 /* ChargeScript.swift in Sources */,
 				92654D03205B06E9008D000D /* AppDelegate.swift in Sources */,
 				921B4D56206AB0D30072BEAF /* SerialWireDebugScript.swift in Sources */,
 				92654D21205B080D008D000D /* Fixture.swift in Sources */,
