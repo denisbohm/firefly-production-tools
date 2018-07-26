@@ -156,15 +156,15 @@
 			isa = PBXGroup;
 			children = (
 				92921BFD20A61CAF00837756 /* BatteryPowerScript.swift */,
+				9235F68221065614002B30F4 /* ChargeScript.swift */,
 				925142222098B41E004A22B9 /* DisplayTestScript.swift */,
 				921B4D53206AAF270072BEAF /* FixtureScript.swift */,
 				921B4D50206AAA7B0072BEAF /* IdentifyScript.swift */,
 				925142272098F6AE004A22B9 /* PowerSetupScript.swift */,
 				925F481C20ACB8A900D22C00 /* ProgramScript.swift */,
+				9285261B20BDCF8400BD2CF6 /* QuiescentScript.swift */,
 				921B4D55206AB0D30072BEAF /* SerialWireDebugScript.swift */,
 				921B4D57206AB1BF0072BEAF /* SpiFlashTestScript.swift */,
-				9285261B20BDCF8400BD2CF6 /* QuiescentScript.swift */,
-				9235F68221065614002B30F4 /* ChargeScript.swift */,
 			);
 			name = scripts;
 			sourceTree = "<group>";

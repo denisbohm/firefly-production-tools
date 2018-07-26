@@ -11,6 +11,8 @@ import FireflyInstruments
 
 class FireflyDesignScript: SerialWireDebugScript {
     
+    var setupState: (heap: Heap, bus: fd_i2cm_bus_t, device: fd_i2cm_device_t)? = nil
+    
     class fd_gpio_t: Heap.Struct {
         
         var port: Heap.Primitive<UInt32>
@@ -22,6 +24,10 @@ class FireflyDesignScript: SerialWireDebugScript {
             super.init(fields: [self.port, self.pin])
         }
         
+    }
+    
+    func fd_gpio_configure_input_pull_up(gpio: fd_gpio_t) throws {
+        let _ = try run(getFunction(name: "fd_gpio_configure_input_pull_up").address, r0: gpio.port.value, r1: gpio.pin.value)
     }
     
     func fd_gpio_configure_output(gpio: fd_gpio_t) throws {
@@ -41,10 +47,6 @@ class FireflyDesignScript: SerialWireDebugScript {
         return r0 != 0
     }
     
-}
-
-class SpiFlashTestScript: FireflyDesignScript, Script {
-
     class fd_i2cm_bus_t: Heap.Struct {
         
         let instance: Heap.Primitive<UInt32>
@@ -117,6 +119,53 @@ class SpiFlashTestScript: FireflyDesignScript, Script {
         return resultR0 != 0
     }
     
+    func fd_bq25120_read_battery_voltage(device: fd_i2cm_device_t) throws -> (result: Bool, voltage: Float) {
+        #if false
+        let resultR0 = try run(getFunction(name: "fd_bq25120_read_battery_voltage").address, r0: device.heapAddress!)
+        let result = resultR0 != 0
+        if !result {
+            return (result: false, voltage: 0.0)
+        }
+        var voltageBitPattern: UInt32 = 0
+        try serialWireDebug?.readRegister(UInt16(CORTEX_M_REGISTER_S0), value: &voltageBitPattern)
+        let voltage = Float(bitPattern: voltageBitPattern)
+        #endif
+        let heap = setupState!.heap
+        let (result1, r1) = try fd_bq25120_read(heap: heap, device: device, location: FD_BQ25120_BATT_VOLTAGE_CTL_REG)
+        if !result1 {
+            return (result: false, voltage: 0.0)
+        }
+        var battery_regulation_voltage: Float = 3.6 + Float(r1 >> 1) * 0.01
+        let result2 = try fd_bq25120_write(heap: heap, device: device, location: FD_BQ25120_BATT_VOLT_MONITOR_REG, value: 0b10000000)
+        if !result2 {
+            return (result: false, voltage: 0.0)
+        }
+        Thread.sleep(forTimeInterval: 0.002)
+        let (result3, r3) = try fd_bq25120_read(heap: heap, device: device, location: FD_BQ25120_BATT_VOLT_MONITOR_REG)
+        if !result3 {
+            return (result: false, voltage: 0.0)
+        }
+        let range: Float = 0.6 + 0.1 * Float((r3 >> 5) & 0b11)
+        let threshold: Float
+        switch (r3 >> 2) & 0b111 {
+        case 0b111:
+            threshold = 0.08
+        case 0b110:
+            threshold = 0.06
+        case 0b011:
+            threshold = 0.04
+        case 0b010:
+            threshold = 0.02
+        case 0b001:
+            threshold = 0.00
+        default:
+            battery_regulation_voltage = 0.00
+            threshold = 0.00
+        }
+        let voltage: Float = battery_regulation_voltage * (range + threshold)
+        return (result: true, voltage: voltage)
+    }
+    
     let FD_BQ25120_STATUS_SHIPMODE_REG: UInt8 =     0x00
     let FD_BQ25120_FAULTS_FAULTMASKS_REG: UInt8 =   0x01
     let FD_BQ25120_TSCONTROL_STATUS_REG: UInt8 =    0x02
@@ -130,27 +179,27 @@ class SpiFlashTestScript: FireflyDesignScript, Script {
     let FD_BQ25120_BATT_VOLT_MONITOR_REG: UInt8 =   0x0A
     let FD_BQ25120_VIN_DPM_TIMER_REG: UInt8 =       0x0B
     
-    func setupSystemVoltage() throws {
+    func setupSystemVoltage() throws -> (heap: Heap, bus: fd_i2cm_bus_t, device: fd_i2cm_device_t) {
         let heap = Heap()
         heap.setBase(address: cortex.heapRange.location)
         
         presenter.show(message: "initializing I2CM...")
         let (bus, device) = try fd_i2cm_initialize(heap: heap)
-
+        
         presenter.show(message: "enabling I2C bus...")
         try fd_i2cm_bus_enable(bus: bus)
         
-        // enabling BQ communication
+        // enable BQ communication
         let cdn = fd_gpio_t(port: 1, pin: 15)
         try fd_gpio_configure_output(gpio: cdn)
         try fd_gpio_set(gpio: cdn, value: true)
         Thread.sleep(forTimeInterval: 1.0);
-
+        
         do {
             let (ok, status) = try fd_bq25120_read(heap: heap, device: device, location: FD_BQ25120_STATUS_SHIPMODE_REG)
             presenter.show(message: String(format:"status: \(ok) 0x%02x", status))
         }
-
+        
         presenter.show(message: "setting system rail to 3.2 V...")
         try fixture.voltageSenseRelayInstrument?.set(true)
         let result = try fd_bq25120_set_system_voltage(device: device, voltage: 3.2)
@@ -158,7 +207,7 @@ class SpiFlashTestScript: FireflyDesignScript, Script {
         let conversion = try fixture.voltageInstrument?.convert()
         try fixture.voltageSenseRelayInstrument?.set(false)
         presenter.show(message: "result = \(result), voltage = \(String(describing: conversion?.voltage))")
-
+        
         do {
             let (ok, status) = try fd_bq25120_read(heap: heap, device: device, location: FD_BQ25120_STATUS_SHIPMODE_REG)
             presenter.show(message: String(format:"status: \(ok) 0x%02x", status))
@@ -167,24 +216,30 @@ class SpiFlashTestScript: FireflyDesignScript, Script {
             let (ok, vout) = try fd_bq25120_read(heap: heap, device: device, location: FD_BQ25120_SYSTEM_VOUT_CTL_REG)
             presenter.show(message: String(format:"vout: \(ok) 0x%02x (expectation: 0xfc)", vout))
         }
-
+        
         presenter.show(message: "enabling 5 V rail...")
         let boost_5v0_en = fd_gpio_t(port: 0, pin: 8)
         try fd_gpio_configure_output(gpio: boost_5v0_en)
         try fd_gpio_set(gpio: boost_5v0_en, value: true)
         Thread.sleep(forTimeInterval: 0.1)
         // !!! VB is not connected on instrument board, so can't test 5V rail... -denis
-//        let conversion5V = try fixture.auxiliaryVoltageInstrument?.convert()
-//        presenter.show(message: "result = \(result), voltage = \(String(describing: conversion5V?.voltage))")
+        //        let conversion5V = try fixture.auxiliaryVoltageInstrument?.convert()
+        //        presenter.show(message: "result = \(result), voltage = \(String(describing: conversion5V?.voltage))")
+        
+        return (heap: heap, bus: bus, device: device)
     }
 
     override func setup() throws {
         try super.setup()
         try setupExecutable(resource: "fd_test_suite_nrf5", address: 0x20000000, length: 0x40000)
         let _ = try run(getFunction(name: "SystemInit").address)
-        try setupSystemVoltage()
+        setupState = try setupSystemVoltage()
     }
     
+}
+
+class SpiFlashTestScript: FireflyDesignScript, Script {
+
     class fd_spim_bus_t: Heap.Struct {
         
         let instance: Heap.Primitive<UInt32>

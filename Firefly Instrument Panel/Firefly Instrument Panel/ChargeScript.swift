@@ -12,6 +12,7 @@ class ChargeScript: FireflyDesignScript, Script {
     
     let usbPowerPortPin: fd_gpio_t = fd_gpio_t(port: 1, pin: 10)
     let chargeStatusPortPin: fd_gpio_t = fd_gpio_t(port: 0, pin: 3)
+    let chipDisablePortPin: fd_gpio_t = fd_gpio_t(port: 1, pin: 15)
     var prechargeMinBatteryVoltage: Float = 3.0
     var prechargeMaxBatteryVoltage: Float = 3.9
     var prechargeDrainTimeout: Float = 60.0
@@ -22,9 +23,10 @@ class ChargeScript: FireflyDesignScript, Script {
     var minChargedBatteryVoltage: Float = 4.0
     var maxChargedBatteryVoltage: Float = 4.3
     var maxChargedCurrent: Float = 0.001
-
+    
     func readBatteryVoltage() throws -> Float {
-        return 3.9
+        let (_, voltage) = try fd_bq25120_read_battery_voltage(device: setupState!.device)
+        return voltage
     }
     
     func readChargeCurrent() throws -> Float {
@@ -32,21 +34,23 @@ class ChargeScript: FireflyDesignScript, Script {
     }
     
     func testCharging() throws {
-        // switch DUT to USB power (first switch charged super cap into bat+ to avoid power loss)
-        try fixture.supercapToBatteryRelayInstrument?.set(true)
-        Thread.sleep(forTimeInterval: 0.1)
-        try fixture.usbPowerRelayInstrument?.set(true)
-        Thread.sleep(forTimeInterval: 0.1)
+        try fd_gpio_configure_input_pull_up(gpio: usbPowerPortPin)
+        try fd_gpio_configure_input_pull_up(gpio: chargeStatusPortPin)
+        try fd_gpio_configure_output(gpio: chipDisablePortPin)
+
         do {
             let value = try fd_gpio_get(gpio: usbPowerPortPin)
-            let pass = value == true
+            let expected = false
+            let pass = value == expected
             presenter.show(message: String(format: "USB power good pin test: \(pass)"))
         }
         
+        #if false
         try fixture.drainSupercapRelayInstrument?.set(false)
         try fixture.fillSupercapRelayInstrument?.set(false)
         try fixture.supercapToBatteryRelayInstrument?.set(false)
         try fixture.simulatorToBatteryRelayInstrument?.set(false)
+        #endif
         
         let drainDeadline = Date().addingTimeInterval(TimeInterval(prechargeDrainTimeout))
         while Date() < drainDeadline {
@@ -75,19 +79,27 @@ class ChargeScript: FireflyDesignScript, Script {
             }
             presenter.show(message: "preparing battery simulator by charging supercap above \(prechargeMinBatteryVoltage) V... (currently at \(batteryCapacitorVoltage) V)")
             // charge the supercap to the nominal battery voltage
+            try fixture.batteryInstrument?.setEnabled(true)
+            try fixture.batteryInstrument?.setVoltage(4.2)
             try fixture.fillSupercapRelayInstrument?.set(true)
             Thread.sleep(forTimeInterval: 5)
             try fixture.fillSupercapRelayInstrument?.set(false)
         }
-        
+        try fixture.batteryInstrument?.setEnabled(false)
+
         // connect DUT to supercap power
         try fixture.supercapToBatteryRelayInstrument?.set(true)
         Thread.sleep(forTimeInterval: 0.1)
+        // enable BQ charging at 100 mA
+        let _ = try fd_bq25120_write(heap: setupState!.heap, device: setupState!.device, location: FD_BQ25120_FASTCHARGE_CTL_REG, value: 0b11010000)
+        try fd_gpio_set(gpio: chipDisablePortPin, value: false)
+        Thread.sleep(forTimeInterval: 1.0);
         do {
+            let faults = try fd_bq25120_read(heap: setupState!.heap, device: setupState!.device, location: FD_BQ25120_FAULTS_FAULTMASKS_REG)
             let value = try fd_gpio_get(gpio: chargeStatusPortPin)
             let expected = false
             let pass = value == expected
-            presenter.show(message: "charge status pin test: \(pass)")
+            presenter.show(message: "charge status pin test: \(pass), faults: \(faults)")
         }
         do {
             let value = try readChargeCurrent()
@@ -128,12 +140,30 @@ class ChargeScript: FireflyDesignScript, Script {
         }
     }
 
+    func powerOnUSB() throws {
+        presenter.show(message: "powering on USB...")
+        Thread.sleep(forTimeInterval: 1.0)
+        try fixture.voltageSenseRelayInstrument?.set(true)
+        try fixture.usbPowerRelayInstrument?.set(true)
+        Thread.sleep(forTimeInterval: 1.0)
+        let conversion = try fixture.voltageInstrument?.convert()
+        if (conversion == nil) || (conversion!.voltage < 1.7) {
+            throw ScriptError.setupFailure
+        }
+        try fixture.voltageSenseRelayInstrument?.set(false)
+    }
+    
+    override func powerOn() throws {
+        try powerOnUSB()
+    }
+
     override func setup() throws {
         try super.setup()
     }
     
     func main() throws {
         try setup()
+        
         try testCharging()
     }
     

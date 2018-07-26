@@ -28,6 +28,7 @@ class FixtureScript {
         Thread.sleep(forTimeInterval: 1.0)
         try fixture.voltageSenseRelayInstrument?.set(true)
         try fixture.batteryInstrument?.setEnabled(true)
+        try fixture.batteryInstrument?.setVoltage(3.9)
         try fixture.simulatorToBatteryRelayInstrument?.set(true)
         Thread.sleep(forTimeInterval: 1.0)
         let conversion = try fixture.voltageInstrument?.convert()
@@ -37,11 +38,15 @@ class FixtureScript {
         try fixture.voltageSenseRelayInstrument?.set(false)
     }
     
+    func powerOn() throws {
+        try powerOnBatterySimulator()
+    }
+    
     func setupInstruments() throws {
         presenter.show(message: "connecting to instruments...")
         try fixture.collectInstruments()
         
-        try powerOnBatterySimulator()
+        try powerOn()
     }
     
     func setup() throws {
