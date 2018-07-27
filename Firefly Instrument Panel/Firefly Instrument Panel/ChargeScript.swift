@@ -25,7 +25,8 @@ class ChargeScript: FireflyDesignScript, Script {
     var maxChargedCurrent: Float = 0.001
     
     func readBatteryVoltage() throws -> Float {
-        let (_, voltage) = try fd_bq25120_read_battery_voltage(device: setupState!.device)
+        let device = setupState!.devices["bq25120"]!
+        let (_, voltage) = try fd_bq25120_read_battery_voltage(device: device)
         return voltage
     }
     
@@ -90,12 +91,15 @@ class ChargeScript: FireflyDesignScript, Script {
         // connect DUT to supercap power
         try fixture.supercapToBatteryRelayInstrument?.set(true)
         Thread.sleep(forTimeInterval: 0.1)
-        // enable BQ charging at 100 mA
-        let _ = try fd_bq25120_write(heap: setupState!.heap, device: setupState!.device, location: FD_BQ25120_FASTCHARGE_CTL_REG, value: 0b11010000)
+        // enable BQ current limit at 400 mA
+        let device = setupState!.devices["bq25120"]!
+        let _ = try fd_bq25120_write(heap: setupState!.heap, device: device, location: FD_BQ25120_ILIMIT_UVLO_CTL_REG, value: 0b00111010)
+        // enable BQ charging at 300 mA
+        let _ = try fd_bq25120_write(heap: setupState!.heap, device: device, location: FD_BQ25120_FASTCHARGE_CTL_REG, value: 0b11101000)
         try fd_gpio_set(gpio: chipDisablePortPin, value: false)
-        Thread.sleep(forTimeInterval: 1.0);
+        Thread.sleep(forTimeInterval: 1.0)
         do {
-            let faults = try fd_bq25120_read(heap: setupState!.heap, device: setupState!.device, location: FD_BQ25120_FAULTS_FAULTMASKS_REG)
+            let faults = try fd_bq25120_read(heap: setupState!.heap, device: device, location: FD_BQ25120_FAULTS_FAULTMASKS_REG)
             let value = try fd_gpio_get(gpio: chargeStatusPortPin)
             let expected = false
             let pass = value == expected

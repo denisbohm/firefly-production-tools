@@ -24,15 +24,53 @@ protocol HeapObject: class {
 // 4) decode object field changes only
 //
 // http://infocenter.arm.com/help/topic/com.arm.doc.ihi0042f/IHI0042F_aapcs.pdf
-class Heap {
+class Heap: CustomDebugStringConvertible {
 
-    class Primitive<T>: HeapObject where T: BinaryConvertable {
+    class ByteArray: HeapObject, CustomDebugStringConvertible {
+        
+        var heapAddress: UInt32?
+        
+        var value: [UInt8]
+        
+        init(value: [UInt8]) {
+            self.value = value
+        }
+        
+        var debugDescription: String {
+            return String(format: "ByteArray(heapAddress = 0x%08x, byte count = %d)", heapAddress ?? 0, value.count)
+        }
+        
+        var size: UInt32 {
+            get {
+                return UInt32(value.count)
+            }
+        }
+        
+        func locate(locator: Heap) {
+            locator.allocate(object: self)
+        }
+        
+        func encode(encoder: Heap) {
+            encoder.write(address: heapAddress!, value: value)
+        }
+        
+        func decode(decoder: Heap) throws {
+            try decoder.read(address: heapAddress!, value: &value)
+        }
+        
+    }
+    
+    class Primitive<T>: HeapObject, CustomDebugStringConvertible where T: BinaryConvertable {
         
         var heapAddress: UInt32? = nil
         var value: T
         
         init(value: T) {
             self.value = value
+        }
+        
+        var debugDescription: String {
+            return String(format: "Primitive<\(T.self)>(heapAddress = 0x%08x)", heapAddress ?? 0)
         }
         
         var size: UInt32 {
@@ -55,13 +93,27 @@ class Heap {
         
     }
     
-    class Struct: HeapObject {
+    class Struct: HeapObject, CustomDebugStringConvertible {
         
         var heapAddress: UInt32? = nil
         let fields: [HeapObject]
         
         init(fields: [HeapObject]) {
             self.fields = fields
+        }
+        
+        func debugDescriptionContent() -> String {
+            var string = String(format: "(heapAddress = 0x%08x) {\n", heapAddress ?? 0)
+            for field in fields {
+                string += String(describing: field)
+                string += "\n"
+            }
+            string += "}"
+            return string
+        }
+
+        var debugDescription: String {
+            return "\(type(of: self))\(debugDescriptionContent())"
         }
         
         var size: UInt32 {
@@ -92,7 +144,7 @@ class Heap {
         
     }
     
-    class Reference<T>: HeapObject where T: HeapObject {
+    class Reference<T>: HeapObject, CustomDebugStringConvertible where T: HeapObject {
         
         var heapAddress: UInt32? = nil
         let object: T
@@ -101,6 +153,10 @@ class Heap {
             self.object = object
         }
         
+        var debugDescription: String {
+            return String(format: "Reference<\(T.self)>(heapAddress = 0x%08x) {\n\(String(reflecting: object))\n}", heapAddress ?? 0)
+        }
+
         var size: UInt32 { get { return 4 } }
         
         func locate(locator: Heap) {
@@ -139,6 +195,16 @@ class Heap {
 
     init(data: Data = Data()) {
         self.data = data
+    }
+    
+    var debugDescription: String {
+        var string = String(format: "Heap(baseAddress = 0x%08x) {\n", baseAddress)
+        for root in roots {
+            string += String(describing: root)
+            string += "\n"
+        }
+        string += "}"
+        return string
     }
     
     func setBase(address: UInt32) {
@@ -185,11 +251,18 @@ class Heap {
         freeAddress += object.size
     }
     
-    func write<B: BinaryConvertable>(address: UInt32, value: B) {
-        let subdata = Binary.pack(value, swapBytes: swapBytes)
+    func write(address: UInt32, value: Data) {
         let start = data.index(data.startIndex, offsetBy: Int(address - baseAddress))
-        let end = data.index(start, offsetBy: subdata.count)
-        data.replaceSubrange(start ..< end, with: subdata)
+        let end = data.index(start, offsetBy: value.count)
+        data.replaceSubrange(start ..< end, with: value)
+    }
+    
+    func write(address: UInt32, value: [UInt8]) {
+        write(address: address, value: Data(bytes: value))
+    }
+    
+    func write<B: BinaryConvertable>(address: UInt32, value: B) {
+        write(address: address, value: Binary.pack(value, swapBytes: swapBytes))
     }
     
     func encode(object: HeapObject) {
@@ -211,6 +284,18 @@ class Heap {
         if true /* not decoded */ {
             pending.append(object)
         }
+    }
+    
+    func read(address: UInt32, value: inout Data) throws {
+        let start = data.index(data.startIndex, offsetBy: Int(address - baseAddress))
+        let end = data.index(start, offsetBy: value.count)
+        value = data.subdata(in: start ..< end)
+    }
+
+    func read(address: UInt32, value: inout [UInt8]) throws {
+        var dataValue = Data(repeating: 0, count: value.count)
+        try read(address: address, value: &dataValue)
+        value = [UInt8](dataValue)
     }
     
     func read<B: BinaryConvertable>(address: UInt32) throws -> B {

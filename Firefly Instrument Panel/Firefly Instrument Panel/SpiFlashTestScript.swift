@@ -11,7 +11,7 @@ import FireflyInstruments
 
 class FireflyDesignScript: SerialWireDebugScript {
     
-    var setupState: (heap: Heap, bus: fd_i2cm_bus_t, device: fd_i2cm_device_t)? = nil
+    var setupState: (heap: Heap, buses: [String: fd_i2cm_bus_t], devices: [String: fd_i2cm_device_t])? = nil
     
     class fd_gpio_t: Heap.Struct {
         
@@ -24,6 +24,10 @@ class FireflyDesignScript: SerialWireDebugScript {
             super.init(fields: [self.port, self.pin])
         }
         
+    }
+    
+    func fd_gpio_configure_input(gpio: fd_gpio_t) throws {
+        let _ = try run(getFunction(name: "fd_gpio_configure_input").address, r0: gpio.port.value, r1: gpio.pin.value)
     }
     
     func fd_gpio_configure_input_pull_up(gpio: fd_gpio_t) throws {
@@ -77,28 +81,79 @@ class FireflyDesignScript: SerialWireDebugScript {
         
     }
     
-    func fd_i2cm_initialize(heap: Heap) throws -> (bus: fd_i2cm_bus_t, device: fd_i2cm_device_t) {
-        let TWIM0: UInt32 = 0x40003000
-        let scl = fd_gpio_t(port: 1, pin: 12)
-        let sda = fd_gpio_t(port: 1, pin: 13)
-        let bus = fd_i2cm_bus_t(instance: TWIM0, scl: scl, sda: sda, frequency: 100000)
-        heap.addRoot(object: bus)
-        let busCount: UInt32 = 1
+    enum fd_i2cm_direction_t: UInt8 {
+        case rx = 0
+        case tx = 1
+    }
+    
+    class fd_i2cm_transfer_t: Heap.Struct {
         
-        let address: UInt32 = 0x6a // bq25120 7-bit address
-        let device = fd_i2cm_device_t(bus: bus, address: address)
-        heap.addRoot(object: device)
-        let deviceCount: UInt32 = 1
+        let direction: Heap.Primitive<UInt8>
+        let bytes: Heap.Reference<Heap.ByteArray>
+        let byte_count: Heap.Primitive<UInt32>
+        
+        init(direction: fd_i2cm_direction_t, bytes: Heap.ByteArray) {
+            self.direction = Heap.Primitive(value: direction.rawValue)
+            self.bytes = Heap.Reference(object: bytes)
+            self.byte_count = Heap.Primitive(value: UInt32(bytes.value.count))
+            super.init(fields: [self.direction, self.bytes, self.byte_count])
+        }
+        
+    }
+    
+    class fd_i2cm_io_t: Heap.Struct {
+        
+        let transfers: Heap.Reference<fd_i2cm_transfer_t>
+        let transfer_count: Heap.Primitive<UInt32>
+        let completion_callback: Heap.Primitive<UInt32>
+        
+        init(transfers: [fd_i2cm_transfer_t]) {
+            self.transfers = Heap.Reference(object: transfers[0])
+            self.transfer_count = Heap.Primitive(value: UInt32(transfers.count))
+            self.completion_callback = Heap.Primitive(value: 0)
+            super.init(fields: [self.transfers, self.transfer_count, self.completion_callback])
+        }
+        
+    }
+    
+    func fd_i2cm_initialize(heap: Heap) throws -> (buses: [String: fd_i2cm_bus_t], devices: [String: fd_i2cm_device_t]) {
+        let TWIM0: UInt32 = 0x40003000
+        let bq25120Scl = fd_gpio_t(port: 1, pin: 12)
+        let bq25120Sda = fd_gpio_t(port: 1, pin: 13)
+        let bq25120Bus = fd_i2cm_bus_t(instance: TWIM0, scl: bq25120Scl, sda: bq25120Sda, frequency: 100000)
+        heap.addRoot(object: bq25120Bus)
+        let heartRateScl = fd_gpio_t(port: 0, pin: 29)
+        let heartRateSda = fd_gpio_t(port: 0, pin: 30)
+        let heartRateBus = fd_i2cm_bus_t(instance: TWIM0, scl: heartRateScl, sda: heartRateSda, frequency: 100000)
+        heap.addRoot(object: heartRateBus)
+        let busCount: UInt32 = 2
+        
+        let bq25120Address: UInt32 = 0x6a // bq25120 7-bit address
+        let bq25120Device = fd_i2cm_device_t(bus: bq25120Bus, address: bq25120Address)
+        heap.addRoot(object: bq25120Device)
+        let heartRateAddress: UInt32 = 0x44 // heart rate 7-bit address
+        let heartRateDevice = fd_i2cm_device_t(bus: heartRateBus, address: heartRateAddress)
+        heap.addRoot(object: heartRateDevice)
+        let deviceCount: UInt32 = 2
         
         heap.locate()
         heap.encode()
         try serialWireDebug?.writeMemory(heap.baseAddress, data: heap.data)
-        let _ = try run(getFunction(name: "fd_i2cm_initialize").address, r0: bus.heapAddress!, r1: busCount, r2: device.heapAddress!, r3: deviceCount)
-        return (bus: bus, device: device)
+        let _ = try run(getFunction(name: "fd_i2cm_initialize").address, r0: bq25120Bus.heapAddress!, r1: busCount, r2: bq25120Device.heapAddress!, r3: deviceCount)
+        return (buses: ["bq25120": bq25120Bus, "heartRate": heartRateBus], devices: ["bq25120": bq25120Device, "heartRate": heartRateDevice])
     }
     
     func fd_i2cm_bus_enable(bus: fd_i2cm_bus_t) throws {
         let _ = try run(getFunction(name: "fd_i2cm_bus_enable").address, r0: bus.heapAddress!)
+    }
+    
+    func fd_i2cm_bus_disable(bus: fd_i2cm_bus_t) throws {
+        let _ = try run(getFunction(name: "fd_i2cm_bus_disable").address, r0: bus.heapAddress!)
+    }
+    
+    func fd_i2cm_device_io(heap: Heap, device: fd_i2cm_device_t, io: fd_i2cm_io_t) throws -> Bool {
+        let resultR0 = try run(getFunction(name: "fd_i2cm_device_io").address, r0: device.heapAddress!, r1: io.heapAddress!)
+        return resultR0 != 0
     }
     
     func fd_bq25120_write(heap: Heap, device: fd_i2cm_device_t, location: UInt8, value: UInt8) throws -> Bool {
@@ -179,13 +234,15 @@ class FireflyDesignScript: SerialWireDebugScript {
     let FD_BQ25120_BATT_VOLT_MONITOR_REG: UInt8 =   0x0A
     let FD_BQ25120_VIN_DPM_TIMER_REG: UInt8 =       0x0B
     
-    func setupSystemVoltage() throws -> (heap: Heap, bus: fd_i2cm_bus_t, device: fd_i2cm_device_t) {
+    func setupSystemVoltage() throws -> (heap: Heap, buses: [String: fd_i2cm_bus_t], devices: [String: fd_i2cm_device_t]) {
         let heap = Heap()
         heap.setBase(address: cortex.heapRange.location)
         
         presenter.show(message: "initializing I2CM...")
-        let (bus, device) = try fd_i2cm_initialize(heap: heap)
-        
+        let (buses, devices) = try fd_i2cm_initialize(heap: heap)
+        let bus = buses["bq25120"]!
+        let device = devices["bq25120"]!
+
         presenter.show(message: "enabling I2C bus...")
         try fd_i2cm_bus_enable(bus: bus)
         
@@ -226,7 +283,7 @@ class FireflyDesignScript: SerialWireDebugScript {
         //        let conversion5V = try fixture.auxiliaryVoltageInstrument?.convert()
         //        presenter.show(message: "result = \(result), voltage = \(String(describing: conversion5V?.voltage))")
         
-        return (heap: heap, bus: bus, device: device)
+        return (heap: heap, buses: buses, devices: devices)
     }
 
     override func setup() throws {
