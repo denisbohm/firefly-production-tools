@@ -96,14 +96,18 @@ class ChargeScript: FireflyDesignScript, Script {
         let _ = try fd_bq25120_write(heap: setupState!.heap, device: device, location: FD_BQ25120_ILIMIT_UVLO_CTL_REG, value: 0b00111010)
         // enable BQ charging at 300 mA
         let _ = try fd_bq25120_write(heap: setupState!.heap, device: device, location: FD_BQ25120_FASTCHARGE_CTL_REG, value: 0b11101000)
+        // turn off DPM feature (so can charge at lower voltages)
+        let _ = try fd_bq25120_write(heap: setupState!.heap, device: device, location: FD_BQ25120_VIN_DPM_TIMER_REG, value: 0b10000010)
         try fd_gpio_set(gpio: chipDisablePortPin, value: false)
         Thread.sleep(forTimeInterval: 1.0)
         do {
             let faults = try fd_bq25120_read(heap: setupState!.heap, device: device, location: FD_BQ25120_FAULTS_FAULTMASKS_REG)
+            let faults_after = try fd_bq25120_read(heap: setupState!.heap, device: device, location: FD_BQ25120_FAULTS_FAULTMASKS_REG)
+            let ts_status = try fd_bq25120_read(heap: setupState!.heap, device: device, location: FD_BQ25120_TSCONTROL_STATUS_REG)
             let value = try fd_gpio_get(gpio: chargeStatusPortPin)
             let expected = false
             let pass = value == expected
-            presenter.show(message: "charge status pin test: \(pass), faults: \(faults)")
+            presenter.show(message: "charge status pin test: \(pass), faults: \(faults) -> \(faults_after), ts status: \(ts_status)")
         }
         do {
             let value = try readChargeCurrent()

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		920C18F920FFCA6100B9786E /* aw_test_suite_apollo.elf in Resources */ = {isa = PBXBuildFile; fileRef = 920C18F820FFCA6100B9786E /* aw_test_suite_apollo.elf */; };
+		920E3112213F0B48003730EC /* DualProgramScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920E3111213F0B48003730EC /* DualProgramScript.swift */; };
+		920E3115213F0F16003730EC /* atlas_display.hex in Resources */ = {isa = PBXBuildFile; fileRef = 920E3114213F0F16003730EC /* atlas_display.hex */; };
 		921B4D51206AAA7B0072BEAF /* IdentifyScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921B4D50206AAA7B0072BEAF /* IdentifyScript.swift */; };
 		921B4D54206AAF270072BEAF /* FixtureScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921B4D53206AAF270072BEAF /* FixtureScript.swift */; };
 		921B4D56206AB0D30072BEAF /* SerialWireDebugScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921B4D55206AB0D30072BEAF /* SerialWireDebugScript.swift */; };
@@ -96,6 +98,8 @@
 
 /* Begin PBXFileReference section */
 		920C18F820FFCA6100B9786E /* aw_test_suite_apollo.elf */ = {isa = PBXFileReference; lastKnownFileType = file; name = aw_test_suite_apollo.elf; path = "../../../../atlas/atlas-wristband3-firmware/build/aw_test_suite_apollo THUMB Debug/aw_test_suite_apollo.elf"; sourceTree = "<group>"; };
+		920E3111213F0B48003730EC /* DualProgramScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DualProgramScript.swift; sourceTree = "<group>"; };
+		920E3114213F0F16003730EC /* atlas_display.hex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = atlas_display.hex; path = "../../../../atlas/atlas-wristband3-firmware/build/atlas_display THUMB Release/atlas_display.hex"; sourceTree = "<group>"; };
 		921B4D50206AAA7B0072BEAF /* IdentifyScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifyScript.swift; sourceTree = "<group>"; };
 		921B4D53206AAF270072BEAF /* FixtureScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixtureScript.swift; sourceTree = "<group>"; };
 		921B4D55206AB0D30072BEAF /* SerialWireDebugScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialWireDebugScript.swift; sourceTree = "<group>"; };
@@ -168,6 +172,7 @@
 				921B4D55206AB0D30072BEAF /* SerialWireDebugScript.swift */,
 				921B4D57206AB1BF0072BEAF /* SpiFlashTestScript.swift */,
 				92257BEF210AB40A00EDDAD7 /* HeartRateScript.swift */,
+				920E3111213F0B48003730EC /* DualProgramScript.swift */,
 			);
 			name = scripts;
 			sourceTree = "<group>";
@@ -175,6 +180,7 @@
 		924410FC20AF25E20082D0D1 /* firmware */ = {
 			isa = PBXGroup;
 			children = (
+				920E3114213F0F16003730EC /* atlas_display.hex */,
 				920C18F820FFCA6100B9786E /* aw_test_suite_apollo.elf */,
 				9285262920BDDAE200BD2CF6 /* fd_quiescent_test_apollo.hex */,
 				9285262720BDDAD800BD2CF6 /* fd_quiescent_test_nrf5.hex */,
@@ -364,6 +370,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				920E3115213F0F16003730EC /* atlas_display.hex in Resources */,
 				9285262820BDDAD800BD2CF6 /* fd_quiescent_test_nrf5.hex in Resources */,
 				92654D07205B06E9008D000D /* Assets.xcassets in Resources */,
 				9285262620BDD4BA00BD2CF6 /* fd_test_suite_apollo.elf in Resources */,
@@ -393,6 +400,7 @@
 			files = (
 				925142282098F6AE004A22B9 /* PowerSetupScript.swift in Sources */,
 				921B4D58206AB1BF0072BEAF /* SpiFlashTestScript.swift in Sources */,
+				920E3112213F0B48003730EC /* DualProgramScript.swift in Sources */,
 				92921BFE20A61CAF00837756 /* BatteryPowerScript.swift in Sources */,
 				925F482020ACB96100D22C00 /* Programmer.swift in Sources */,
 				9285261C20BDCF8400BD2CF6 /* QuiescentScript.swift in Sources */,

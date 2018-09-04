@@ -137,11 +137,13 @@ class ProgramScript: SpiFlashTestScript {
     
     override func main() throws {
         try setup()
+        /*
         try eraseChip()
         try programBoot()
         try programApplication()
         try programSoftdevice()
         try programManufacturingInformation()
+ */
     }
 
 }

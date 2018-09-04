@@ -42,14 +42,15 @@ class ViewController: NSViewController, Presenter {
     @IBAction func programFirmware(_ sender: Any) {
         NSLog("Program Firmware")
         guard
-            let boot = loadFirmware(resource: "atlas_boot"),
-            let application = loadFirmware(resource: "atlas_app"),
-            let softdevice = loadFirmware(resource: "s140_nrf52_6.0.0_softdevice")
+            let nrf5Boot = loadFirmware(resource: "atlas_boot"),
+            let nrf5Application = loadFirmware(resource: "atlas_app"),
+            let nrf5Softdevice = loadFirmware(resource: "s140_nrf52_6.0.0_softdevice"),
+            let apolloApplication = loadFirmware(resource: "atlas_display")
         else {
             show(message: "Can't load firmware!")
             return
         }
-        run(script: ProgramScript(fixture: fixture, presenter: self, serialWireInstrumentIdentifier: "SerialWire1", boot: boot, application: application, softdevice: softdevice, serialNumber: 0))
+        run(script: DualProgramScript(fixture: fixture, presenter: self, nrf5Boot: nrf5Boot, nrf5Application: nrf5Application, nrf5Softdevice: nrf5Softdevice, serialNumber: 0, apolloApplication: apolloApplication))
     }
     
     @IBAction func quiescentTest(_ sender: Any) {

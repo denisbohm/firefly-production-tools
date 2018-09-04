@@ -704,8 +704,26 @@ class SpiFlashTestScript: FireflyDesignScript, Script {
         try toggle_off_on(gpio: blue, duration: 1.0)
     }
     
+    func fd_test_suite_crystal_test(source: UInt32) throws -> Bool {
+        let r0 = try run(getFunction(name: "fd_test_suite_crystal_test").address, r0: source, r1: 1000000)
+        return r0 != 0
+    }
+    
+    func lowFrequencyCrystalTest() throws {
+        let pass = try fd_test_suite_crystal_test(source: 0)
+        presenter.show(message: "32kHz crystal test: \(pass)")
+    }
+    
+    func highFrequencyCrystalTest() throws {
+        let pass = try fd_test_suite_crystal_test(source: 1)
+        presenter.show(message: "32mHz crystal test: \(pass)")
+    }
+    
     func main() throws {
         try setup()
+
+        try lowFrequencyCrystalTest()
+        try highFrequencyCrystalTest()
 
         try petIndicatorTest()
         
