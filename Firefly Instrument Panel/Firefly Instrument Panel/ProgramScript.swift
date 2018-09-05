@@ -87,7 +87,9 @@ class ProgramScript: SpiFlashTestScript {
         ProgramScript.set(&data, index: &index, value: UInt8(truncatingIfNeeded: bootloaderAddress >> 16))
         ProgramScript.set(&data, index: &index, value: UInt8(truncatingIfNeeded: bootloaderAddress >> 24))
         
-        let pselreset = 0x80000000 | UInt32(18) // setup P0.18 as reset pin
+        let port: UInt32 = 0
+        let pin: UInt32 = 18
+        let pselreset = 0b01111111111111111111111111000000 | (UInt32(port) << 5) | UInt32(pin) // connect reset pin
         index = ProgramScript.PSELRESET0
         ProgramScript.set(&data, index: &index, value: UInt8(truncatingIfNeeded: pselreset))
         ProgramScript.set(&data, index: &index, value: UInt8(truncatingIfNeeded: pselreset >> 8))
@@ -137,13 +139,11 @@ class ProgramScript: SpiFlashTestScript {
     
     override func main() throws {
         try setup()
-        /*
         try eraseChip()
         try programBoot()
         try programApplication()
         try programSoftdevice()
         try programManufacturingInformation()
- */
     }
 
 }
