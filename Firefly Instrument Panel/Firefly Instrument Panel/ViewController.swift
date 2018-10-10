@@ -108,7 +108,8 @@ class ViewController: NSViewController, Presenter {
     }
     
     func showOnMain(message: String) {
-        messageTextView.textStorage?.append(NSAttributedString(string: message + "\n"))
+        let string = NSAttributedString(string: message + "\n", attributes: [.foregroundColor : NSColor.textColor])
+        messageTextView.textStorage?.append(string)
         messageTextView.scrollToEndOfDocument(nil)
     }
     

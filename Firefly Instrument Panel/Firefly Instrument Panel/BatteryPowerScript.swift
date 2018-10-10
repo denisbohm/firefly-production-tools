@@ -15,6 +15,8 @@ class BatteryPowerScript: FixtureScript, Script {
     }
     
     func main() throws {
+        self.batteryVoltage = 3.6
+        
         try setup()
         
         try fixture.voltageSenseRelayInstrument?.set(true)

@@ -11,6 +11,7 @@ import FireflyInstruments
 
 class FireflyDesignScript: SerialWireDebugScript {
     
+    var systemVoltageTarget: Float = 3.2
     var setupState: (heap: Heap, buses: [String: fd_i2cm_bus_t], devices: [String: fd_i2cm_device_t])? = nil
     
     class fd_gpio_t: Heap.Struct {
@@ -257,9 +258,9 @@ class FireflyDesignScript: SerialWireDebugScript {
             presenter.show(message: String(format:"status: \(ok) 0x%02x", status))
         }
         
-        presenter.show(message: "setting system rail to 3.2 V...")
+        presenter.show(message: "setting system rail to \(self.systemVoltageTarget) V...")
         try fixture.voltageSenseRelayInstrument?.set(true)
-        let result = try fd_bq25120_set_system_voltage(device: device, voltage: 3.2)
+        let result = try fd_bq25120_set_system_voltage(device: device, voltage: self.systemVoltageTarget)
         Thread.sleep(forTimeInterval: 0.5)
         let conversion = try fixture.voltageInstrument?.convert()
         try fixture.voltageSenseRelayInstrument?.set(false)
@@ -725,8 +726,6 @@ class SpiFlashTestScript: FireflyDesignScript, Script {
         try lowFrequencyCrystalTest()
         try highFrequencyCrystalTest()
 
-        try petIndicatorTest()
-        
         let heap = Heap()
         heap.setBase(address: cortex.heapRange.location)
         presenter.show(message: "initializing SPIM...")
@@ -738,8 +737,8 @@ class SpiFlashTestScript: FireflyDesignScript, Script {
         presenter.show(message: String(format: "%02x %02x %02x %02x", information.manufacturer_id.value, information.device_id.value, information.memory_type.value, information.memory_capacity.value))
         presenter.show(message: "getting LSM6DSL samples...")
         try lsm6dslTest(heap: heap, device: lsm6dslDevice)
-        presenter.show(message: "vibrating at 32kHz 50% duty cycle...")
-        try vibrate()
+
+        try petIndicatorTest()
     }
 
 }

@@ -69,10 +69,10 @@ class HeartRateScript: FireflyDesignScript, Script {
         print(String(describing: heap))
         try serialWireDebug?.writeMemory(heap.baseAddress, data: heap.data)
 
-        // write: [0x44 5, 0x08, 0x13, 0x44, 0x45, 0x47]
-        let _ = try fd_i2cm_device_io(heap: heap, device: device, io: getIo)
+        // write: [0x44, 5, 0x08, 0x13, 0x44, 0x45, 0x47]
+        let writeResult = try fd_i2cm_device_io(heap: heap, device: device, io: getIo)
         // read: [0x44, 13, 0x20, 0x13, 0x00, 0x00, 0x44, 0x00, 0x00, 0x45, 0x00, 0x00, 0x47, 0x00, 0x00]
-        let _ = try fd_i2cm_device_io(heap: heap, device: device, io: resultIo)
+        let readResult = try fd_i2cm_device_io(heap: heap, device: device, io: resultIo)
         
         heap.data = try serialWireDebug!.readMemory(heap.baseAddress, length: UInt32(heap.data.count))
         try heap.decode()

@@ -17,18 +17,32 @@ class FixtureScript {
     let fixture: Fixture
     let presenter: Presenter
     var doSetupInstruments = true
-    
+    var batteryVoltage: Float = 4.1
+
     init(fixture: Fixture, presenter: Presenter) {
         self.fixture = fixture
         self.presenter = presenter
     }
     
+    func powerOnUSB() throws {
+        presenter.show(message: "powering on USB...")
+        Thread.sleep(forTimeInterval: 1.0)
+        try fixture.voltageSenseRelayInstrument?.set(true)
+        try fixture.usbPowerRelayInstrument?.set(true)
+        Thread.sleep(forTimeInterval: 1.0)
+        let conversion = try fixture.voltageInstrument?.convert()
+        if (conversion == nil) || (conversion!.voltage < 1.7) {
+            throw ScriptError.setupFailure
+        }
+        try fixture.voltageSenseRelayInstrument?.set(false)
+    }
+    
     func powerOnBatterySimulator() throws {
-        presenter.show(message: "powering on battery simulator...")
+        presenter.show(message: "powering on battery simulator at \(self.batteryVoltage) V...")
         Thread.sleep(forTimeInterval: 1.0)
         try fixture.voltageSenseRelayInstrument?.set(true)
         try fixture.batteryInstrument?.setEnabled(true)
-        try fixture.batteryInstrument?.setVoltage(3.9)
+        try fixture.batteryInstrument?.setVoltage(batteryVoltage)
         try fixture.simulatorToBatteryRelayInstrument?.set(true)
         Thread.sleep(forTimeInterval: 1.0)
         let conversion = try fixture.voltageInstrument?.convert()

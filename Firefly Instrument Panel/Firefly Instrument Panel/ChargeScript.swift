@@ -119,7 +119,11 @@ class ChargeScript: FireflyDesignScript, Script {
         var status: Bool = false
         let chargeDeadline = Date().addingTimeInterval(TimeInterval(chargeTimeout))
         while Date() < chargeDeadline {
-            presenter.show(message: "waiting for battery charge to complete...")
+            try fd_gpio_set(gpio: chipDisablePortPin, value: true)
+            Thread.sleep(forTimeInterval: 0.1)
+            let status_register = try fd_bq25120_read(heap: setupState!.heap, device: device, location: FD_BQ25120_STATUS_SHIPMODE_REG)
+            try fd_gpio_set(gpio: chipDisablePortPin, value: false)
+            presenter.show(message: "waiting for battery charge to complete... " + String(format: "0b%08b", status_register.value))
             Thread.sleep(forTimeInterval: 1)
             
             status = try fd_gpio_get(gpio: chargeStatusPortPin)
@@ -148,19 +152,6 @@ class ChargeScript: FireflyDesignScript, Script {
         }
     }
 
-    func powerOnUSB() throws {
-        presenter.show(message: "powering on USB...")
-        Thread.sleep(forTimeInterval: 1.0)
-        try fixture.voltageSenseRelayInstrument?.set(true)
-        try fixture.usbPowerRelayInstrument?.set(true)
-        Thread.sleep(forTimeInterval: 1.0)
-        let conversion = try fixture.voltageInstrument?.convert()
-        if (conversion == nil) || (conversion!.voltage < 1.7) {
-            throw ScriptError.setupFailure
-        }
-        try fixture.voltageSenseRelayInstrument?.set(false)
-    }
-    
     override func powerOn() throws {
         try powerOnUSB()
     }
