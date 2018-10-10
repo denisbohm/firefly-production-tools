@@ -10,21 +10,10 @@ import Cocoa
 import ARMSerialWireDebug
 import FireflyInstruments
 
-class ViewController: NSViewController, Presenter {
-
-    @IBOutlet var messageTextView: NSTextView!
-    
-    let fixture = Fixture()
-    var runner: Runner? = nil
+class ViewController: FireflyInstrumentsViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
-    
-    @IBAction func cancel(_ sender: Any) {
-        if let runner = runner {
-            runner.cancel()
-        }
     }
     
     func loadFirmware(resource: String) -> IntelHex? {
@@ -98,35 +87,6 @@ class ViewController: NSViewController, Presenter {
     @IBAction func heartRateTest(_ sender: Any) {
         NSLog("heart rate test")
         run(script: HeartRateScript(fixture: fixture, presenter: self, serialWireInstrumentIdentifier: "SerialWire1"))
-    }
-    
-    func run(script: Script) {
-        messageTextView.string = ""
-        
-        runner = Runner(fixture: fixture, presenter: self, script: script)
-        runner?.start()
-    }
-    
-    func showOnMain(message: String) {
-        let string = NSAttributedString(string: message + "\n", attributes: [.foregroundColor : NSColor.textColor])
-        messageTextView.textStorage?.append(string)
-        messageTextView.scrollToEndOfDocument(nil)
-    }
-    
-    func show(message: String) {
-        DispatchQueue.main.async() {
-            self.showOnMain(message: message)
-        }
-    }
-    
-    func completedOnMain() {
-        runner = nil
-    }
-    
-    func completed() {
-        DispatchQueue.main.async() {
-            self.completedOnMain()
-        }
     }
     
 }
