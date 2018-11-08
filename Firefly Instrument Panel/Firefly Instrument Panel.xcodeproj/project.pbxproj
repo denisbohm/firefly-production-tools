@@ -7,11 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		920C18F920FFCA6100B9786E /* aw_test_suite_apollo.elf in Resources */ = {isa = PBXBuildFile; fileRef = 920C18F820FFCA6100B9786E /* aw_test_suite_apollo.elf */; };
-		920E3115213F0F16003730EC /* atlas_display.hex in Resources */ = {isa = PBXBuildFile; fileRef = 920E3114213F0F16003730EC /* atlas_display.hex */; };
 		924410F720AF24090082D0D1 /* s140_nrf52_6.0.0_softdevice.hex in Resources */ = {isa = PBXBuildFile; fileRef = 924410F520AF24090082D0D1 /* s140_nrf52_6.0.0_softdevice.hex */; };
-		924410F920AF241B0082D0D1 /* atlas_app.hex in Resources */ = {isa = PBXBuildFile; fileRef = 924410F820AF241B0082D0D1 /* atlas_app.hex */; };
-		924410FB20AF242B0082D0D1 /* atlas_boot.hex in Resources */ = {isa = PBXBuildFile; fileRef = 924410FA20AF242B0082D0D1 /* atlas_boot.hex */; };
 		92654D03205B06E9008D000D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92654D02205B06E9008D000D /* AppDelegate.swift */; };
 		92654D05205B06E9008D000D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92654D04205B06E9008D000D /* ViewController.swift */; };
 		92654D07205B06E9008D000D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92654D06205B06E9008D000D /* Assets.xcassets */; };
@@ -78,12 +74,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		920C18F820FFCA6100B9786E /* aw_test_suite_apollo.elf */ = {isa = PBXFileReference; lastKnownFileType = file; name = aw_test_suite_apollo.elf; path = "../../../../atlas/atlas-wristband3-firmware/build/aw_test_suite_apollo THUMB Debug/aw_test_suite_apollo.elf"; sourceTree = "<group>"; };
-		920E3114213F0F16003730EC /* atlas_display.hex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = atlas_display.hex; path = "../../../../atlas/atlas-wristband3-firmware/build/atlas_display THUMB Release/atlas_display.hex"; sourceTree = "<group>"; };
 		923900DC2062D94400EC9AB4 /* Firefly Instrument Panel.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Firefly Instrument Panel.entitlements"; sourceTree = "<group>"; };
 		924410F520AF24090082D0D1 /* s140_nrf52_6.0.0_softdevice.hex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = s140_nrf52_6.0.0_softdevice.hex; sourceTree = "<group>"; };
-		924410F820AF241B0082D0D1 /* atlas_app.hex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = atlas_app.hex; path = "../../../../atlas/atlas-wristband3-firmware/build/atlas_app THUMB Release/atlas_app.hex"; sourceTree = "<group>"; };
-		924410FA20AF242B0082D0D1 /* atlas_boot.hex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = atlas_boot.hex; path = "../../../../atlas/atlas-wristband3-firmware/build/atlas_boot THUMB Release/atlas_boot.hex"; sourceTree = "<group>"; };
 		92654CFF205B06E9008D000D /* Firefly Instrument Panel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Firefly Instrument Panel.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		92654D02205B06E9008D000D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		92654D04205B06E9008D000D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -123,15 +115,11 @@
 		924410FC20AF25E20082D0D1 /* firmware */ = {
 			isa = PBXGroup;
 			children = (
-				920E3114213F0F16003730EC /* atlas_display.hex */,
-				920C18F820FFCA6100B9786E /* aw_test_suite_apollo.elf */,
 				9285262920BDDAE200BD2CF6 /* fd_quiescent_test_apollo.hex */,
 				9285262720BDDAD800BD2CF6 /* fd_quiescent_test_nrf5.hex */,
 				9285262520BDD4BA00BD2CF6 /* fd_test_suite_apollo.elf */,
 				9285262220BDD44C00BD2CF6 /* fd_test_suite_nrf5.elf */,
 				924410F520AF24090082D0D1 /* s140_nrf52_6.0.0_softdevice.hex */,
-				924410FA20AF242B0082D0D1 /* atlas_boot.hex */,
-				924410F820AF241B0082D0D1 /* atlas_app.hex */,
 			);
 			name = firmware;
 			sourceTree = "<group>";
@@ -307,14 +295,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				920E3115213F0F16003730EC /* atlas_display.hex in Resources */,
 				9285262820BDDAD800BD2CF6 /* fd_quiescent_test_nrf5.hex in Resources */,
 				92654D07205B06E9008D000D /* Assets.xcassets in Resources */,
 				9285262620BDD4BA00BD2CF6 /* fd_test_suite_apollo.elf in Resources */,
-				924410F920AF241B0082D0D1 /* atlas_app.hex in Resources */,
 				9285262A20BDDAE200BD2CF6 /* fd_quiescent_test_apollo.hex in Resources */,
-				920C18F920FFCA6100B9786E /* aw_test_suite_apollo.elf in Resources */,
-				924410FB20AF242B0082D0D1 /* atlas_boot.hex in Resources */,
 				924410F720AF24090082D0D1 /* s140_nrf52_6.0.0_softdevice.hex in Resources */,
 				92654D0A205B06E9008D000D /* Main.storyboard in Resources */,
 				9285262320BDD44C00BD2CF6 /* fd_test_suite_nrf5.elf in Resources */,

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -755,7 +755,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
-                            <button verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LlG-zU-AR2">
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="LlG-zU-AR2">
                                 <rect key="frame" x="862" y="13" width="82" height="32"/>
                                 <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="dh4-h7-IML">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -768,9 +768,8 @@ Gw
                                     <action selector="cancel:" target="XfG-lQ-9wD" id="OnR-pU-iAt"/>
                                 </connections>
                             </button>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fdm-Bo-ZYT">
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Fdm-Bo-ZYT">
                                 <rect key="frame" x="94" y="13" width="82" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="SWD 2" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="nS0-Fv-p3A">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -779,9 +778,8 @@ Gw
                                     <action selector="swd2Identify:" target="XfG-lQ-9wD" id="H6R-Bn-stg"/>
                                 </connections>
                             </button>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fuE-Si-ZOh">
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fuE-Si-ZOh">
                                 <rect key="frame" x="176" y="13" width="84" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Battery" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tw5-T1-KlR">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -790,18 +788,47 @@ Gw
                                     <action selector="batteryPower:" target="XfG-lQ-9wD" id="UmA-Wp-cK1"/>
                                 </connections>
                             </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HdI-Zg-EHA">
+                                <rect key="frame" x="254" y="13" width="67" height="32"/>
+                                <buttonCell key="cell" type="push" title="USB" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="3AZ-9P-R5C">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="usbPower:" target="XfG-lQ-9wD" id="7Ze-R7-6iQ"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2dJ-Fq-gEt">
+                                <rect key="frame" x="321" y="13" width="102" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Quiescent" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qrL-Qp-L9S">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="quiescent:" target="XfG-lQ-9wD" id="hdu-1n-6LG"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="ydp-I9-FK1" firstAttribute="trailing" secondItem="LlG-zU-AR2" secondAttribute="trailing" id="5FM-9I-B6J"/>
-                            <constraint firstItem="ydp-I9-FK1" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="22" id="6oy-zG-Vly"/>
-                            <constraint firstItem="US4-ko-GUK" firstAttribute="top" secondItem="ydp-I9-FK1" secondAttribute="bottom" constant="20" symbolic="YES" id="7Lu-z3-uni"/>
-                            <constraint firstAttribute="trailing" secondItem="ydp-I9-FK1" secondAttribute="trailing" constant="20" symbolic="YES" id="khc-U7-rzO"/>
-                            <constraint firstItem="ydp-I9-FK1" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="lkp-gj-lc5"/>
-                            <constraint firstItem="ydp-I9-FK1" firstAttribute="leading" secondItem="US4-ko-GUK" secondAttribute="leading" id="zNZ-pK-4Oo"/>
-                            <constraint firstAttribute="bottom" secondItem="US4-ko-GUK" secondAttribute="bottom" constant="20" symbolic="YES" id="zsZ-J1-9fJ"/>
+                            <constraint firstItem="US4-ko-GUK" firstAttribute="top" secondItem="ydp-I9-FK1" secondAttribute="bottom" constant="20" symbolic="YES" id="1U0-Nl-It7"/>
+                            <constraint firstItem="ydp-I9-FK1" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="1my-Gg-a1e"/>
+                            <constraint firstItem="ydp-I9-FK1" firstAttribute="leading" secondItem="US4-ko-GUK" secondAttribute="leading" id="3Ua-t7-Rry"/>
+                            <constraint firstAttribute="trailing" secondItem="ydp-I9-FK1" secondAttribute="trailing" constant="20" symbolic="YES" id="MBw-hj-Ko8"/>
+                            <constraint firstItem="fuE-Si-ZOh" firstAttribute="baseline" secondItem="HdI-Zg-EHA" secondAttribute="baseline" id="Pjx-Ze-ImD"/>
+                            <constraint firstItem="Fdm-Bo-ZYT" firstAttribute="baseline" secondItem="fuE-Si-ZOh" secondAttribute="baseline" id="V80-b1-isw"/>
+                            <constraint firstItem="HdI-Zg-EHA" firstAttribute="baseline" secondItem="LlG-zU-AR2" secondAttribute="baseline" id="VDI-99-siH"/>
+                            <constraint firstItem="ydp-I9-FK1" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="22" id="YWF-0W-HJe"/>
+                            <constraint firstItem="US4-ko-GUK" firstAttribute="baseline" secondItem="Fdm-Bo-ZYT" secondAttribute="baseline" id="jhL-FW-2no"/>
+                            <constraint firstItem="HdI-Zg-EHA" firstAttribute="leading" secondItem="fuE-Si-ZOh" secondAttribute="trailing" constant="6" id="nXL-Kt-VGj"/>
+                            <constraint firstItem="ydp-I9-FK1" firstAttribute="trailing" secondItem="LlG-zU-AR2" secondAttribute="trailing" id="ngP-PP-G9g"/>
+                            <constraint firstItem="fuE-Si-ZOh" firstAttribute="leading" secondItem="Fdm-Bo-ZYT" secondAttribute="trailing" constant="12" symbolic="YES" id="ppx-mm-cHc"/>
+                            <constraint firstItem="Fdm-Bo-ZYT" firstAttribute="leading" secondItem="US4-ko-GUK" secondAttribute="trailing" constant="12" symbolic="YES" id="tfD-FV-5cu"/>
+                            <constraint firstAttribute="bottom" secondItem="US4-ko-GUK" secondAttribute="bottom" constant="20" symbolic="YES" id="wxf-xU-PsH"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="cancelButton" destination="LlG-zU-AR2" id="UhX-Ei-p2T"/>
                         <outlet property="messageTextView" destination="Lbt-YY-wCa" id="Mdq-QP-pB6"/>
                     </connections>
                 </viewController>
